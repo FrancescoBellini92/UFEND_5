@@ -1,0 +1,9 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url('/src/assets/fonts/Roboto-Regular.ttf') format('ttf');
+}
+
+$color-primary: rgb(10, 104, 133);
+$color-primary-contrast: rgb(255, 255, 255);
+$color-border: silver;
+$font: 'Roboto', sans-serif;

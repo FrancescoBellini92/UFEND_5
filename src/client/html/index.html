@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="eng">
+  <head>
+    <meta charset="UTF-8" />
+    <title>UFEND-5 Travel App</title>
+    <meta name="description" content="UFEND-3 project">
+    <meta name="keywords" content="travelling">
+    <meta name="author" content="Francesco Bellini">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <header class="header shadow bg-primary">
+      <h1 class="header__title">Travel App</h1>
+    </header>
+    <main class="column">
+      <form name="text-entry" autocomplete="off" class="section">
+        <div class="column">
+          <label class="color-primary" for="feelings">Enter text to analyze</label>
+          <textarea class="shadow" name="text" id="text" placeholder="Write the text to analyze" rows="5" cols="30" required></textarea>
+        </div>
+        <button id="analyze-btn" type="submit" class="section__button bg-primary shadow">Analyze</button>
+      </form>
+      <div id="loader" class="loader can-hide hidden"></div>
+      <section class="section can-hide hidden" id="analysis-container">
+        <ul class="list">
+          <li class="list__item"><p>Analysis confidence: <strong id="confidence"></strong></p></li>
+          <li class="list__item"><p>Emotional score: <strong id="score"></strong></p></li>
+          <li class="list__item"><p>Inner agreement: <em id="agreement"></em></p></li>
+          <li class="list__item"><p>Subjectivity: <em id="subjectivity"></em></p></li>
+          <li class="list__item"><p>Irony: <em id="irony"></b></em></li>
+        </ul>
+      </section>
+    </main>
+    <!-- <script>
+      // Check that service workers are supported
+      if ('serviceWorker' in navigator) {
+        // Use the window load event to keep the page load performant
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js');
+        });
+      }
+      </script> -->
+  </body>
+</html>

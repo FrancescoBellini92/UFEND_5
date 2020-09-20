@@ -1,0 +1,19 @@
+html, body {
+  height: 100%;
+}
+body {
+  display: grid;
+  grid-template-rows: 25px auto;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+  "hd"
+  "main";
+}
+
+header {
+  grid-area: hd;
+}
+
+main {
+  grid-area: main;
+}

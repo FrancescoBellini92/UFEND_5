@@ -1,0 +1,29 @@
+// @import './modifiers';
+* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  border: 0;
+  box-sizing: border-box;
+  font-family: $font;
+}
+
+textarea {
+  @extend .padding-small;
+  @extend .border-radius;
+  @extend .border;
+  width: 100%;
+}
+
+button {
+  @extend .padding-small;
+  @extend .border-radius;
+}
+
+label {
+  padding: 5px 0;
+}
+
+ul {
+  list-style: none;
+}

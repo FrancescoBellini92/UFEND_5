@@ -1,0 +1,59 @@
+// @import '../base/base';
+
+.can-hide {
+  transition: opacity 0.5s;
+  
+  &.hidden {
+    opacity: 0 !important;
+  }
+}
+
+.s {
+  width: 50px !important;
+}
+
+.m {
+  width: 120px;
+}
+
+.bg-primary {
+  background-color: $color-primary !important;
+  color: $color-primary-contrast!important;
+}
+
+.color-primary {
+  color: $color-primary;
+  border-color: $color-primary !important;
+}
+
+.shadow {
+  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+    0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06);
+}
+
+.padding-small {
+  padding: 5px 10px;
+}
+
+.border {
+  border: 1px solid $color-border;
+}
+
+.border-radius {
+  border-radius: 6px;
+}
+
+@mixin flex($orientation, $justify, $align) {
+  display: flex;
+  flex-direction: $orientation;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+.column {
+  @include flex(column, center, center)  
+}
+
+.row {
+  @include flex(row, space-between, center)  
+}

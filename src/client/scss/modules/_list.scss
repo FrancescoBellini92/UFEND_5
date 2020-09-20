@@ -1,0 +1,7 @@
+.list {
+  .list__item {
+    @extend .padding-small;
+    border-bottom: 1px solid $color-border;
+    margin: 10px 0;
+  }
+}
