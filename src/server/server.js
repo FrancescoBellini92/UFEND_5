@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const fetch = require('node-fetch');
 const { PORT, APIKEY, APIBASEURL, MODE } = require('./environment');
 
+const geoController = require('./controllers/geo.controller');
+const pixController = require('./controllers/pix.controller');
+
 const app = express();
 app.use(logger, bodyParser.json(), cors());
 
@@ -11,6 +14,9 @@ function logger (req, res, next) {
   console.log('Request', 'method', req.method, 'pathname', req.url);
   next();
 }
+
+app.use('/geo', geoController);
+app.use('/pix', pixController);
 
 app.get(
   '/sentiment-analysis',

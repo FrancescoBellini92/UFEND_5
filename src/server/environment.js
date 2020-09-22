@@ -2,7 +2,11 @@ const dotEnv = require('dotenv');
 dotEnv.config();
 module.exports = {
   PORT: process.env.PORT,
-  APIBASEURL: process.env.API_BASEURL,
-  APIKEY: process.env.API_KEY,
+  API_KEY_GEO: process.env.API_KEY_GEO,
+  API_GEO_BASEURL: process.env.API_GEO_BASEURL,
+  API_KEY_WEATHERBIT: process.env.API_KEY_WEATHERBIT,
+  API_WEATHERBIT_BASEURL: process.env.API_WEATHERBIT_BASEURL,
+  API_KEY_PIXABAY: process.env.API_KEY_PIXABAY,
+  API_PIXABAY_BASEURL: process.env.API_PIXABAY_BASEURL,
   MODE: process.env.MODE
 };
