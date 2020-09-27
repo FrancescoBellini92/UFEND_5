@@ -1,11 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const fetch = require('node-fetch');
-const { PORT, APIKEY, APIBASEURL, MODE } = require('./environment');
+const moment = require('moment');
+const { PORT, MODE, API_WEATHERBIT_MAX_FORECAST } = require('./environment');
 
-const geoController = require('./controllers/geo.controller');
-const pixController = require('./controllers/pix.controller');
+const { getGeoData, getWeatherData, getPixData } = require('./controllers/controllers');
+const WeatherResponse = require('./models/weather-response.model');
 
 const app = express();
 app.use(logger, bodyParser.json(), cors());
@@ -15,31 +15,38 @@ function logger (req, res, next) {
   next();
 }
 
-app.use('/geo', geoController);
-app.use('/pix', pixController);
-
 app.get(
-  '/sentiment-analysis',
-  (req, res, next) => req.query && req.query.text ? next() : res.status(400).json({ error: 'missing text query parameter' }),
+  '/trip-info',
+  (req, res, next) => {
+    // check parameters defined
+    const hasQueryParams = req.query && req.query.start && req.query.end && req.query.location; 
+    hasQueryParams ? next() : res.status(400).json({ error: 'missing required query parameters' });
+  },
+  (req, res, next) => {
+    // parameters validation
+    const today = moment();
+    const isStartAfterPast = moment(req.query.start).isSameOrAfter(today, 'days'); 
+    const isEndAfterStart = moment(req.query.end).isSameOrAfter(req.query.start, 'days'); 
+    (isStartAfterPast && isEndAfterStart) ? next() : res.status(400).json({ error: 'bad dates' });
+  }, 
   async (req, res) => {
     try {
-      const text = req.query.text;
-      const url = `${APIBASEURL}?key=${APIKEY}&txt=${text}&lang=auto`;
-      const APIRequest = await fetch(url, { method: 'POST' });
-      const APIResponse = await APIRequest.json();
-      console.log('API response', APIResponse);
-      if (APIResponse.status.msg !== 'OK') {
-        // probably something wrong with the request parameters
-        res.status(400).json(APIResponse.status.msg || 'unknown error');
-        return;
-      }
-      res.json({ success: 'true', data: APIResponse });
+      const APIRequest = await Promise.all([
+        getGeoData(req),
+        getPixData(req)
+      ]);
+      const [ geoAPIResponse, pixAPIResponse ] = APIRequest;
+      const lat = geoAPIResponse.lat;
+      const lon = geoAPIResponse.lng;
+      const [deltaDaysFromStart, deltaDaysFromEnd] = WeatherResponse.calculateDeltaDays(req.query.start, req.query.end);
+      const isWithinMaxForecast = deltaDaysFromStart  <= API_WEATHERBIT_MAX_FORECAST; 
+      const weatherAPIResponse = isWithinMaxForecast ? await getWeatherData({query: {lat, lon, days: deltaDaysFromEnd}}) : [];
+      const APIResponse = {geo: geoAPIResponse, pix: pixAPIResponse, weather: weatherAPIResponse};
+      res.json(APIResponse);
     } catch (e) {
       res.status(500).send()
-      if (MODE === 'PROD') {
+      if (MODE === 'DEV') {
         console.error(e);
-      } else {
-        throw e;
       }
     }
   }
