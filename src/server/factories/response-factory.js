@@ -5,7 +5,7 @@ const WeatherResponse = require('../models/weather-response.model');
 class EmptyResponseError extends Error {}
 
 function factory(responseBody, dataProps, parserFn) {
-  const noResults = responseBody[dataProps].length === 0;
+  const noResults = responseBody[dataProps] ? responseBody[dataProps].length === 0 : true;
   if (noResults) {
     throw new EmptyResponseError('empty response');
   }

@@ -1,6 +1,9 @@
 /* eslint-disable no-undef */
 /* eslint-disable camelcase */
-class WeatherData {
+const BaseModel = require('./base.model');
+const moment = require('moment');
+
+class WeatherData extends BaseModel {
   wind_spd;
   wind_cdir_full;
   temp;
@@ -8,12 +11,13 @@ class WeatherData {
   min_temp;
   valid_date;
   weather = {
-    icon,
-    description
+    icon: undefined,
+    description: undefined
   };
 
   constructor(input) {
-    Object.assign(this, input);
+    super();
+    this._initProps(input);
   }
 }
 
@@ -22,7 +26,20 @@ class WeatherResponse {
 
   constructor(weatherData) {
     this.data = weatherData;
-    this.data.map(item => new WeatherData(item));
+    this.data = this.data.map(item => new WeatherData(item));
+    return this.data;
+  }
+
+  
+  static calculateDeltaDays(startDate, endDate) {
+    const start = moment(startDate);
+    const end = moment(endDate);
+    const today = moment();
+    let deltaDaysFromEnd = end.diff(today, 'days');
+    deltaDaysFromEnd = deltaDaysFromEnd ? deltaDaysFromEnd + 2 : 1;
+    let deltaDaysFromStart = start.diff(today, 'days');
+    deltaDaysFromStart = deltaDaysFromStart ? deltaDaysFromStart + 2 : 1;
+    return [ deltaDaysFromStart, deltaDaysFromEnd ];
   }
 }
 

@@ -1,10 +1,13 @@
-class PixResponse {
+const BaseModel = require('./base.model');
+
+class PixResponse extends BaseModel {
   pageURL;
   previewURL;
   webformatURL;
 
   constructor(input) {
-    Object.assign(this, input)
+    super();
+    this._initProps(input);
   }
 }
 
