@@ -19,6 +19,10 @@ module.exports = {
         loader: ['style-loader', 'css-loader', 'sass-loader']
       },
       {
+        test: /\.html$/i,
+        loader: 'html-loader',
+      },
+      {
         test: /\.(ico|ttf)$/,
         loader: ['file-loader']
       }

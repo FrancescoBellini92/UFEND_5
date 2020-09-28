@@ -1,4 +1,4 @@
-export function $(selector) {
+export function $(selector, document = self) {
   return selector.includes('#') ? document.querySelector(selector) : document.querySelectorAll(selector);
 }
 
