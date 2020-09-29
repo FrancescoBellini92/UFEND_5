@@ -16,7 +16,23 @@ module.exports = {
       },
       {
         test: /\.scss$/,
+        exclude: [/\.component.scss$/, /node_modules/],
         loader: ['style-loader', 'css-loader', 'sass-loader']
+      },
+      {
+      test: /\.component.scss$/,
+        exclude: /node_modules/,
+        use: [
+          "sass-to-string",
+          {
+            loader: "sass-loader",
+            options: {
+              sassOptions: {
+                outputStyle: "compressed",
+              },
+            }
+          }
+        ]
       },
       {
         test: /\.html$/i,
@@ -34,7 +50,7 @@ module.exports = {
     }),
     new CleanWebpackPlugin({}),
     new Webpack.DefinePlugin({
-      'process.env.APIURL': JSON.stringify(`http://localhost:${PORT}/sentiment-analysis`),
+      'process.env.APIURL': JSON.stringify(`http://localhost:${PORT}/trip-info`),
       'process.env.MODE': JSON.stringify(MODE)
     })
   ]
