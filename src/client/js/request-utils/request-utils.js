@@ -10,5 +10,5 @@ export async function manageRequestResponse(response, errorCheck = () => {}, err
     throw new Error(`Request failed: ${response.status}`);
   }
   const payload = await response.json();
-  return payload.data;
+  return payload;
 }

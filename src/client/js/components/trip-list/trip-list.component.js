@@ -1,7 +1,7 @@
 import tripFormTemplate from './trip-form.component.html';
 import { $, inputNotValid } from '../../DOM-utils/DOM-utils';
 import { WebComponent } from '../../base/web-component';
-export default class TripFormComponent extends WebComponent {
+export default class TripListComponent extends WebComponent {
 
   _html = tripFormTemplate;
 
@@ -17,7 +17,6 @@ export default class TripFormComponent extends WebComponent {
     this._submitBtn.addEventListener('click', this._onSubmit)
   }
 
-  
   _queryTemplate() {
     this._startDate = $('#startDate');
     this._endDate = $('#endDate');
