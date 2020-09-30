@@ -1,41 +1,45 @@
 import { $, show, hide, inputNotValid } from './DOM-utils/DOM-utils';
-import { sendRequest, manageRequestResponse } from './request-utils/request-utils';
 import Observable from './base/observable';
-import environment from './environment';
 import TripFormComponent from './components/trip-form/trip-form.component';
+import TripListComponent from './components/trip-list/trip-list.component';
+import TripService from './services/trip.service';
 TripFormComponent.define();
+TripListComponent.define();
 
-
-
+const tripService = new TripService();
 
 export default () => {
   const loader = $('#loader');
 
   const tripForm = $('#trip-form');
+  const tripList = $('#trip-list');
   const analysisContainer = $('#analysis-container');
   const confidenceInput = $('#confidence');
   const scoreInput = $('#score');
   const agreementInput = $('#agreement');
   const subjectivityInput = $('#subjectivity');
   const ironyInput = $('#irony');
+  debugger;
+  tripList.updateMany(tripService.trips);
 
-  const isProd = environment.MODE === 'PROD';
 
-  const addTripReq$ = new Observable(async([start, end, location]) => {
+  const addTripReq$ = new Observable(async([name, start, end, location]) => {
       show(loader);
-      const request = await sendRequest(`${environment.APIURL}?start=${start}&end=${end}&location=${location}`, isProd);
-      const response = await manageRequestResponse(request);
-      return response;
+      const newTrip = await tripService.add(name, start, end, location);
+      debugger;
+      return newTrip;
   });
 
   addTripReq$.subscribe((data) => {
+    debugger;
     hide(loader);
     tripForm.reset();
+    tripList.update(data.general);
   });
 
   async function createTrip({detail}) {
     try {
-      addTripReq$.next(detail.startDate, detail.endDate, detail.location);
+      addTripReq$.next(detail.name, detail.startDate, detail.endDate, detail.location);
       // debugger;
       // if (inputNotValid(textInput)) {
       //   throw new Error('Validation error: input was not valid');

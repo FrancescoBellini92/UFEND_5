@@ -13,23 +13,11 @@
       <h1 class="header__title">Travel App</h1>
     </header>
     <main class="column">
-      <!-- <form name="text-entry" autocomplete="off" class="section">
-        <div class="column">
-          <label class="color-primary" for="feelings">Enter text to analyze</label>
-          <textarea class="shadow" name="text" id="text" placeholder="Write the text to analyze" rows="5" cols="30" required></textarea>
-        </div>
-        <button id="analyze-btn" type="submit" class="section__button bg-primary shadow">Analyze</button>
-      </form> -->
+      
       <trip-form id="trip-form"></trip-form>
       <div id="loader" class="loader can-hide hidden"></div>
-      <section class="section can-hide hidden" id="analysis-container">
-        <ul class="list">
-          <li class="list__item"><p>Analysis confidence: <strong id="confidence"></strong></p></li>
-          <li class="list__item"><p>Emotional score: <strong id="score"></strong></p></li>
-          <li class="list__item"><p>Inner agreement: <em id="agreement"></em></p></li>
-          <li class="list__item"><p>Subjectivity: <em id="subjectivity"></em></p></li>
-          <li class="list__item"><p>Irony: <em id="irony"></b></em></li>
-        </ul>
+      <section class="section">
+        <trip-list id="trip-list"></trip-list>
       </section>
     </main>
     <!-- <script>

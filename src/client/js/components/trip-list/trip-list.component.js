@@ -1,54 +1,48 @@
-import tripFormTemplate from './trip-form.component.html';
-import { $, inputNotValid } from '../../DOM-utils/DOM-utils';
-import { WebComponent } from '../../base/web-component';
+import tripListTemplate from "./trip-list.component.html";
+import { $, inputNotValid } from "../../DOM-utils/DOM-utils";
+import { WebComponent } from "../../base/web-component";
 export default class TripListComponent extends WebComponent {
 
-  _html = tripFormTemplate;
+  static SELECTOR = "trip-list";
 
-  _startDate;
-  _endDate;
-  _location;
-  _submitBtn;
+  _html = tripListTemplate;
+  _list;
 
   constructor() {
     super();
     this._init();
     this._queryTemplate();
-    this._submitBtn.addEventListener('click', this._onSubmit)
-  }
-
-  _queryTemplate() {
-    this._startDate = $('#startDate');
-    this._endDate = $('#endDate');
-    this._location = $('#location');
-    this._submitBtn = $('#submit');
-  }
-  
-  _onSubmit = (event) => {
-    const notValid = inputNotValid(this._startDate) || inputNotValid(this._endDate) || inputNotValid(this._location);
-    if (notValid) {
-      return;
-    }
-    event.preventDefault();
-    this._emitSubmit();
-  }
-
-  _emitSubmit() {
-    const eventBody = {
-      startDate: this._startDate.value,
-      endDate: this._endDate.value,
-      location: this._location.value
-    };
-    const onSubmit = new CustomEvent('submit', {detail: eventBody });
-    this.dispatchEvent(onSubmit);
-  }
-
-  reset() {
-    this._startDate.value = this._endDate.value = this._location.value = null;
   }
 
   static define() {
-    super.define('trip-form', TripFormComponent);
+    super.define(TripListComponent);
+  }
+
+  static _makeListEl({name, location, start, end}) {
+    const listEl = document.createElement("li");
+    listEl.innerHTML = `<p><strong>${name}</strong></p><p>${location} (${start} - ${end})</p>`;
+    listEl.classList.add("list__item");
+    return listEl;
+  }
+
+  update({ name, location, start, end }) {
+    debugger;
+    const listEl = this._makeListEl(name, location, start, end);
+    this._list.appendChild(listEl);
+  }
+
+  updateMany(trips) {
+    debugger;
+    const fragment = document.createDocumentFragment();
+    trips.forEach(trip => {
+      const listEl = TripListComponent._makeListEl(trip.general);
+      fragment.appendChild(listEl);
+    })
+    this._list.appendChild(fragment);
+  }
+
+  _queryTemplate() {
+    this._list = $("#list");
   }
 
 }
