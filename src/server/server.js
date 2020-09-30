@@ -19,7 +19,7 @@ app.get(
   '/trip-info',
   (req, res, next) => {
     // check parameters defined
-    const hasQueryParams = req.query && req.query.start && req.query.end && req.query.location; 
+    const hasQueryParams = req.query && req.query.name && req.query.start && req.query.end && req.query.location; 
     hasQueryParams ? next() : res.status(400).json({ error: 'missing required query parameters' });
   },
   (req, res, next) => {
@@ -35,13 +35,24 @@ app.get(
         getGeoData(req),
         getPixData(req)
       ]);
+      const start = req.query.start;
+      const end = req.query.end;
       const [ geoAPIResponse, pixAPIResponse ] = APIRequest;
       const lat = geoAPIResponse.lat;
       const lon = geoAPIResponse.lng;
-      const [deltaDaysFromStart, deltaDaysFromEnd] = WeatherResponse.calculateDeltaDays(req.query.start, req.query.end);
+      const [deltaDaysFromStart, deltaDaysFromEnd] = WeatherResponse.calculateDeltaDays(start, end);
       const isWithinMaxForecast = deltaDaysFromStart  <= API_WEATHERBIT_MAX_FORECAST; 
       const weatherAPIResponse = isWithinMaxForecast ? await getWeatherData({query: {lat, lon, days: deltaDaysFromEnd}}) : [];
-      const APIResponse = {geo: geoAPIResponse, pix: pixAPIResponse, weather: weatherAPIResponse};
+
+      const general = {
+        id: new Date().getTime(), // return UNIX time
+        start,
+        end,
+        location: req.query.location,
+        name: req.query.name
+      }
+
+      const APIResponse = {general, geo: geoAPIResponse, pix: pixAPIResponse, weather: weatherAPIResponse};
       res.json(APIResponse);
     } catch (e) {
       res.status(500).send()

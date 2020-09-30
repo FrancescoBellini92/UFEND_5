@@ -4,11 +4,11 @@ const BaseModel = require('./base.model');
 const moment = require('moment');
 
 class WeatherData extends BaseModel {
-  wind_spd;
-  wind_cdir_full;
+  // wind_spd;
+  // wind_cdir_full;
   temp;
-  max_temp;
-  min_temp;
+  // max_temp;
+  // min_temp;
   valid_date;
   weather = {
     icon: undefined,
