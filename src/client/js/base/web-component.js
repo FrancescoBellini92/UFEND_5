@@ -1,8 +1,15 @@
 export class WebComponent extends HTMLElement {
+
+  static SELECTOR;
+  
   _html;
 
   constructor() {
     super();
+  }
+
+  static define(className) {
+    customElements.define(SELECTOR, className);
   }
 
   _init() {
@@ -16,8 +23,5 @@ export class WebComponent extends HTMLElement {
   _attachHTML() {
     this.innerHTML = this._html;
   }
-
-  static define(selector, className) {
-    customElements.define(selector, className);
-  }
+  
 }

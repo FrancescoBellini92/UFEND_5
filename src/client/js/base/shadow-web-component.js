@@ -2,7 +2,7 @@ import { WebComponent } from "./web-component";
 
 
 export class ShadowWebComponent extends WebComponent {
-  _html;
+
   _shadowRoot;
   _styles;
 
@@ -27,9 +27,5 @@ export class ShadowWebComponent extends WebComponent {
   }
   _attachHTML() {
     this.innerHTML = this._html;
-  }
-
-  static define(selector, className) {
-    customElements.define(selector, className);
   }
 }
