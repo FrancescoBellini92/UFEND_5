@@ -2,9 +2,11 @@ import { $, show, hide, inputNotValid } from './DOM-utils/DOM-utils';
 import Observable from './base/observable';
 import TripFormComponent from './components/trip-form/trip-form.component';
 import TripListComponent from './components/trip-list/trip-list.component';
+import TripCardComponent from './components/trip-card/trip-card.component';
 import TripService from './services/trip.service';
 TripFormComponent.define();
 TripListComponent.define();
+TripCardComponent.define();
 
 const tripService = new TripService();
 
@@ -13,14 +15,25 @@ export default () => {
 
   const tripForm = $('#trip-form');
   const tripList = $('#trip-list');
+  const tripCardContainer = $('#card-container');
   const analysisContainer = $('#analysis-container');
   const confidenceInput = $('#confidence');
   const scoreInput = $('#score');
   const agreementInput = $('#agreement');
   const subjectivityInput = $('#subjectivity');
   const ironyInput = $('#irony');
-  debugger;
   tripList.updateMany(tripService.trips);
+  initCards();
+
+  function initCards() {
+    const fragment = document.createDocumentFragment();
+    tripService.trips.forEach(trip => {
+      const tripCard = new TripCardComponent();
+      tripCard.update(trip.general)
+      fragment.appendChild(tripCard);
+    })
+    tripCardContainer.appendChild(fragment);
+  }
 
 
   const addTripReq$ = new Observable(async([name, start, end, location]) => {
@@ -37,7 +50,7 @@ export default () => {
     tripList.update(data.general);
   });
 
-  async function createTrip({detail}) {
+  async function onSubmit({detail}) {
     try {
       addTripReq$.next(detail.name, detail.startDate, detail.endDate, detail.location);
       // debugger;
@@ -69,5 +82,11 @@ export default () => {
     //   ironyInput.innerText = response.irony.toLowerCase();
     // }
   }
-  tripForm.addEventListener('submit', createTrip);
+
+  async function onRemove({detail}) {
+    const tripId = detail;
+    tripService.delete(tripId);
+  }
+  tripForm.addEventListener('submit', onSubmit);
+  tripList.addEventListener('remove', onRemove)
 }
