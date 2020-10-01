@@ -18,7 +18,10 @@ export default class TripService {
 
   index() {
     const savedTrips = JSON.parse(localStorage.getItem(TripService.STORAGE_TRIP_PROP));
-    this.trips = savedTrips;
+    if (savedTrips) {
+      this.trips = savedTrips;
+    }
+    return this.trips;
   }
 
   async add(name, start, end, location) {
@@ -34,7 +37,7 @@ export default class TripService {
   }
 
   delete(tripId) {
-    this.trip = this.trips.filter((trip) => trip.id !== +tripId);
+    this.trips = this.trips.filter((trip) => trip.general.id !== +tripId);
     this._syncStorage();
   }
 
