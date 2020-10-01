@@ -1,5 +1,4 @@
 import tripListTemplate from "./trip-list.component.html";
-import { $, inputNotValid } from "../../DOM-utils/DOM-utils";
 import { WebComponent } from "../../base/web-component";
 export default class TripListComponent extends WebComponent {
 
@@ -12,27 +11,27 @@ export default class TripListComponent extends WebComponent {
     super();
     this._init();
     this._queryTemplate();
+    this._attachEventHandlers();
   }
 
   static define() {
     super.define(TripListComponent);
   }
 
-  static _makeListEl({name, location, start, end}) {
+  static _makeListEl({id ,name, location, start, end}) {
     const listEl = document.createElement("li");
-    listEl.innerHTML = `<p><strong>${name}</strong></p><p>${location} (${start} - ${end})</p>`;
+    listEl.innerHTML = `<p><strong>${name}</strong></p><p>${location} (${start} - ${end})</p><button data-id=${id}>&#10005;</button>`;
     listEl.classList.add("list__item");
+    listEl.setAttribute('data-id', id);
     return listEl;
   }
 
-  update({ name, location, start, end }) {
-    debugger;
-    const listEl = this._makeListEl(name, location, start, end);
+  update({ id, name, location, start, end }) {
+    const listEl = this._makeListEl(id, name, location, start, end);
     this._list.appendChild(listEl);
   }
 
   updateMany(trips) {
-    debugger;
     const fragment = document.createDocumentFragment();
     trips.forEach(trip => {
       const listEl = TripListComponent._makeListEl(trip.general);
@@ -42,7 +41,25 @@ export default class TripListComponent extends WebComponent {
   }
 
   _queryTemplate() {
-    this._list = $("#list");
+    this._list = this.querySelector("#list");
   }
 
+  _attachEventHandlers() {
+    this._list.addEventListener('click', this._onClick);
+  }
+
+  _onClick = (e) => {
+    const target = e.target;
+    let tripId;
+    if (target.nodeName === 'BUTTON') {
+      tripId = target.attributes['data-id'].value;
+      const removeEvent = new CustomEvent('remove', { detail: tripId });
+      this.dispatchEvent(removeEvent);
+      this._list.removeChild(target.parentNode);
+    } else {
+      tripId = target.parentNode.attributes['data-id'].value;
+      const viewEvent = new CustomEvent('view', { detail: tripId });
+      this.dispatchEvent(viewEvent);
+    }
+  };
 }

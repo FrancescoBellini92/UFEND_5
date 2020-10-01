@@ -1,5 +1,5 @@
 import tripFormTemplate from './trip-form.component.html';
-import { $, inputNotValid } from '../../DOM-utils/DOM-utils';
+import { inputNotValid } from '../../DOM-utils/DOM-utils';
 import { WebComponent } from '../../base/web-component';
 
 // function testDecorator(target, name, descriptor) {
@@ -23,7 +23,7 @@ export default class TripFormComponent extends WebComponent {
     super();
     this._init();
     this._queryTemplate();
-    this._submitBtn.addEventListener('click', this._onSubmit)
+    this._attachEventHandlers();
   }
 
   static define() {
@@ -35,15 +35,19 @@ export default class TripFormComponent extends WebComponent {
   }
   
   _queryTemplate() {
-    this._startDate = $('#startDate');
-    this._endDate = $('#endDate');
-    this._location = $('#location');
-    this._name = $('#name');
-    this._submitBtn = $('#submit');
+    this._startDate = this.querySelector('#star-date');
+    this._endDate = this.querySelector('#end-date');
+    this._location = this.querySelector('#location');
+    this._name = this.querySelector('#name');
+    this._submitBtn = this.querySelector('#submit');
   }
-  
+
+  _attachEventHandlers() {
+    this._submitBtn.addEventListener('click', this._onSubmit);
+  }
+
   _onSubmit = (event) => {
-    const notValid = inputNotValid(this._startDate) || inputNotValid(this._endDate) || inputNotValid(this._location);
+    const notValid = inputNotValid(this._startDate) || inputNotValid(this._endDate) || inputNotValid(this._location) || inputNotValid(this._name);
     if (notValid) {
       return;
     }
@@ -58,8 +62,8 @@ export default class TripFormComponent extends WebComponent {
       location: this._location.value,
       name: this._name.value
     };
-    const onSubmit = new CustomEvent('submit', {detail: eventBody });
-    this.dispatchEvent(onSubmit);
+    const submitEvent = new CustomEvent('submit', {detail: eventBody });
+    this.dispatchEvent(submitEvent);
   }
 
 
