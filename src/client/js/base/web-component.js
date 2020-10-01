@@ -9,7 +9,7 @@ export class WebComponent extends HTMLElement {
   }
 
   static define(className) {
-    customElements.define(SELECTOR, className);
+    customElements.define(this.SELECTOR, className);
   }
 
   _init() {
