@@ -13,15 +13,18 @@
       <h1 class="header__title">Travel App</h1>
     </header>
     <main class="column">
-    <section class="section" id="card-container">
-    </section>
-
-      
-      <trip-form id="trip-form"></trip-form>
-      <div id="loader" class="loader can-hide hidden"></div>
-      <section class="section">
-        <trip-list id="trip-list"></trip-list>
+      <section class="can-hide hidden" id="home">
+        <div id="card-container"></div>
       </section>
+      <section class="can-hide hidden" id="add">
+        <trip-form id="trip-form"></trip-form>
+        <div id="loader" class="loader can-hide hidden"></div>
+      </section>
+      <section class="can-hide hidden" id="detail">
+      </section>
+      <div class="section can-hide hidden">
+        <trip-list id="trip-list"></trip-list>
+      </div>
       
     </main>
     <!-- <script>
