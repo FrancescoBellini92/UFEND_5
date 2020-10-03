@@ -1,0 +1,11 @@
+@import "../../../scss/shared";
+
+.form {
+  @extend .column;
+  max-width: 500px;
+
+  .form__button {
+    width: 80%;
+    max-width: 200px;
+  }
+}

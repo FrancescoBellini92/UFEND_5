@@ -1,5 +1,7 @@
-import tripCardTemplate from './trip-card.component.html';
-import { WebComponent } from '../../base/web-component';
+import template from './trip-card.component.html';
+import styles from './trip-card.component.scss';
+import WebComponent from '../../base/web-component';
+import Trip from '../../models/trip.model';
 
 // function testDecorator(target, name, descriptor) {
 //   debugger;
@@ -9,74 +11,66 @@ export default class TripCardComponent extends WebComponent {
 
   static SELECTOR = "trip-card";
 
-
-  _html = tripCardTemplate;
+  _html = template;
+  _styles = styles;
 
   _startDate;
   _endDate;
   _location;
   _name;
+  _pictureContainer;
 
   _trip;
   _submitBtn;
+  _removeBtnID = 'remove';
 
   constructor() {
     super();
     this._init();
-    this._queryTemplate();
-    this._attachEventHandlers();
   }
 
   static define() {
     super.define(TripCardComponent);
   }
 
-  update({ id, name, location, start, end }) {
+  updateProps(tripData) {
+    this._trip = new Trip(tripData);
+    const { id, name, location, start, end } = this._trip.general;
+    const pix = this._trip.pix.webformatURL;
     this._name.textContent = name;
-    this._location.textContent = location;
+    this._location.textContent = `${location} - ${this._trip.geo.countryName}`;
     this._startDate.textContent = start;
     this._endDate.textContent = end;
-    this._trip = {
-      id,
-      name,
-      location,
-      start,
-      end
-    };
+    const img = document.createElement('img');
+    img.classList.add('card__img');
+    img.src = pix;
+    this._pictureContainer.appendChild(img);
   }
   
   _queryTemplate() {
-    this._startDate = this.querySelector('#start-date');
-    this._endDate = this.querySelector('#end-date');
-    this._location = this.querySelector('#location');
-    this._name = this.querySelector('#name');
+    this._startDate = this._shadowRoot.querySelector('#start-date');
+    this._endDate = this._shadowRoot.querySelector('#end-date');
+    this._location = this._shadowRoot.querySelector('#location');
+    this._name = this._shadowRoot.querySelector('#name');
+    this._pictureContainer = this._shadowRoot.querySelector('#picture-container');
     // this._submitBtn = $('#submit');
   }
 
   _attachEventHandlers() {
     // this._submitBtn.addEventListener('click', this._onSubmit);
+    this._shadowRoot.addEventListener('click', this._onClick )
   }
 
-  _onSubmit = (event) => {
-    const notValid = inputNotValid(this._startDate) || inputNotValid(this._endDate) || inputNotValid(this._location);
-    if (notValid) {
-      return;
+  _onClick = (e) => {
+    const target = e.target;
+    const isRemoveBtn = target.id === this._removeBtnID; 
+    if (isRemoveBtn) {
+      const removeEvent = new CustomEvent('remove', { detail: this._trip.general.id });
+      this.dispatchEvent(removeEvent);
+      this.remove(this);
+      return
     }
-    event.preventDefault();
-    this._emitSubmit();
-  }
-
-  _emitSubmit() {
-    const eventBody = {
-      startDate: this._startDate.value,
-      endDate: this._endDate.value,
-      location: this._location.value,
-      name: this._name.value
-    };
-    const submitEvent = new CustomEvent('submit', {detail: eventBody });
-    this.dispatchEvent(submitEvent);
-  }
-
+  };
 
 
 }

@@ -33,7 +33,7 @@ export default class TripService {
     const newTrip = new Trip(response);
     this.trips = this.trips.concat(newTrip);
     this._syncStorage();
-    return this.trip;
+    return newTrip;
   }
 
   delete(tripId) {

@@ -1,17 +1,17 @@
-import tripListTemplate from "./trip-list.component.html";
-import { WebComponent } from "../../base/web-component";
+import template from "./trip-list.component.html";
+import styles from './trip-list.component.scss';
+import WebComponent from "../../base/web-component";
 export default class TripListComponent extends WebComponent {
 
   static SELECTOR = "trip-list";
 
-  _html = tripListTemplate;
+  _html = template;
+  _styles = styles;
   _list;
 
   constructor() {
     super();
     this._init();
-    this._queryTemplate();
-    this._attachEventHandlers();
   }
 
   static define() {
@@ -26,12 +26,12 @@ export default class TripListComponent extends WebComponent {
     return listEl;
   }
 
-  update({ id, name, location, start, end }) {
+  add({ id, name, location, start, end }) {
     const listEl = this._makeListEl(id, name, location, start, end);
     this._list.appendChild(listEl);
   }
 
-  updateMany(trips) {
+  updateProps(trips) {
     const fragment = document.createDocumentFragment();
     trips.forEach(trip => {
       const listEl = TripListComponent._makeListEl(trip.general);
@@ -41,7 +41,7 @@ export default class TripListComponent extends WebComponent {
   }
 
   _queryTemplate() {
-    this._list = this.querySelector("#list");
+    this._list = this.shadowRoot.querySelector("#list");
   }
 
   _attachEventHandlers() {

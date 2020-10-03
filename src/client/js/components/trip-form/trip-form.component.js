@@ -1,6 +1,7 @@
-import tripFormTemplate from './trip-form.component.html';
+import template from "./trip-form.component.html";
+import styles from './trip-form.component.scss';
 import { inputNotValid } from '../../DOM-utils/DOM-utils';
-import { WebComponent } from '../../base/web-component';
+import WebComponent from '../../base/web-component';
 
 // function testDecorator(target, name, descriptor) {
 //   debugger;
@@ -11,7 +12,8 @@ export default class TripFormComponent extends WebComponent {
   static SELECTOR = "trip-form";
 
 
-  _html = tripFormTemplate;
+  _html = template;
+  _styles = styles;
 
   _startDate;
   _endDate;
@@ -22,8 +24,6 @@ export default class TripFormComponent extends WebComponent {
   constructor() {
     super();
     this._init();
-    this._queryTemplate();
-    this._attachEventHandlers();
   }
 
   static define() {
@@ -35,11 +35,11 @@ export default class TripFormComponent extends WebComponent {
   }
   
   _queryTemplate() {
-    this._startDate = this.querySelector('#star-date');
-    this._endDate = this.querySelector('#end-date');
-    this._location = this.querySelector('#location');
-    this._name = this.querySelector('#name');
-    this._submitBtn = this.querySelector('#submit');
+    this._startDate = this.shadowRoot.querySelector('#start-date');
+    this._endDate = this.shadowRoot.querySelector('#end-date');
+    this._location = this.shadowRoot.querySelector('#location');
+    this._name = this.shadowRoot.querySelector('#name');
+    this._submitBtn = this.shadowRoot.querySelector('#submit');
   }
 
   _attachEventHandlers() {
