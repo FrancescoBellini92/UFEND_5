@@ -2,6 +2,7 @@ import template from './trip-card.component.html';
 import styles from './trip-card.component.scss';
 import WebComponent from '../../base/web-component';
 import Trip from '../../models/trip.model';
+import * as moment from 'moment';
 
 // function testDecorator(target, name, descriptor) {
 //   debugger;
@@ -22,7 +23,19 @@ export default class TripCardComponent extends WebComponent {
 
   _trip;
   _submitBtn;
-  _removeBtnID = 'remove';
+
+  _handlersMap = {
+    'remove': () => {
+      const removeEvent = new CustomEvent('remove', { detail: this._trip.general.id, bubbles: true });
+      this.dispatchEvent(removeEvent);
+      this.remove(this);
+    },
+    'done': () => {
+      const doneEvent = new CustomEvent('done', { detail: this._trip.general.id, bubbles: true });
+      this.dispatchEvent(doneEvent);
+      // ADD STYLE SET CONTENT 
+    }
+  }
 
   constructor() {
     super();
@@ -39,8 +52,8 @@ export default class TripCardComponent extends WebComponent {
     const pix = this._trip.pix.webformatURL;
     this._name.textContent = name;
     this._location.textContent = `${location} - ${this._trip.geo.countryName}`;
-    this._startDate.textContent = start;
-    this._endDate.textContent = end;
+    this._startDate.textContent = moment(start).format('L');
+    this._endDate.textContent = moment(end).format('L');;
     const img = document.createElement('img');
     img.classList.add('card__img');
     img.src = pix;
@@ -57,20 +70,12 @@ export default class TripCardComponent extends WebComponent {
   }
 
   _attachEventHandlers() {
-    // this._submitBtn.addEventListener('click', this._onSubmit);
     this._shadowRoot.addEventListener('click', this._onClick )
   }
 
   _onClick = (e) => {
     const target = e.target;
-    const isRemoveBtn = target.id === this._removeBtnID; 
-    if (isRemoveBtn) {
-      const removeEvent = new CustomEvent('remove', { detail: this._trip.general.id });
-      this.dispatchEvent(removeEvent);
-      this.remove(this);
-      return
-    }
+    const handlerFn = this._handlersMap[target.id];
+    handlerFn();
   };
-
-
 }
