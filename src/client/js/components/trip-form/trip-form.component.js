@@ -31,7 +31,10 @@ export default class TripFormComponent extends WebComponent {
   }
 
   reset() {
-    this._startDate.value = this._endDate.value = this._location.value = null;
+    this._startDate.value = null;
+    this._endDate.value = null;
+    this._location.value = null;
+    this._name.value = null;
   }
   
   _queryTemplate() {
@@ -40,6 +43,8 @@ export default class TripFormComponent extends WebComponent {
     this._location = this.shadowRoot.querySelector('#location');
     this._name = this.shadowRoot.querySelector('#name');
     this._submitBtn = this.shadowRoot.querySelector('#submit');
+
+    this._endDate.setAttribute('min', new Date().toISOString());
   }
 
   _attachEventHandlers() {
