@@ -1,7 +1,15 @@
 // @import '../base/base';
 
-.can-hide {
+.can-hide-absent {
+  
+  &.hidden {
+    display: none;
+  }
+}
+
+.can-hide-present {
   transition: opacity 0.5s;
+  opacity: 1;
   
   &.hidden {
     opacity: 0 !important;
@@ -21,9 +29,25 @@
   color: $color-primary-contrast!important;
 }
 
+.bg-danger {
+  background-color: $color-danger !important;
+  color: $color-primary-contrast!important;
+}
+.bg-success {
+  background-color: $color-success !important;
+  color: $color-primary-contrast!important;
+}
+
 .color-primary {
   color: $color-primary;
-  border-color: $color-primary !important;
+}
+
+.color-danger {
+  color: $color-danger;
+}
+
+.color-success {
+  color: $color-success;
 }
 
 .shadow {
@@ -67,9 +91,13 @@
 }
 
 .column {
-  @include flex(column, center, center)  
+  @include flex(column, center, center);  
 }
 
 .row {
   @include flex(row, space-between, center)  
+}
+.responsive-container {
+  width: 100%;
+  max-width: 500px;
 }

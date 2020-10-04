@@ -1,0 +1,8 @@
+.alert {
+    @extend .column;
+    @extend .border;
+    @extend .border-radius;
+    @extend .padding-medium;
+    @extend .margin-medium;
+    @extend .shadow;
+}

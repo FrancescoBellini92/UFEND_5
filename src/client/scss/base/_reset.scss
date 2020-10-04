@@ -20,6 +20,13 @@ button {
   @extend .border-radius;
 }
 
+a {
+  @extend .padding-small;
+  @extend .border-radius;
+  text-decoration: none;
+}
+
+
 label {
   padding: 10px 0 2px 0;
 }

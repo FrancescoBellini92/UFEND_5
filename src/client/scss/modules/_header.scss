@@ -1,9 +1,16 @@
 // @import '../modifiers/modifiers';
 
 .header {
-  @include flex(row, center, center);
+  @include flex(row, space-between, center);
+  padding: 10px;
 
   .header__title {
     font-size: 16px;
+  }
+
+  .nav {
+    a {
+      color: $color-primary-contrast;
+    }
   }
 }
