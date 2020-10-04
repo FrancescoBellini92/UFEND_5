@@ -16,9 +16,15 @@ export default class TripService {
     this.index();
   }
 
+  static isEmpty(collection) {
+    const hasNoItems = collection.length === 0;
+    const hasNoKeys = collection.keys === 0;
+    return collection ? (hasNoItems && hasNoKeys) : true;
+  }
+
   index() {
     const savedTrips = JSON.parse(localStorage.getItem(TripService.STORAGE_TRIP_PROP));
-    if (savedTrips) {
+    if (savedTrips && !TripService.isEmpty(savedTrips)) {
       this.trips = savedTrips;
     }
     return this.trips;
@@ -31,13 +37,16 @@ export default class TripService {
     );
     const response = await manageRequestResponse(request);
     const newTrip = new Trip(response);
-    this.trips = this.trips.concat(newTrip);
+    this.trips.unshift(newTrip);
     this._syncStorage();
     return newTrip;
   }
 
   delete(tripId) {
     this.trips = this.trips.filter((trip) => trip.general.id !== +tripId);
+    if(TripService.isEmpty(this.trips)) {
+      localStorage.removeItem('trips');
+    }
     this._syncStorage();
   }
 
