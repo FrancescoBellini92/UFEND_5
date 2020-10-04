@@ -10,12 +10,12 @@ export function removeClass(className, ...elements) {
   elements.forEach((el) => el.classList.remove(className));
 }
 
-export function show(element) {
-  removeClass('hidden', element);
+export function show(...element) {
+  removeClass('hidden', ...element);
 }
 
-export function hide(element) {
-  addClass('hidden', element);
+export function hide(...element) {
+  addClass('hidden', ...element);
 }
 
 export function inputNotValid(inputElement) {
