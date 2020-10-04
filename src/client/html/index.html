@@ -11,18 +11,54 @@
   <body>
     <header class="header shadow bg-primary">
       <h1 class="header__title">Travel App</h1>
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#add">Add</a>
+        <a href="#add">Back</a>
+      </nav>
+      </nav>
     </header>
     <main class="column">
-      <section class="can-hide hidden" id="home">
+      <section class="can-hide-absent hidden" id="home-page">
+        <div id="empty-container" class="column can-hide-absent">
+          <div class="alert">
+            <p>
+              Seems like you have no trip planned!
+            </p>
+          </div>
+          <div class="alert">
+            <p>
+              Start by creating a new trip!
+            </p> 
+          </div>
+          <a href="#add" class="bg-primary alert">
+            Add trip
+          </a>
+        </div>
+        <div id="home-title" class="can-hide-absent hidden bg-primary alert">
+          <p>
+            Your trips
+          </p> 
+        </div>
         <div id="card-container"></div>
       </section>
-      <section class="can-hide hidden" id="add">
+      <section class="column can-hide-absent hidden" id="add-page">
+        <div class="bg-primary alert">
+          <p>
+            Create a new trip
+          </p> 
+        </div>
         <trip-form id="trip-form"></trip-form>
-        <div id="loader" class="loader can-hide hidden"></div>
+        <div id="loader" class="loader can-hide-present hidden"></div>
+        <div id="add-success" class="bg-success can-hide-present hidden alert">
+          <a>
+            New trip created! Click to see it
+          </a>
+        </div>
       </section>
-      <section class="can-hide hidden" id="detail">
+      <section class="can-hide-absent hidden" id="detail">
       </section>
-      <div class="section can-hide hidden">
+      <div class="section can-hide-absent hidden">
         <trip-list id="trip-list"></trip-list>
       </div>
       

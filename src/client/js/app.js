@@ -13,17 +13,23 @@ const tripService = new TripService();
 export default () => {
   const loader = $('#loader');
 
-  const tripForm = $('#trip-form');
-  const tripList = $('#trip-list');
+  // const tripList = $('#trip-list');
+  
+  const homePage = $('#home-page');
+  const emptyContainer = $('#empty-container');
+  const homeTitle = $('#home-title');
   const tripCardContainer = $('#card-container');
-  const home = $('#home');
+  
+  const addPage = $('#add-page');
+  const tripForm = $('#trip-form');
+  const addSuccessAlert = $('#add-success');
   const analysisContainer = $('#analysis-container');
   const confidenceInput = $('#confidence');
   const scoreInput = $('#score');
   const agreementInput = $('#agreement');
   const subjectivityInput = $('#subjectivity');
   const ironyInput = $('#irony');
-  tripList.updateProps(tripService.trips);
+  // tripList.updateProps(tripService.trips);
   initCards();
 
   function initCards() {
@@ -46,57 +52,54 @@ export default () => {
     tripForm.reset();
     const tripCard = new TripCardComponent();
     tripCard.updateProps(trip)
-    tripCardContainer.appendChild(tripCard);
-    tripList.add(trip.general);
+    tripCardContainer.insertBefore(tripCard, tripCardContainer.firstChild);
+    show(addSuccessAlert);
+    // tripList.add(trip.general);
   });
+
+  function navigateTo(hash) {
+    window.location.hash = hash;
+  }
 
   async function onSubmit({detail}) {
     try {
       addTripReq$.next(detail.name, detail.startDate, detail.endDate, detail.location);
-      // debugger;
-      // if (inputNotValid(textInput)) {
-      //   throw new Error('Validation error: input was not valid');
-      // }
-      // e.preventDefault();
-      // show(loader);
-      // const escapedText = escape(textInput.value)
-      // const url = `${environment.APIURL}?text=${escapedText}`;
-      // const analysisRequest = await sendRequest(url, isProd);
-      // const analysisResponse = await manageRequestResponse(
-      //   analysisRequest,
-      //   response => !response.ok,
-      //   response => response.status === 400 ? alert('Sorry, we could not analyze this text: try with a longer sentence') : null);
-      // renderResponse(analysisResponse);
-      // show(analysisContainer);
     } catch (e) {
       alert('Something went wrong :(')
-    } finally {
-      // hide(loader)
-    }
-
-    // function renderResponse(response) {
-    //   confidenceInput.innerText = response.confidence;
-    //   scoreInput.innerText = response.score_tag;
-    //   agreementInput.innerText = response.agreement.toLowerCase();
-    //   subjectivityInput.innerText = response.subjectivity.toLowerCase();
-    //   ironyInput.innerText = response.irony.toLowerCase();
-    // }
+    } 
   }
 
   function onRemove({detail}) {
     const tripId = detail;
     tripService.delete(tripId);
+    if (!tripService.trips.length) {
+      show(emptyContainer)
+      hide(homeTitle)
+    }
   }
 
   function onNavigation() {
-    const hash = window.location.hash ?? '#home';
-    routeManager[hash]();
-  }
-
-  const routeManager = {
-    '#home': () => {
-      show(home);
+    const hash = window.location.hash;
+    let navigationFn;
+    switch (hash) {
+      case '#add':
+        navigationFn = () => {
+          hide(homePage)
+          hide(addSuccessAlert);
+          show(addPage);    
+        };
+        break;
+      default:
+        navigationFn = () => {
+          hide(addPage)
+          if (tripService.trips.length) {
+            hide(emptyContainer)
+            show(homeTitle)
+          }
+          show(homePage);    
+        };
     }
+    navigationFn();
   }
 
   function initApp() {
@@ -104,9 +107,8 @@ export default () => {
   }
 
   tripForm.addEventListener('submit', onSubmit);
-  tripList.addEventListener('remove', onRemove)
+  // tripList.addEventListener('remove', onRemove)
   tripCardContainer.addEventListener('remove', onRemove)
-  window.addEventListener('popstate', onNavigation);
   window.addEventListener('hashchange', onNavigation);
 
   initApp();
