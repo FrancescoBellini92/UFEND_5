@@ -3,7 +3,7 @@ import '@babel/polyfill';
 
 describe('request utils', () => {
   let isProd;
-  const mockResponseBody = { data: { foo: 'bar' } };
+  const mockResponseBody = {  foo: 'bar' };
   let mockFetchReturnVal;
 
   beforeEach(() => {
@@ -32,7 +32,7 @@ describe('request utils', () => {
     const mockUrl = 'http://foo';
     const response = await sendRequest(mockUrl, isProd);
     const responsePayload = await manageRequestResponse(response);
-    expect(responsePayload).toStrictEqual(mockResponseBody.data);
+    expect(responsePayload).toStrictEqual(mockResponseBody);
   });
 
   test('catch error', async() => {
