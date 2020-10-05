@@ -11,6 +11,7 @@ import {
 export default class TripService {
   static STORAGE_TRIP_PROP = "trips";
   trips = [];
+  currentTrip;
 
   constructor() {
     this.index();
@@ -18,8 +19,7 @@ export default class TripService {
 
   static isEmpty(collection) {
     const hasNoItems = collection.length === 0;
-    const hasNoKeys = collection.keys === 0;
-    return collection ? (hasNoItems && hasNoKeys) : true;
+    return collection ? hasNoItems : true;
   }
 
   index() {
