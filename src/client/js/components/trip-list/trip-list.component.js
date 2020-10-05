@@ -1,6 +1,7 @@
 import template from "./trip-list.component.html";
 import styles from './trip-list.component.scss';
 import WebComponent from "../../base/web-component";
+
 export default class TripListComponent extends WebComponent {
 
   static SELECTOR = "trip-list";
@@ -8,6 +9,12 @@ export default class TripListComponent extends WebComponent {
   _html = template;
   _styles = styles;
   _list;
+
+  data = [];
+
+  makeListStrategyFn;
+
+  canRemove;
 
   constructor() {
     super();
@@ -18,25 +25,20 @@ export default class TripListComponent extends WebComponent {
     super.define(TripListComponent);
   }
 
-  static _makeListEl({id ,name, location, start, end}) {
-    const listEl = document.createElement("li");
-    listEl.innerHTML = `<p><strong>${name}</strong></p><p>${location} (${start} - ${end})</p><button data-id=${id}>&#10005;</button>`;
-    listEl.classList.add("list__item");
-    listEl.setAttribute('data-id', id);
-    return listEl;
-  }
-
-  add({ id, name, location, start, end }) {
-    const listEl = this._makeListEl(id, name, location, start, end);
+  add(item) {
+    this.data.unshift(item);
+    const listEl = this._makeListEl(item);
     this._list.appendChild(listEl);
   }
 
-  updateProps(trips) {
+  addMany(data) {
+    this.data = data;
     const fragment = document.createDocumentFragment();
-    trips.forEach(trip => {
-      const listEl = TripListComponent._makeListEl(trip.general);
+    data.forEach((item, index) => {
+      const listEl = this._makeListEl(item, index);
       fragment.appendChild(listEl);
-    })
+    });
+    this._list.innerHTML = '';
     this._list.appendChild(fragment);
   }
 
@@ -50,16 +52,23 @@ export default class TripListComponent extends WebComponent {
 
   _onClick = (e) => {
     const target = e.target;
-    let tripId;
+    let idToRemove;
     if (target.nodeName === 'BUTTON') {
-      tripId = target.attributes['data-id'].value;
-      const removeEvent = new CustomEvent('remove', { detail: tripId });
+      idToRemove = target.parentElement.attributes['data-id'].value;
+      this.data.splice(idToRemove,1);
+      const removeEvent = new CustomEvent('remove', { detail: { idToRemove, element: this } });
       this.dispatchEvent(removeEvent);
       this._list.removeChild(target.parentNode);
-    } else {
-      tripId = target.parentNode.attributes['data-id'].value;
-      const viewEvent = new CustomEvent('view', { detail: tripId });
-      this.dispatchEvent(viewEvent);
-    }
-  };
+    } 
+  }
+
+    _makeListEl(item, index) {
+      const listEl = document.createElement("li");
+      listEl.innerHTML = 
+      listEl.innerHTML = this.makeListStrategyFn(item);
+      listEl.classList.add("list__item");
+      listEl.setAttribute('data-id', index);
+      return listEl;
+  }
+
 }

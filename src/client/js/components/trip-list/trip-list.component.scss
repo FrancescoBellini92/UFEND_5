@@ -3,6 +3,9 @@
 .list {
   @extend .border;
   @extend .border-radius;
+  max-width: 400px;
+  margin: 20px;
+  
   .list__item {
     @extend .padding-medium;
     border-bottom: 1px solid $color-border;
