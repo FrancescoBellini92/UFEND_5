@@ -39,7 +39,7 @@ module.exports = {
         loader: 'html-loader',
       },
       {
-        test: /\.(ico|ttf)$/,
+        test: /\.ttf$/,
         loader: ['file-loader']
       }
     ]

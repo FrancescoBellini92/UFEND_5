@@ -7,7 +7,7 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const WorkBoxPlugin = require('workbox-webpack-plugin');
 
 const Webpack = require('webpack');
-const { MODE } = require('./src/server/environment');
+const { MODE, PORT } = require('./src/server/environment');
 
 module.exports = {
   entry: './src/client/index.js',
@@ -25,11 +25,31 @@ module.exports = {
       },
       {
         test: /\.scss$/,
+        exclude: [/\.component.scss$/, /node_modules/],
         // mini will extract css into a single file
         loader: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       },
       {
-        test: /\.(ico|ttf)$/,
+        test: /\.component.scss$/,
+          exclude: /node_modules/,
+          use: [
+            "sass-to-string",
+            {
+              loader: "sass-loader",
+              options: {
+                sassOptions: {
+                  outputStyle: "compressed",
+                },
+              }
+            }
+          ]
+        },
+        {
+          test: /\.html$/i,
+          loader: 'html-loader',
+        },
+      {
+        test: /\.ttf$/,
         loader: ['file-loader']
       }
     ]
@@ -41,7 +61,7 @@ module.exports = {
     new CleanWebpackPlugin({}),
     new MiniCssExtractPlugin({}),
     new Webpack.DefinePlugin({
-      'process.env.APIURL': JSON.stringify('/sentiment-analysis'),
+      'process.env.APIURL': JSON.stringify(`http://localhost:${PORT}/trip-info`),
       'process.env.MODE': JSON.stringify(MODE)
     }),
     new WorkBoxPlugin.GenerateSW({
@@ -51,9 +71,9 @@ module.exports = {
     new FaviconsWebpackPlugin({
       logo: './src/assets/icons/icon.png',
       favicons: {
-        appName: 'Sentiment Analysis',
-        appShortName: 'Sentiment Analysis',
-        appDescription: 'NLP text analyzer',
+        appName: 'Travel app',
+        appShortName: 'Travel app',
+        appDescription: '',
         version: '1.0',
         start_url: '/',
         scope: '/',
