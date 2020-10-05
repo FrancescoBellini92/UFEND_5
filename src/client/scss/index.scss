@@ -1,6 +1,4 @@
-@import './base/base';
-@import './modifiers/modifiers';
-@import './base/reset';
+@import './_shared.scss';
 @import './layout/layout';
 @import './modules/header';
 @import './modules/loader';
