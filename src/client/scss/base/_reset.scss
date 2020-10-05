@@ -15,17 +15,23 @@ input {
   width: 100%;
 }
 
+
 button {
   @extend .padding-small;
   @extend .border-radius;
+
+  &:hover {
+    background-color: $color-primary;
+    color: $color-primary-contrast;
+  }
 }
 
 a {
   @extend .padding-small;
   @extend .border-radius;
   text-decoration: none;
+  color: inherit;
 }
-
 
 label {
   padding: 10px 0 2px 0;
