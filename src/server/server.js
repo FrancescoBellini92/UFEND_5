@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const moment = require('moment');
 const { PORT, MODE, API_WEATHERBIT_MAX_FORECAST } = require('./environment');
+const { EmptyResponseError } = require('./factories/response-factory');
 
 const { getGeoData, getWeatherData, getPixData } = require('./controllers/controllers');
 const WeatherResponse = require('./models/weather-response.model');
@@ -55,10 +56,10 @@ app.get(
       const APIResponse = {general, geo: geoAPIResponse, pix: pixAPIResponse, weather: weatherAPIResponse};
       res.json(APIResponse);
     } catch (e) {
-      res.status(500).send()
-      if (MODE === 'DEV') {
-        console.error(e);
+      if (e instanceof EmptyResponseError) {
+        res.status(400).json({ error: 'bad location' });
       }
+      throw e;
     }
   }
 );

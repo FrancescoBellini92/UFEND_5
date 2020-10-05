@@ -24,9 +24,6 @@ async function getDataFromAPI(req, urlBuilderFn, factoryFn, emptyResponseFallbac
     const parsedResponse = factoryFn(response);
     return parsedResponse;
   } catch (e) {
-    if (e instanceof EmptyResponseError) {
-      return emptyResponseFallback;
-    }
     throw e;
   }
 };
