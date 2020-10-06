@@ -33,7 +33,7 @@ export default () => {
   const weatherList = $('#weather-list');
 
   weatherList.makeListStrategyFn = ({valid_date, temp, weather}) => 
-    `<p><strong>${moment(valid_date).format('L')}</strong></p><p>${weather.description} - ${temp} C</p><button>&#10005;</button>`; 
+    `<p><strong>${moment(valid_date).format('L')}</strong></p><p>${weather.description} - ${temp} °C</p><button>&#10005;</button>`; 
   const removedAlert = $('#detail-deleted');
 
   const cardTripMap = new Map();
