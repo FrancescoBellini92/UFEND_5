@@ -50,7 +50,7 @@ export default () => {
   }
 
   const addTripReq$ = new Observable(async([name, start, end, location]) => {
-      hide(addErrorAlert);
+      hide(addErrorAlert, addSuccessAlert);
       show(loader);
       const newTrip = await tripService.add(name, start, end, location);
       return newTrip;
