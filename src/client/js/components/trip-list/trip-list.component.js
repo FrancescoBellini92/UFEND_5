@@ -1,6 +1,7 @@
 import template from "./trip-list.component.html";
 import styles from './trip-list.component.scss';
 import WebComponent from "../../base/web-component";
+import TripService from "../../services/trip.service";
 
 export default class TripListComponent extends WebComponent {
 
@@ -33,6 +34,10 @@ export default class TripListComponent extends WebComponent {
 
   addMany(data) {
     this.data = data;
+    if (TripService.isEmpty(this.data)) {
+      this._list.innerHTML = '<li class="list__item">Sorry, there is no data available</li>';
+      return;
+    }
     const fragment = document.createDocumentFragment();
     data.forEach((item, index) => {
       const listEl = this._makeListEl(item, index);
