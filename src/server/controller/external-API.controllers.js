@@ -16,7 +16,7 @@ const {
 
 const fetch = require('node-fetch');
 
-async function getDataFromAPI(req, urlBuilderFn, factoryFn, emptyResponseFallback = []) {
+async function getDataFromAPI(req, urlBuilderFn, factoryFn, emptyResponseFallback) {
   try {
     const url = urlBuilderFn(req.query);
     const request = await fetch(url);
@@ -24,6 +24,11 @@ async function getDataFromAPI(req, urlBuilderFn, factoryFn, emptyResponseFallbac
     const parsedResponse = factoryFn(response);
     return parsedResponse;
   } catch (e) {
+    if (e instanceof EmptyResponseError) {
+      if(emptyResponseFallback) {
+        return emptyResponseFallback;
+      }
+    }
     throw e;
   }
 };
@@ -33,6 +38,7 @@ async function getGeoData(req) {
     req,
     (queryParams) => `${API_GEO_BASEURL}?username=${API_KEY_GEO}&name=${queryParams.location}`,
     makeGeoResponse
+    // no emptyResponse fallback: other API requests depend on geo payload, so exception must be thrown
   );
 }
 
@@ -40,7 +46,8 @@ async function getWeatherData(req) {
   return getDataFromAPI(
     req,
     (queryParams) => `${API_WEATHERBIT_BASEURL}?lat=${queryParams.lat}&lon=${queryParams.lon}&days=${queryParams.days}&key=${API_KEY_WEATHERBIT}`,
-    makeWeatherResponse
+    makeWeatherResponse,
+    []
   );
 }
 
@@ -48,7 +55,8 @@ async function getPixData(req) {
   return getDataFromAPI(
     req,
     (queryParams) => `${API_PIXABAY_BASEURL}?key=${API_KEY_PIXABAY}&q=${queryParams.location}&category=places&editors_choice=true&per_page=10`,
-    makePixResponse
+    makePixResponse,
+    []
   );
 }
 
