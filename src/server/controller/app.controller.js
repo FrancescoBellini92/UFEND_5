@@ -22,7 +22,7 @@ app.get(
   '/trip-info',
   (req, res, next) => {
     // check parameters defined
-    const hasQueryParams = req.query && req.query.name && req.query.start && req.query.end && req.query.location; 
+    const hasQueryParams = req.query && req.query.name && req.query.start && req.query.end && req.query.location;
     hasQueryParams ? next() : res.status(400).json({ error: 'missing required query parameters' });
   },
   (req, res, next) => {
