@@ -1,6 +1,6 @@
 import template from './trip-card.component.html';
 import styles from './trip-card.component.scss';
-import WebComponent from '../../base/web-component';
+import WebComponent from '../../base/web.component';
 import Trip from '../../models/trip.model';
 import * as moment from 'moment';
 import { show, hide } from './../../DOM-utils/DOM-utils';

@@ -1,7 +1,7 @@
 import template from "./trip-form.component.html";
 import styles from './trip-form.component.scss';
 import { inputNotValid } from '../../DOM-utils/DOM-utils';
-import WebComponent from '../../base/web-component';
+import WebComponent from '../../base/web.component';
 
 // function testDecorator(target, name, descriptor) {
 //   debugger;
