@@ -31,6 +31,7 @@ export default () => {
   const detailCard = $('#detail-card');
   detailCard.hideChildren('#view');
   const weatherList = $('#weather-list');
+  weatherList.title = 'Weather forecast';
 
   weatherList.makeListStrategyFn = ({valid_date, temp, weather}) => 
     `<p><strong>${moment(valid_date).format('L')}</strong></p><p>${weather.description} - ${temp} °C</p><button>&#10005;</button>`; 
@@ -91,7 +92,6 @@ export default () => {
   function scrollOnTop() {
     window.scrollTo({
       top: 0,
-      left: 0,
       behavior: 'smooth'
     });  }
 
