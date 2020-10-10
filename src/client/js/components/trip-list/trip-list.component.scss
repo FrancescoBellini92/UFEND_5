@@ -1,10 +1,7 @@
 @import "../../../scss/shared";
 
 .list {
-  @extend .border;
-  @extend .border-radius;
-  max-width: 400px;
-  margin: 20px;
+  width: 100%;
   
   .list__item {
     @extend .padding-medium;
@@ -17,9 +14,10 @@
       right: 5px;
     }
   }
+}
 
-  .list__title {
-    @extend .padding-medium;
-    font-size: 12px;
-  }
+.list__title {
+  @extend .padding-medium;
+  width: 100%;
+  font-size: 12px;
 }

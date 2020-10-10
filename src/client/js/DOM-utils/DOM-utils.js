@@ -12,10 +12,12 @@ export function removeClass(className, ...elements) {
 
 export function show(...element) {
   removeClass('hidden', ...element);
+  removeClass('open', ...element);
 }
 
 export function hide(...element) {
   addClass('hidden', ...element);
+  removeClass('open', ...element);
 }
 
 export function inputNotValid(inputElement) {

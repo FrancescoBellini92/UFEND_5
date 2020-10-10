@@ -24,6 +24,17 @@
   width: 120px;
 }
 
+.collapsable {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 1s;
+  
+  &.open {
+    overflow: scroll;
+    max-height: 400px;  
+  }
+}
+
 .bg-primary {
   background-color: $color-primary !important;
   color: $color-primary-contrast!important;
@@ -90,8 +101,14 @@
   align-items: $align;
 }
 
+.page {
+  height: 100%;
+}
+
 .column {
   @include flex(column, center, center);  
+  max-width: 400px;
+  margin: 20px;
 }
 
 .row {

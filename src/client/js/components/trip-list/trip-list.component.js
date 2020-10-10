@@ -1,21 +1,24 @@
 import template from "./trip-list.component.html";
 import styles from './trip-list.component.scss';
-import WebComponent from "../../base/web-component";
+import WebComponent from "../../base/web.component";
 import TripService from "../../services/trip.service";
+import { addClass, removeClass, show } from "../../DOM-utils/DOM-utils";
 
 export default class TripListComponent extends WebComponent {
 
   static SELECTOR = "trip-list";
 
-  _html = template;
-  _styles = styles;
-  _list;
-
   data = [];
 
   makeListStrategyFn;
 
-  canRemove;
+
+  _html = template;
+  _styles = styles;
+  _listEl;
+  _titleEl;
+
+  _isCollapsed = true;
 
   constructor() {
     super();
@@ -26,33 +29,43 @@ export default class TripListComponent extends WebComponent {
     super.define(TripListComponent);
   }
 
+  get title() {
+    return this._title;
+  }
+
+  set title(val) {
+    this._titleEl.textContent = val;
+    show(this._titleEl);
+  }
+
   add(item) {
     this.data.unshift(item);
     const listEl = this._makeListEl(item);
-    this._list.appendChild(listEl);
+    this._listEl.appendChild(listEl);
   }
 
   addMany(data) {
     this.data = data;
     if (TripService.isEmpty(this.data)) {
-      this._list.innerHTML = '<li class="list__item">Sorry, there is no data available</li>';
+      this._listEl.innerHTML = '<li class="list__item">Sorry, there is no data available</li>';
       return;
     }
     const fragment = document.createDocumentFragment();
     data.forEach((item, index) => {
       const listEl = this._makeListEl(item, index);
       fragment.appendChild(listEl);
-    });
-    this._list.innerHTML = '';
-    this._list.appendChild(fragment);
+    }); 
+    this._listEl.innerHTML = '';
+    this._listEl.appendChild(fragment);
   }
 
   _queryTemplate() {
-    this._list = this.shadowRoot.querySelector("#list");
+    this._listEl = this.shadowRoot.querySelector("#list");
+    this._titleEl = this.shadowRoot.querySelector("#title");
   }
 
   _attachEventHandlers() {
-    this._list.addEventListener('click', this._onClick);
+    this.shadowRoot.addEventListener('click', this._onClick);
   }
 
   _onClick = (e) => {
@@ -63,17 +76,20 @@ export default class TripListComponent extends WebComponent {
       this.data.splice(idToRemove,1);
       const removeEvent = new CustomEvent('remove', { detail: { idToRemove, element: this } });
       this.dispatchEvent(removeEvent);
-      this._list.removeChild(target.parentNode);
+      this._listEl.removeChild(target.parentNode);
+    }
+    if (target.nodeName === 'H2') {
+      debugger;
+      this._listEl.className.includes('open') ? removeClass('open', this._listEl) : addClass('open', this._listEl);
     } 
   }
 
-    _makeListEl(item, index) {
-      const listEl = document.createElement("li");
-      listEl.innerHTML = 
-      listEl.innerHTML = this.makeListStrategyFn(item);
-      listEl.classList.add("list__item");
-      listEl.setAttribute('data-id', index);
-      return listEl;
+  _makeListEl(item, index) {
+    const listEl = document.createElement("li");
+    listEl.innerHTML = this.makeListStrategyFn(item);
+    listEl.classList.add("list__item");
+    listEl.setAttribute('data-id', index);
+    return listEl;
   }
 
 }
