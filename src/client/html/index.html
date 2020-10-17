@@ -20,34 +20,12 @@
       </nav>
     </header>
     <main class="page">
-      <section class="can-hide-absent hidden page" id="home-page">
-        <div id="empty-container" class="column can-hide-absent">
-          <div class="alert">
-            <p>
-              Seems like you have no trip planned!
-            </p>
-          </div>
-          <div class="alert">
-            <p>
-              Start by creating a new trip!
-            </p> 
-          </div>
-          <a href="#add" class="bg-primary alert">
-            Add trip
-          </a>
-        </div>
-        <div id="home-title" class="can-hide-absent hidden bg-primary alert">
-          <p>
-            Your trips
-          </p> 
-        </div>
-        <div id="card-container"></div>
-      </section>
+      <home-page id="home-page"></home-page>
       <section class="column can-hide-absent hidden" id="add-page">
         <div class="bg-primary alert">
           <p>
             Create a new trip
-          </p> 
+          </p>
         </div>
         <trip-form id="trip-form"></trip-form>
         <div id="loader" class="loader can-hide-present hidden"></div>
@@ -66,7 +44,7 @@
         <div id="detail-title" class="bg-primary alert can-hide-absent">
           <p>
             Selected trip
-          </p> 
+          </p>
         </div>
         <trip-card id="detail-card" class="can-hide-absent"></trip-card>
         <trip-list id="weather-list" class="can-hide-absent"></trip-list>
@@ -75,7 +53,7 @@
             You deleted this trip! Go back to the home page
           </a>
         </div>
-      </section>      
+      </section>
     </main>
     <!-- <script>
       // Check that service workers are supported

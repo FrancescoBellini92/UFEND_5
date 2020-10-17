@@ -1,4 +1,4 @@
-import { $, addClass, removeClass, show, hide, inputNotValid } from '../DOM-utils';
+import { addClass, removeClass, show, hide, inputNotValid } from '../DOM-utils';
 
 describe('DOM utils functions', () => {
   let targetEl;
@@ -11,17 +11,7 @@ describe('DOM utils functions', () => {
   });
 
   afterEach(() => {
-    document.innerHTML = '';
-  });
-
-  test('selects by id', () => {
-    const selectedEl = $('#element-to-select');
-    expect(selectedEl).toEqual(targetEl);
-  });
-
-  test('selects by class', () => {
-    const selectedEl = $('.class-to-select').item(0);
-    expect(selectedEl).toEqual(targetEl);
+    document['innerHTML'] = '';
   });
 
   test('adds class', () => {

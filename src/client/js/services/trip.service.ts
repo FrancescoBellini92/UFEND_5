@@ -1,19 +1,25 @@
 import Trip from "../models/trip.model";
 import environment from '../environment';
-
-const isProd = environment.MODE === 'PROD';
+import BaseService from '../base/base.service';
 
 import {
   sendRequest,
   manageRequestResponse,
 } from "../request-utils/request-utils";
+import TripRequest from "../models/trip.request";
 
-export default class TripService {
+const isProd = environment.MODE === 'PROD';
+
+export default class TripService extends BaseService{
+  static token = 'tripService';
+  static isSingleton = true;
+  static factoryFn = () => new TripService();
   static STORAGE_TRIP_PROP = "trips";
   trips = [];
   currentTrip;
 
   constructor() {
+    super();
     this.index();
   }
 
@@ -30,13 +36,13 @@ export default class TripService {
     return this.trips;
   }
 
-  async add(name, start, end, location) {
+  async add(tripRequest: TripRequest) {
+    const { name, startDate, endDate, location } = tripRequest;
     const request = await sendRequest(
-      `${environment.APIURL}?name=${name}&start=${start}&end=${end}&location=${location}`,
+      `${environment.APIURL}?name=${name}&start=${startDate}&end=${endDate}&location=${location}`,
       isProd
     );
-    const response = await manageRequestResponse(request);
-    const newTrip = new Trip(response);
+    const newTrip: Trip = await manageRequestResponse<Trip>(request);
     this.trips.unshift(newTrip);
     this._syncStorage();
     return newTrip;
@@ -59,3 +65,5 @@ export default class TripService {
   }
 
 }
+
+TripService.addProvider();

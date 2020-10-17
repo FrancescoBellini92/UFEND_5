@@ -1,38 +1,36 @@
-import template from './trip-card.component.html';
-import styles from './trip-card.component.scss';
-import WebComponent from '../../base/web.component';
+import ShadowWebComponent from "../../base/shadow-web.component";
 import Trip from '../../models/trip.model';
 import * as moment from 'moment';
-import { show, hide } from './../../DOM-utils/DOM-utils';
+import { show, hide } from '../../DOM-utils/DOM-utils';
+import { CardRemoveEvent, CardViewEvent } from "../../models/events";
 
+const template: string = require('./trip-card.component.html') ;
+const styles: { default: string } = require('./trip-card.component.scss');
 
-// function testDecorator(target, name, descriptor) {
-//   debugger;
-// }
-// @testDecorator()
-export default class TripCardComponent extends WebComponent {
+export default class TripCardComponent extends ShadowWebComponent {
 
   static SELECTOR = "trip-card";
   static _PICTURE_ID  = 'picture';
 
-  _html = template;
-  _styles = styles;
+  protected _html = template;
+  protected _styles = styles;
+  private _startDate: HTMLElement;
+  private _endDate: HTMLElement;
+  private _location: HTMLElement;
+  private _name: HTMLElement;
 
-  _startDate;
-  _endDate;
-  _location;
-  _name;
+  private _trip: Trip;
 
-  _trip;
-  
+  private _pictureContainer: any;
 
   _handlersMap = {
     'remove': () => {
-      const removeEvent = new CustomEvent('remove', { detail: { id: this._trip.general.id, element: this }, bubbles: true });
+      const removeEvent = new CardRemoveEvent('remove', { detail: this._trip.general.id , bubbles: true });
+      hide(this);
       this.dispatchEvent(removeEvent);
     },
     'view': () => {
-      const viewEvent = new CustomEvent('view', { detail: {trip: this._trip, element: this}, bubbles: true});
+      const viewEvent = new CardViewEvent('view', { detail: this._trip , bubbles: true});
       this.dispatchEvent(viewEvent);
     }
   }
@@ -46,18 +44,18 @@ export default class TripCardComponent extends WebComponent {
     super.define(TripCardComponent);
   }
 
-  hideChildren(selector) {
+  hideChildren(selector: string): void {
     const element = this.shadowRoot.querySelector(selector);
     hide(element);
   }
 
-  showChildren(selector) {
+  showChildren(selector: string): void {
     const element = this.shadowRoot.querySelector(selector);
     show(element);
   }
 
-  updateProps(tripData) {
-    this._trip = new Trip(tripData);
+  updateProps(trip: Trip) {
+    this._trip = trip;
     const { id, name, location, start, end } = this._trip.general;
     const pix = this._trip.pix.webformatURL;
     this._name.textContent = name;
@@ -66,16 +64,16 @@ export default class TripCardComponent extends WebComponent {
     this._endDate.textContent = moment(end).format('L');
     const img = this.shadowRoot.querySelector(`#${TripCardComponent._PICTURE_ID}`) ?? document.createElement('img');
     if (pix) {
-      img.id = TripCardComponent._PICTURE_ID; 
+      img.id = TripCardComponent._PICTURE_ID;
       img.classList.add('card__img');
-      img.src = pix;
+      img['src'] = pix;
       this._pictureContainer.appendChild(img);
     } else {
       img.remove();
     }
   }
-  
-  _queryTemplate() {
+
+  protected _queryTemplate(): void {
     this._startDate = this._shadowRoot.querySelector('#start-date');
     this._endDate = this._shadowRoot.querySelector('#end-date');
     this._location = this._shadowRoot.querySelector('#location');
@@ -83,12 +81,12 @@ export default class TripCardComponent extends WebComponent {
     this._pictureContainer = this._shadowRoot.querySelector('#picture-container');
   }
 
-  _attachEventHandlers() {
+  protected _attachEventHandlers(): void {
     this._shadowRoot.addEventListener('click', this._onClick )
   }
 
-  _onClick = (e) => {
-    const target = e.target;
+  private _onClick = (e: Event) => {
+    const target = e.target as HTMLElement;
     const handlerFn = this._handlersMap[target.id];
     handlerFn();
   };

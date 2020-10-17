@@ -3,7 +3,7 @@ import '@babel/polyfill';
 
 describe('request utils', () => {
   let isProd;
-  const mockResponseBody = {  foo: 'bar' };
+  const mockResponseBody = { foo: 'bar' };
   let mockFetchReturnVal;
 
   beforeEach(() => {
