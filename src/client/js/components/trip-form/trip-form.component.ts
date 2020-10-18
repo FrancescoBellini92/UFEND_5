@@ -1,16 +1,17 @@
 import { inputNotValid } from '../../DOM-utils/DOM-utils';
-import ShadowWebComponent from '../../base/shadow-web.component';
 import { AddFormSubmitEvent } from '../../models/events';
+import { Component } from '../../base/decorators';
+import WebComponent from '../../base/web.component';
 
 const template: string = require('./trip-form.component.html');
-const styles: { default: string } = require('./trip-form.component.scss');
-
-export default class TripFormComponent extends ShadowWebComponent {
-
-  static SELECTOR = "trip-form";
-
-  protected _html = template;
-  protected _styles = styles;
+const style: { default: string } = require('./trip-form.component.scss');
+@Component({
+  selector: "trip-form",
+  template,
+  hasShadow: true,
+  style
+})
+export default class TripFormComponent extends WebComponent {
 
   private _startDate: HTMLInputElement;
   private _endDate: HTMLInputElement;

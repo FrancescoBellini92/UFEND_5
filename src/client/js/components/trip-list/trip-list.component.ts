@@ -1,20 +1,24 @@
-const template = require("./trip-list.component.html");
-const styles = require('./trip-list.component.scss');
-import ShadowWebComponent from "../../base/shadow-web.component";
 import TripService from "../../services/trip.service";
 import { addClass, removeClass, show } from "../../DOM-utils/DOM-utils";
 import { ListRemoveEvent } from "../../models/events";
+import { Component } from "../../base/decorators";
+import WebComponent from "../../base/web.component";
 
-export default class TripListComponent extends ShadowWebComponent {
+const template = require("./trip-list.component.html");
+const style = require('./trip-list.component.scss');
 
-  static SELECTOR = "trip-list";
+@Component({
+  selector: 'trip-list',
+  template,
+  hasShadow: true,
+  style
+})
+export default class TripListComponent extends WebComponent {
 
   data: any[] = [];
 
   makeListStrategyFn: { (item: any): string } = item => '';
 
-  protected _html = template;
-  protected _styles = styles;
   private _listEl: HTMLElement;
   private _titleEl: HTMLElement;
 
