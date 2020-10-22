@@ -9,10 +9,10 @@ import TripCardComponent from './components/trip-card/trip-card.component';
 import { AddFormSubmitEvent, CardRemoveEvent, CardViewEvent, ListRemoveEvent } from './models/events';
 import TripRequest from './models/trip.request';
 import Trip from './models/trip.model';
-TripCardComponent.define();
-HomePageComponent.define();
-TripFormComponent.define();
-TripListComponent.define();
+import registerComponents from './components/components.module';
+import factory from './factory/factory';
+
+registerComponents();
 
 const tripService = new TripService();
 
@@ -156,9 +156,19 @@ export default () => {
   }
 
   function initApp() {
+    document.addEventListener('dependencyInjection', (e: CustomEvent) => {
+      const client = e.target;
+      const token = e.detail;
+      const dependency = factory.make(e.detail);
+      Object.defineProperty(client, token, dependency);
+      debugger;
+    })
     initCards();
     onNavigation();
   }
+
+
+
 
   tripForm.addEventListener('submit', onSubmit);
   homePage.addEventListener('remove', onRemoveFromHome);

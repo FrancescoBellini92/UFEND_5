@@ -1,19 +1,21 @@
 import Trip from "../models/trip.model";
 import environment from '../environment';
-import BaseService from '../base/base.service';
+import { Service } from '../base/service';
 
 import {
   sendRequest,
   manageRequestResponse,
 } from "../request-utils/request-utils";
 import TripRequest from "../models/trip.request";
+import { Injectable } from "../base/service";
 
 const isProd = environment.MODE === 'PROD';
 
-export default class TripService extends BaseService{
-  static token = 'tripService';
-  static isSingleton = true;
-  static factoryFn = () => new TripService();
+@Injectable({
+  injectionToken: 'tripService',
+  isSingleton: true
+})
+export default class TripService extends Service{
   static STORAGE_TRIP_PROP = "trips";
   trips = [];
   currentTrip;
@@ -21,6 +23,10 @@ export default class TripService extends BaseService{
   constructor() {
     super();
     this.index();
+  }
+
+  static factoryFn(): TripService {
+    return new TripService();
   }
 
   static isEmpty(collection) {
@@ -65,5 +71,3 @@ export default class TripService extends BaseService{
   }
 
 }
-
-TripService.addProvider();

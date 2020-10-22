@@ -1,21 +1,30 @@
-export default class Factory {
+import { Service } from "../base/service";
 
-  providers = {};// TOKEN: FACTORY FN
+class Factory {
+
+  providers: DependencyProviders = {};
 
   instances = {};
 
   constructor() {}
 
-  addInjectable = (token, factoryFn) => this.providers[token] = factoryFn;
+  addInjectable(injectionToken: string, factoryFn:  {(): Service}) {
+    this.providers[injectionToken] = factoryFn;
+  }
 
-  make = token => {
-    const factoryFn = this.providers[token];
+  make(injectionToken: string): Service {
+    const factoryFn = this.providers[injectionToken];
     let instance = factoryFn();
-    const previousInstance = this.instances[token];
-    if (instance.isSigleton && previousInstance) {
+    const previousInstance = this.instances[injectionToken];
+    if (instance.isSingleton && previousInstance) {
       instance = previousInstance;
     }
     return instance;
   }
-
 };
+
+interface DependencyProviders {
+  [injectionToken: string]: {(): Service}
+}
+
+export default new Factory();

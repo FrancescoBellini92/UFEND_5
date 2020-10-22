@@ -2,10 +2,10 @@ export default abstract class WebComponent extends HTMLElement {
 
   static selector: string;
 
-  protected _html: string;
-  protected _hasShadow: boolean;
+  public html: string;
+  public hasShadow: boolean;
+  public _style: { default: string };
   protected _shadowRoot: ShadowRoot;
-  protected _style: { default: string };
 
   constructor() {
     super();
@@ -25,9 +25,9 @@ export default abstract class WebComponent extends HTMLElement {
   }
 
   protected _attachHTML(): void {
-    this._shadowRoot = this._hasShadow ? this.attachShadow({ mode: "open" }): null;
+    this._shadowRoot = this.hasShadow ? this.attachShadow({ mode: "open" }): null;
     const root = this._shadowRoot ?? this;
-    root.innerHTML = this._html;
+    root.innerHTML = this.html;
   }
 
   protected _attachStyle(): void {

@@ -1,9 +1,8 @@
 export default class Observable<TRequest, TResponse> {
-  // defines base class
 
-  private _functions: { (item: TResponse): TResponse }[] = []; // functions to be composed before subscription
+  private _functions: { (item: any): any }[] = []; // functions to be composed before subscription
   private _subscribers: { (item: TResponse): any }[] = [];
-  private _children: Observable<TRequest, TResponse>[] = []; // observables create a tree structure of father-children
+  private _children: Observable<TRequest, TResponse>[] = []; // observables create a tree structure
 
   constructor(private _dataSource: { (input: TRequest): Promise<TResponse>}) {}
 
@@ -18,20 +17,19 @@ export default class Observable<TRequest, TResponse> {
 
   pipe(...functions:  { (item: TResponse): TResponse }[]) {
     const child = this._makeChild();
-    child._functions.concat(functions); // give new pipe functions to clone and return it
+    child._functions = child._functions.concat(functions); // give new pipe functions to clone and return it
     return child;
   }
 
-  async _update(params: TRequest) {
-    let result = await this._dataSource(params);
+  private async _update(params: TRequest) {
     const composedPipedOps = this._compose(...this._functions);
-    result = composedPipedOps(result);
+    const result: TResponse = composedPipedOps(await this._dataSource(params));
     if (result) {
-      this._subscribers.forEach((subscriber) => subscriber(result));
+      this._subscribers.forEach(subscriber => subscriber(result));
     }
   }
 
-  private _compose = (...functions) => (input) =>
+  private _compose: { (...functions: { (item: any): any }[]): { (input: any): TResponse } } = (...functions) => input =>
     functions.reduce((accumulator, f) => f(accumulator), input);
 
   private _makeChild() {
@@ -41,12 +39,3 @@ export default class Observable<TRequest, TResponse> {
     return child;
   }
 }
-
-// const source = () => new Promise(resolve => resolve([1,2,3]));
-
-// const obs = new Observable(source).pipe(data => data.map(item => item * 2), data => data.filter(item => item % 2 === 0));
-
-// obs.pipe(data => data.map(item => item + 1 )).subscribe(result => console.log(result, '1'));
-// obs.pipe(result => result.join()).subscribe(result => console.log(result, '2'));
-
-// obs.next();

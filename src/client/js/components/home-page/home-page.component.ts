@@ -3,9 +3,15 @@ import TripCardComponent from '../trip-card/trip-card.component';
 import { hide, show } from "../../DOM-utils/DOM-utils";
 import Trip from "../../models/trip.model";
 import { Component } from "../../base/decorators";
+import { Inject } from "../../base/inject";
+import TripService from "../../services/trip.service";
 
 const template: string = require("./home-page.component.html");
 
+@Inject({
+  injectionToken: TripService.injectionToken,
+  nameAsDependency: TripService.injectionToken
+})
 @Component({
   selector:"home-page",
   template
