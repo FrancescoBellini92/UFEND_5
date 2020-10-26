@@ -21,25 +21,7 @@
     </header>
     <main class="page">
       <home-page id="home-page"></home-page>
-      <section class="column can-hide-absent hidden" id="add-page">
-        <div class="bg-primary alert">
-          <p>
-            Create a new trip
-          </p>
-        </div>
-        <trip-form id="trip-form"></trip-form>
-        <div id="loader" class="loader can-hide-present hidden"></div>
-        <div id="add-success" class="bg-success can-hide-absent hidden alert">
-          <a href="#detail">
-            New trip created! Click to see it
-          </a>
-        </div>
-        <div id="add-error" class="bg-danger can-hide-absent hidden alert">
-          <p >
-            Something went wrong! Make sure to add a real destination and sensible dates
-          </p>
-        </div>
-      </section>
+      <add-page id="add-page"></add-page>
       <section class="can-hide-absent hidden page" id="detail-page">
         <div id="detail-title" class="bg-primary alert can-hide-absent">
           <p>

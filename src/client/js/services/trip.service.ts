@@ -8,6 +8,7 @@ import {
 } from "../request-utils/request-utils";
 import TripRequest from "../models/trip.request";
 import { Injectable } from "../base/service";
+import Observable from "../base/observable";
 
 const isProd = environment.MODE === 'PROD';
 
@@ -17,8 +18,11 @@ const isProd = environment.MODE === 'PROD';
 })
 export default class TripService extends Service{
   static STORAGE_TRIP_PROP = "trips";
-  trips = [];
-  currentTrip;
+  trips: Trip[] = [];
+  currentTrip: Trip;
+
+  onTripAdded$ = new Observable<Trip, Trip>(async(trip: Trip) => trip);
+
 
   constructor() {
     super();
@@ -34,7 +38,7 @@ export default class TripService extends Service{
     return collection ? hasNoItems : true;
   }
 
-  index() {
+  index(): Trip[] {
     const savedTrips = JSON.parse(localStorage.getItem(TripService.STORAGE_TRIP_PROP));
     if (savedTrips && !TripService.isEmpty(savedTrips)) {
       this.trips = savedTrips;
@@ -42,19 +46,28 @@ export default class TripService extends Service{
     return this.trips;
   }
 
-  async add(tripRequest: TripRequest) {
+  async add(tripRequest: TripRequest): Promise<Trip> {
     const { name, startDate, endDate, location } = tripRequest;
     const request = await sendRequest(
       `${environment.APIURL}?name=${name}&start=${startDate}&end=${endDate}&location=${location}`,
       isProd
     );
-    const newTrip: Trip = await manageRequestResponse<Trip>(request);
+    const newTrip: Trip = await manageRequestResponse<Trip>(
+      request,
+      request => request.status === 400,
+      async request => {
+        const { error } = await request.json();
+        throw new BadRequestError(error);
+      }
+    );
     this.trips.unshift(newTrip);
+    this.onTripAdded$.next(newTrip);
     this._syncStorage();
+    this.currentTrip = newTrip
     return newTrip;
   }
 
-  delete(tripId) {
+  delete(tripId: number): void {
     this.trips = this.trips.filter((trip) => trip.general.id !== +tripId);
     if(TripService.isEmpty(this.trips)) {
       localStorage.removeItem('trips');
@@ -66,8 +79,14 @@ export default class TripService extends Service{
     // TODO
   }
 
-  _syncStorage() {
+  private _syncStorage(): void {
     localStorage.setItem(TripService.STORAGE_TRIP_PROP, JSON.stringify(this.trips));
   }
 
+}
+
+export class BadRequestError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
 }

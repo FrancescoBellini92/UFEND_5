@@ -10,22 +10,18 @@ import { AddFormSubmitEvent, CardRemoveEvent, CardViewEvent, ListRemoveEvent } f
 import TripRequest from './models/trip.request';
 import Trip from './models/trip.model';
 import registerComponents from './components/components.module';
-import factory from './factory/factory';
+import factory from './base/factory';
+import AddPageComponent from './components/add-page/add-page.component';
 
 registerComponents();
 
-const tripService = new TripService();
+const tripService = factory.make<TripService>(TripService.injectionToken);
 
 export default () => {
   const detailAnchor = document.getElementById('detail-anchor');
 
   const homePage = document.getElementById('home-page') as HomePageComponent;
-
-  const addPage = document.getElementById('add-page');
-  const tripForm = document.getElementById('trip-form') as TripFormComponent;
-  const loader = document.getElementById('loader');
-  const addSuccessAlert = document.getElementById('add-success');
-  const addErrorAlert = document.getElementById('add-error');
+  const addPage = document.getElementById('add-page') as AddPageComponent;
 
   const detailPage = document.getElementById('detail-page');
   const detailTitle = document.getElementById('detail-title');
@@ -39,36 +35,10 @@ export default () => {
   const removedAlert = document.getElementById('detail-deleted');
 
 
-  const addTripReq$ = new Observable<TripRequest, Trip>(async(tripRequest: TripRequest) => {
-    hide(addErrorAlert, addSuccessAlert);
-    show(loader);
-    const newTrip: Trip = await tripService.add(tripRequest);
-    return newTrip;
-  });
-
-  addTripReq$.subscribe((trip: Trip) => {
-    hide(loader);
-    if (trip.error) {
-      show(addErrorAlert);
-      return;
-    }
-    tripForm.reset();
-    homePage.updateProps([trip]);
-    setCurrentTrip(trip);
-    show(addSuccessAlert);
-  });
-
   function setCurrentTrip(trip) {
     show(detailAnchor);
-    tripService.currentTrip = trip;
     detailCard.updateProps(trip);
     weatherList.addMany(trip.weather);
-  }
-
-  function onView(e: CardViewEvent) {
-    const currentTrip = e.detail;
-    setCurrentTrip(currentTrip);
-    navigateTo('#detail');
   }
 
   function navigateTo(hash) {
@@ -82,25 +52,9 @@ export default () => {
     });
   }
 
-  async function onSubmit(e: AddFormSubmitEvent) {
-    try {
-      addTripReq$.next(e.detail);
-    } catch (e) {
-      alert('Something went wrong :(')
-    }
-  }
-
-  function onRemoveFromHome(e: CardRemoveEvent) {
-    const tripId = e.detail;
-    tripService.delete(tripId);
-    homePage.onRemove(tripId);
-  }
-
   function onRemoveFromDetail(e: CardRemoveEvent) {
-    const tripID = e.detail;
     tripService.currentTrip = null;
     hide(detailAnchor);
-    onRemoveFromHome(e);
     hide(detailTitle);
     hide(weatherList);
     show(removedAlert);
@@ -113,10 +67,8 @@ export default () => {
       case '#add':
         navigationFn = () => {
           homePage.hide();
+          addPage.show();
           hide(detailPage);
-          hide(addSuccessAlert);
-          hide(addErrorAlert);
-          show(addPage);
         };
         break;
       case '#detail':
@@ -126,8 +78,7 @@ export default () => {
             return;
           }
           homePage.hide();
-          hide(addPage);
-          hide(removedAlert);
+          addPage.hide();
           show(detailPage);
           show(detailTitle);
           show(detailCard);
@@ -142,7 +93,7 @@ export default () => {
         break;
       default:
         navigationFn = () => {
-          hide(addPage);
+          addPage.hide();
           hide(detailPage);
           homePage.show();
         };
@@ -151,28 +102,10 @@ export default () => {
     scrollOnTop();
   }
 
-  function initCards() {
-    homePage.updateProps(tripService.trips);
-  }
-
   function initApp() {
-    document.addEventListener('dependencyInjection', (e: CustomEvent) => {
-      const client = e.target;
-      const token = e.detail;
-      const dependency = factory.make(e.detail);
-      Object.defineProperty(client, token, dependency);
-      debugger;
-    })
-    initCards();
     onNavigation();
   }
 
-
-
-
-  tripForm.addEventListener('submit', onSubmit);
-  homePage.addEventListener('remove', onRemoveFromHome);
-  homePage.addEventListener('view', onView);
   detailCard.addEventListener('remove', onRemoveFromDetail);
   weatherList.addEventListener('remove', (e: ListRemoveEvent) => {
     const element = e.detail.element;

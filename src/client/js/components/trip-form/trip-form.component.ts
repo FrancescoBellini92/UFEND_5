@@ -63,7 +63,8 @@ export default class TripFormComponent extends WebComponent {
         endDate: this._endDate.value,
         location: this._location.value,
         name: this._name.value
-      }
+      },
+      bubbles: true
     });
     this.dispatchEvent(submitEvent);
   }

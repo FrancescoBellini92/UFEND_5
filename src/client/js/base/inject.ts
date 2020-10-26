@@ -1,9 +1,10 @@
-import factory from "../factory/factory";
+import factory from "./factory";
 
 export const Inject: {(...dependencies: DependencyDescriptor[]): { (target: any): void }} =
-  (...dependencies) => target => { // target is ctor function
+  (...dependencies) => target => {
     dependencies.forEach(
-      dependencyDescriptor => target.prototype[dependencyDescriptor.nameAsDependency] = factory.make(dependencyDescriptor.injectionToken)
+      ({nameAsDependency, injectionToken}) =>
+      target.prototype[nameAsDependency] = factory.make(injectionToken)
   );
 }
 

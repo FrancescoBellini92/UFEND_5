@@ -1,8 +1,8 @@
-import factory from "../factory/factory";
+import factory from "./factory";
 
 export abstract class Service {
   static injectionToken: string;
-  static factoryFn: { (): Service };
+  static factoryFn: { (): any };
   isSingleton: boolean;
 }
 
