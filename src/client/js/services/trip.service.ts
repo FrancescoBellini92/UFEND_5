@@ -19,10 +19,11 @@ const isProd = environment.MODE === 'PROD';
 export default class TripService extends Service{
   static STORAGE_TRIP_PROP = "trips";
   trips: Trip[] = [];
-  currentTrip: Trip;
 
-  onTripAdded$ = new Observable<Trip, Trip>(async(trip: Trip) => trip);
+  currentTrip$: Observable<Trip, Trip> = new Observable<Trip, Trip>(async(trip: Trip) => trip);
+  onTripAdded$: Observable<Trip, Trip> = new Observable<Trip, Trip>(async(trip: Trip) => trip);
 
+  private _currentTrip: Trip;
 
   constructor() {
     super();
@@ -36,6 +37,15 @@ export default class TripService extends Service{
   static isEmpty(collection) {
     const hasNoItems = collection.length === 0;
     return collection ? hasNoItems : true;
+  }
+
+  set currentTrip(value: Trip) {
+    this._currentTrip = value;
+    this.currentTrip$.next(this._currentTrip);
+  }
+
+  get currentTript(): Trip {
+    return this._currentTrip;
   }
 
   index(): Trip[] {
@@ -54,11 +64,11 @@ export default class TripService extends Service{
     );
     const newTrip: Trip = await manageRequestResponse<Trip>(
       request,
-      request => request.status === 400,
-      async request => {
-        const { error } = await request.json();
-        throw new BadRequestError(error);
-      }
+      // request => request.status === 400,
+      // async request => {
+      //   const { error } = await request.json();
+      //   throw new BadRequestError(error);
+      // }
     );
     this.trips.unshift(newTrip);
     this.onTripAdded$.next(newTrip);

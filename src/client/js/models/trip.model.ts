@@ -27,7 +27,7 @@ export default interface Trip {
         icon: string,
         description: string
     }
-  };
+  }[];
 
   error?: string;
 

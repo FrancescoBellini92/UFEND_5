@@ -89,6 +89,8 @@ export default class HomePageComponent extends WebComponent {
   private _onView(e: CardViewEvent): void {
     const currentTrip = e.detail;
     this._tripService.currentTrip = currentTrip;
+    // TODO: create header component to manage this
+    show(document.getElementById('detail-anchor'));
     navigateTo('#detail');
   }
 
