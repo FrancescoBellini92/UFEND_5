@@ -24,3 +24,6 @@ To run the project:
 3) to test the build, set "MODE" to "PROD"
 4) npm run build to build the frontend
 5) npm start to run the express server
+
+#
+PS: this repo is work in progress and workflow is plit across different branches (following the git flow pattern)
