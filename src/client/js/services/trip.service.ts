@@ -22,6 +22,7 @@ export default class TripService extends Service{
 
   currentTrip$: Observable<Trip, Trip> = new Observable<Trip, Trip>(async(trip: Trip) => trip);
   onTripAdded$: Observable<Trip, Trip> = new Observable<Trip, Trip>(async(trip: Trip) => trip);
+  onTripDeleted$: Observable<number, number> = new Observable<number, number>(async tripId => tripId);
 
   private _currentTrip: Trip;
 
@@ -44,7 +45,7 @@ export default class TripService extends Service{
     this.currentTrip$.next(this._currentTrip);
   }
 
-  get currentTript(): Trip {
+  get currentTrip(): Trip {
     return this._currentTrip;
   }
 
@@ -83,6 +84,7 @@ export default class TripService extends Service{
       localStorage.removeItem('trips');
     }
     this._syncStorage();
+    this.onTripDeleted$.next(tripId);
   }
 
   edit() {
