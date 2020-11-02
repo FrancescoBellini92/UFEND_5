@@ -1,4 +1,4 @@
-import WebComponent from "../../base/web.component";
+import DynamicWebComponent from "../../base/dynamic.web.component";
 import TripCardComponent from '../trip-card/trip-card.component';
 import { hide, show } from "../../DOM-utils/DOM-utils";
 import Trip from "../../models/trip.model";
@@ -18,7 +18,7 @@ const template: string = require("./home-page.component.html");
   selector:"home-page",
   template
 })
-export default class HomePageComponent extends WebComponent {
+export default class HomePageComponent extends DynamicWebComponent {
 
   private _emptyContainer: HTMLElement;
   private _homeTitle: HTMLElement;
@@ -34,6 +34,12 @@ export default class HomePageComponent extends WebComponent {
       this.updateProps(trip)
       this._updateUI();
     });
+    this._tripService.onTripDeleted$.subscribe(tripId => {
+      const element = this._cardTripMap.get(tripId);
+      element.remove();
+      this._cardTripMap.delete(tripId);
+      this._updateUI();
+    })
   }
 
   static define(): void {
@@ -80,10 +86,6 @@ export default class HomePageComponent extends WebComponent {
   private _onRemove(e: CardRemoveEvent): void {
     const tripId = e.detail;
     this._tripService.delete(tripId);
-    const element = this._cardTripMap.get(tripId);
-    element.remove();
-    this._cardTripMap.delete(tripId);
-    this._updateUI();
   }
 
   private _onView(e: CardViewEvent): void {
