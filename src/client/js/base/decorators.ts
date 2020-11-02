@@ -1,0 +1,17 @@
+import WebComponent from "./web.component";
+
+export const Component: {(componentParams: ComponentParameters): { <T extends typeof WebComponent>(target:  T): void }} =
+  ({ selector, template, hasShadow, style }) => target => {
+      target.selector = selector;
+      target.prototype.html = template;
+      target.prototype.hasShadow = hasShadow;
+      target.prototype._style = style;
+};
+
+interface ComponentParameters {
+  selector: string;
+  template: string,
+  hasShadow?: boolean,
+  style?: { default: string };
+}
+

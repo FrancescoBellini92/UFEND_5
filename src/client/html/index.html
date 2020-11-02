@@ -19,65 +19,13 @@
       </nav>
       </nav>
     </header>
-    <main class="column">
-      <section class="can-hide-absent hidden" id="home-page">
-        <div id="empty-container" class="column can-hide-absent">
-          <div class="alert">
-            <p>
-              Seems like you have no trip planned!
-            </p>
-          </div>
-          <div class="alert">
-            <p>
-              Start by creating a new trip!
-            </p> 
-          </div>
-          <a href="#add" class="bg-primary alert">
-            Add trip
-          </a>
-        </div>
-        <div id="home-title" class="can-hide-absent hidden bg-primary alert">
-          <p>
-            Your trips
-          </p> 
-        </div>
-        <div id="card-container"></div>
-      </section>
-      <section class="column can-hide-absent hidden" id="add-page">
-        <div class="bg-primary alert">
-          <p>
-            Create a new trip
-          </p> 
-        </div>
-        <trip-form id="trip-form"></trip-form>
-        <div id="loader" class="loader can-hide-present hidden"></div>
-        <div id="add-success" class="bg-success can-hide-absent hidden alert">
-          <a href="#detail">
-            New trip created! Click to see it
-          </a>
-        </div>
-        <div id="add-error" class="bg-danger can-hide-absent hidden alert">
-          <p >
-            Something went wrong! Make sure to add a real destination and sensible dates
-          </p>
-        </div>
-      </section>
-      <section class="can-hide-absent hidden" id="detail-page">
-        <div id="detail-title" class="bg-primary alert can-hide-absent">
-          <p>
-            Selected trip
-          </p> 
-        </div>
-        <trip-card id="detail-card" class="can-hide-absent"></trip-card>
-        <trip-list id="weather-list" class="can-hide-absent"></trip-list>
-        <div id="detail-deleted" class="can-hide-present hidden alert bg-danger">
-          <a href="#home">
-            You deleted this trip! Go back to the home page
-          </a>
-        </div>
-      </section>      
+    <toast-component></toast-component>
+    <main class="page">
+      <home-page id="home-page"></home-page>
+      <add-page id="add-page"></add-page>
+      <detail-page id="detail-page"></detail-page>
     </main>
-    <script>
+    <!-- <script>
       // Check that service workers are supported
       if ('serviceWorker' in navigator) {
         // Use the window load event to keep the page load performant
@@ -85,6 +33,6 @@
           navigator.serviceWorker.register('/service-worker.js');
         });
       }
-      </script>
+      </script> -->
   </body>
 </html>

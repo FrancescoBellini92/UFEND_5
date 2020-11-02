@@ -4,15 +4,19 @@ const Webpack = require('webpack');
 const { MODE, PORT } = require('./src/server/environment');
 
 module.exports = {
-  entry: './src/client/index.js',
+  entry: './src/client/index.ts',
   mode: 'development',
   devtool: 'source-map',
+  resolve: {
+    extensions: ['.ts', '.js']
+  },
+
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: '/node_modules',
-        loader: 'babel-loader'
+        test: /\.ts$/,
+        exclude: ['/node_modules', /\.spec.ts$/],
+        loader: 'ts-loader'
       },
       {
         test: /\.scss$/,
@@ -20,23 +24,23 @@ module.exports = {
         loader: ['style-loader', 'css-loader', 'sass-loader']
       },
       {
-      test: /\.component.scss$/,
+        test: /\.component.scss$/,
         exclude: /node_modules/,
         use: [
-          "sass-to-string",
+          'sass-to-string',
           {
-            loader: "sass-loader",
+            loader: 'sass-loader',
             options: {
               sassOptions: {
-                outputStyle: "compressed",
-              },
+                outputStyle: 'compressed'
+              }
             }
           }
         ]
       },
       {
         test: /\.html$/i,
-        loader: 'html-loader',
+        loader: 'html-loader'
       },
       {
         test: /\.ttf$/,

@@ -1,16 +1,29 @@
 // @import '../base/base';
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 .can-hide-absent {
-  
+
   &.hidden {
     display: none;
   }
+
+  &.visible {
+    animation: fadeIn 0.25s 1;
+  }
+
 }
 
 .can-hide-present {
   transition: opacity 0.5s;
   opacity: 1;
-  
+
   &.hidden {
     opacity: 0 !important;
   }
@@ -22,6 +35,17 @@
 
 .m {
   width: 120px;
+}
+
+.collapsable {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 1s;
+
+  &.open {
+    overflow: scroll;
+    max-height: 400px;
+  }
 }
 
 .bg-primary {
@@ -90,12 +114,18 @@
   align-items: $align;
 }
 
+.page {
+  height: 100%;
+}
+
 .column {
-  @include flex(column, center, center);  
+  @include flex(column, center, center);
+  max-width: 400px;
+  margin: 20px;
 }
 
 .row {
-  @include flex(row, space-between, center)  
+  @include flex(row, space-between, center)
 }
 .responsive-container {
   width: 100%;
