@@ -1,4 +1,4 @@
-export default abstract class WebComponent extends HTMLElement {
+export default class WebComponent extends HTMLElement {
 
   static selector: string;
 
@@ -20,8 +20,6 @@ export default abstract class WebComponent extends HTMLElement {
     if (this._style) {
       this._attachStyle();
     }
-    this._queryTemplate();
-    this._attachEventHandlers();
   }
 
   protected _attachHTML(): void {
@@ -35,9 +33,4 @@ export default abstract class WebComponent extends HTMLElement {
     style.textContent = this._style.default;
     this._shadowRoot.appendChild(style);
   }
-
-  protected abstract _queryTemplate(): void
-
-  protected abstract _attachEventHandlers(): void
-
 }
