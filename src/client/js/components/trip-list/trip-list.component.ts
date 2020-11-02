@@ -1,8 +1,8 @@
+import DynamicWebComponent from "../../base/dynamic.web.component";
 import TripService from "../../services/trip.service";
 import { addClass, removeClass, show } from "../../DOM-utils/DOM-utils";
 import { ListRemoveEvent } from "../../models/events";
 import { Component } from "../../base/decorators";
-import WebComponent from "../../base/web.component";
 
 const template = require("./trip-list.component.html");
 const style = require('./trip-list.component.scss');
@@ -13,7 +13,7 @@ const style = require('./trip-list.component.scss');
   hasShadow: true,
   style
 })
-export default class TripListComponent extends WebComponent {
+export default class TripListComponent extends DynamicWebComponent {
 
   data: any[] = [];
 

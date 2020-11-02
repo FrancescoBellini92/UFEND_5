@@ -1,7 +1,7 @@
+import DynamicWebComponent from '../../base/dynamic.web.component';
 import { inputNotValid } from '../../DOM-utils/DOM-utils';
 import { AddFormSubmitEvent } from '../../models/events';
 import { Component } from '../../base/decorators';
-import WebComponent from '../../base/web.component';
 
 const template: string = require('./trip-form.component.html');
 const style: { default: string } = require('./trip-form.component.scss');
@@ -11,7 +11,7 @@ const style: { default: string } = require('./trip-form.component.scss');
   hasShadow: true,
   style
 })
-export default class TripFormComponent extends WebComponent {
+export default class TripFormComponent extends DynamicWebComponent {
 
   private _startDate: HTMLInputElement;
   private _endDate: HTMLInputElement;

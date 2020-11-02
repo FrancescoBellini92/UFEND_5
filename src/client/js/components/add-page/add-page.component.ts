@@ -1,11 +1,10 @@
-import WebComponent from "../../base/web.component";
 import { hide, show } from "../../DOM-utils/DOM-utils";
-import Trip from "../../models/trip.model";
 import { Component } from "../../base/decorators";
 import { Inject } from "../../base/inject";
 import TripService, { BadRequestError } from "../../services/trip.service";
 import TripFormComponent from "../trip-form/trip-form.component";
 import { AddFormSubmitEvent } from "../../models/events";
+import DynamicWebComponent from "../../base/dynamic.web.component";
 
 const template: string = require("./add-page.component.html");
 
@@ -17,7 +16,7 @@ const template: string = require("./add-page.component.html");
   selector:"add-page",
   template
 })
-export default class AddPageComponent extends WebComponent {
+export default class AddPageComponent extends DynamicWebComponent {
 
   private _tripForm: TripFormComponent;
   private _loader: HTMLElement;

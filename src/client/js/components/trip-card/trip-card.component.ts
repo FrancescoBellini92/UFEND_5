@@ -1,9 +1,9 @@
+import DynamicWebComponent from '../../base/dynamic.web.component';
 import Trip from '../../models/trip.model';
 import * as moment from 'moment';
 import { show, hide } from '../../DOM-utils/DOM-utils';
 import { CardRemoveEvent, CardViewEvent } from "../../models/events";
 import { Component } from "../../base/decorators";
-import WebComponent from "../../base/web.component";
 
 const template: string = require('./trip-card.component.html') ;
 const style: { default: string } = require('./trip-card.component.scss');
@@ -14,7 +14,7 @@ const style: { default: string } = require('./trip-card.component.scss');
   hasShadow: true,
   style
 })
-export default class TripCardComponent extends WebComponent {
+export default class TripCardComponent extends DynamicWebComponent {
 
   static _PICTURE_ID  = 'picture';
 
