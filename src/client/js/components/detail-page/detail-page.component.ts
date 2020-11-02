@@ -1,12 +1,11 @@
-import WebComponent from "../../base/web.component";
+import DynamicWebComponent from '../../base/dynamic.web.component';
 import TripCardComponent from '../trip-card/trip-card.component';
 import { hide, show } from "../../DOM-utils/DOM-utils";
 import Trip from "../../models/trip.model";
 import { Component } from "../../base/decorators";
 import { Inject } from "../../base/inject";
 import TripService from "../../services/trip.service";
-import { CardRemoveEvent, CardViewEvent } from "../../models/events";
-import { navigateTo } from "../../base/router";
+import { CardRemoveEvent } from "../../models/events";
 import TripListComponent from "../trip-list/trip-list.component";
 import moment from "moment";
 
@@ -20,7 +19,7 @@ const template: string = require("./detail-page.component.html");
   selector:"detail-page",
   template
 })
-export default class DetailPageComponent extends WebComponent {
+export default class DetailPageComponent extends DynamicWebComponent {
 
   private _detailTitle: HTMLElement;
   private _detailCard: TripCardComponent;
@@ -37,13 +36,6 @@ export default class DetailPageComponent extends WebComponent {
 
   static define(): void {
     super.define(DetailPageComponent);
-  }
-
-  connectedCallback(): void {
-    this._detailCard.hideChildren('#view');
-    this._weatherList.title = 'Weather forecast';
-    this._weatherList.makeListStrategyFn = ({ valid_date, temp, weather }) =>
-      `<p><strong>${moment(valid_date).format('L')}</strong></p><p>${weather.description} - ${temp} °C</p><button>&#10005;</button>`;
   }
 
   show(): void {
@@ -64,15 +56,21 @@ export default class DetailPageComponent extends WebComponent {
     this._detailCard = document.getElementById('detail-card') as TripCardComponent;
     this._weatherList = document.getElementById('weather-list') as TripListComponent;
     this._removedAlert = document.getElementById('detail-deleted');
-    }
+
+    this._detailCard.hideChildren('#view');
+    this._weatherList.title = 'Weather forecast';
+    this._weatherList.makeListStrategyFn = ({ valid_date, temp, weather }) => `<p><strong>${moment(valid_date).format('L')}</strong></p><p>${weather.description} - ${temp} °C</p><button>&#10005;</button>`;
+  }
 
   protected _attachEventHandlers(): void {
-    this._detailCard.addEventListener('remove', this._onRemove);
-    this._weatherList.addEventListener('remove', this._onRemove);
+    this._detailCard.addEventListener('remove', (e: CardRemoveEvent) => this._onRemove(e));
+    // this._weatherList.addEventListener('remove', this._onRemove);
   }
 
   private _onRemove(e: CardRemoveEvent): void {
+    const tripId = this._tripService.currentTrip.general.id;
     this._tripService.currentTrip = null;
+    this._tripService.delete(tripId)
     // TODO: create header component to manage this
     hide(document.getElementById('detail-anchor'));
     hide(this._detailTitle);
