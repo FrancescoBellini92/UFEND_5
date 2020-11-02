@@ -6,14 +6,17 @@ export function removeClass(className: string, ...elements: Element[]): void {
   elements.forEach((el) => el.classList.remove(className));
 }
 
-export function show(...element: Element[]): void {
-  removeClass('hidden', ...element);
-  removeClass('open', ...element);
+export function show(...elements: Element[]): void {
+  removeClass('hidden', ...elements);
+  removeClass('open', ...elements);
+  addClass('visible', ...elements)
 }
 
-export function hide(...element: Element[]): void {
-  addClass('hidden', ...element);
-  removeClass('open', ...element);
+export function hide(...elements: Element[]): void {
+  addClass('hidden', ...elements);
+  removeClass('open', ...elements);
+  removeClass('visible', ...elements)
+
 }
 
 export function inputNotValid(inputElement: HTMLInputElement): boolean {
