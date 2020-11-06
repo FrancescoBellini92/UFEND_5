@@ -121,7 +121,7 @@
 .column {
   @include flex(column, center, center);
   max-width: 400px;
-  margin: 20px;
+  margin: 20px 5px;
 }
 
 .row {
