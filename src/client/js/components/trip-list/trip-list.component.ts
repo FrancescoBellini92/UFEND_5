@@ -58,10 +58,10 @@ export default class TripListComponent extends DynamicWebComponent {
   }
 
   protected _attachEventHandlers(): void {
-    this.shadowRoot.addEventListener('click', this._onClick);
+    this.shadowRoot.addEventListener('click', e => this._onClick(e));
   }
 
-  private _onClick = (e: Event) => {
+  private _onClick(e: Event): void {
     const target = e.target as HTMLElement;
     let idToRemove: number;
     if (target.nodeName === 'BUTTON') {

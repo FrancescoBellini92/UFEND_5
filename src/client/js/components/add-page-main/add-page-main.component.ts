@@ -17,7 +17,7 @@ const template: string = require("./add-page-main.component.html");
 @Component({
   selector:"add-page-main",
   template,
-  route: '#add/main'
+  route: '#add'
 })
 export default class AddPageMainComponent extends DynamicWebComponent implements Routable {
 
@@ -55,7 +55,7 @@ export default class AddPageMainComponent extends DynamicWebComponent implements
 
       this._tripForm.reset();
       // TODO: SHOW SUCCESS TOAST
-      setTimeout(() => navigateTo('#add/details'), 1000);
+      setTimeout(() => navigateTo('#details'), 1000);
     } catch (e) {
       if (e instanceof BadRequestError) {
       // TODO: SHOW ERROR TOAST

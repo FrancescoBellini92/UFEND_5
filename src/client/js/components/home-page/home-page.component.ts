@@ -89,7 +89,7 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
     this._tripService.currentTrip = currentTrip;
     // TODO: create header component to manage this
     show(document.getElementById('detail-anchor'));
-    navigateTo('#detail');
+    navigateTo('#details');
   }
 
   private _updateUI(dataSize: number = this._cardTripMap.size): void {

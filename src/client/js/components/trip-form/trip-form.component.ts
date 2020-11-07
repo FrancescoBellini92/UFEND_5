@@ -40,10 +40,10 @@ export default class TripFormComponent extends DynamicWebComponent {
   }
 
   protected _attachEventHandlers(): void {
-    this._submitBtn.addEventListener('click', this._onSubmit);
+    this._submitBtn.addEventListener('click', e => this._onSubmit(e));
   }
 
-  private _onSubmit = (e: Event) => {
+  private _onSubmit(e: Event): void {
     const notValid = inputNotValid(this._startDate) || inputNotValid(this._endDate) || inputNotValid(this._location) || inputNotValid(this._name);
     if (notValid) {
       return;

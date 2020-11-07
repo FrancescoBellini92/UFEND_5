@@ -81,10 +81,10 @@ export default class TripCardComponent extends DynamicWebComponent {
   }
 
   protected _attachEventHandlers(): void {
-    this._shadowRoot.addEventListener('click', this._onClick )
+    this._shadowRoot.addEventListener('click', e => this._onClick(e) )
   }
 
-  private _onClick = (e: Event) => {
+  private _onClick(e: Event): void {
     const target = e.target as HTMLElement;
     const handlerFn = this._handlersMap[target.id];
     handlerFn();

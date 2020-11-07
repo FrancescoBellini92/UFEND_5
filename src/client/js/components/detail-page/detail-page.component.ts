@@ -19,7 +19,7 @@ const template: string = require("./detail-page.component.html");
 @Component({
   selector:"detail-page",
   template,
-  route: '#detail'
+  route: '#details'
 })
 export default class DetailPageComponent extends DynamicWebComponent implements Routable{
 
