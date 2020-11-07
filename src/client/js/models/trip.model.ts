@@ -20,19 +20,21 @@ export default interface Trip {
     webformatURL: string
   };
 
-  weather: {
-    temp: string,
-    valid_date: string,
-    weather: {
-        icon: string,
-        description: string
-    }
-  }[];
+  weather: Weather[];
 
   details: TripDetail[]
 
   error?: string;
 
+}
+
+export interface Weather {
+  temp: string;
+  valid_date: string;
+  weather: {
+    icon: string;
+    description: string;
+  }
 }
 
 export interface TripDetail {

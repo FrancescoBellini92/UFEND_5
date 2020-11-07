@@ -5,10 +5,10 @@ import Trip from "../../models/trip.model";
 import { Component } from "../../base/decorators";
 import { Inject } from "../../base/inject";
 import TripService from "../../services/trip.service";
-import { CardRemoveEvent } from "../../models/events";
+import { RemoveTripEvent, SelectTripEvent } from "../../models/events";
 import TripListComponent from "../trip-list/trip-list.component";
 import moment from "moment";
-import { Routable } from '../../base/router';
+import { navigateTo, Routable } from '../../base/router';
 
 const template: string = require("./detail-page.component.html");
 
@@ -64,11 +64,12 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
   }
 
   protected _attachEventHandlers(): void {
-    this._detailCard.addEventListener('remove', (e: CardRemoveEvent) => this._onRemove(e));
+    this._detailCard.addEventListener('remove', () => this._onRemove());
+    this.addEventListener('edit', () => navigateTo('#edit'));
     // this._weatherList.addEventListener('remove', this._onRemove);
   }
 
-  private _onRemove(e: CardRemoveEvent): void {
+  private _onRemove(): void {
     const tripId = this._tripService.currentTrip.general.id;
     this._tripService.currentTrip = null;
     this._tripService.delete(tripId)
@@ -78,5 +79,4 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
     hide(this._weatherList);
     show(this._removedAlert);
   }
-
 }

@@ -3,7 +3,7 @@ import { Component } from "../../base/decorators";
 import { Inject } from "../../base/inject";
 import TripService, { BadRequestError } from "../../services/trip.service";
 import TripFormComponent from "../trip-form/trip-form.component";
-import { AddFormSubmitEvent } from "../../models/events";
+import { SubmitTripEvent } from "../../models/events";
 import DynamicWebComponent from "../../base/dynamic.web.component";
 import TripDetailComponent from "../trip-detail/trip-detail.component";
 import { navigateTo, Routable } from "../../base/router";
@@ -46,7 +46,7 @@ export default class AddPageMainComponent extends DynamicWebComponent implements
     this.addEventListener('submit', this._onSubmit);
   }
 
-  private async _onSubmit(e: AddFormSubmitEvent): Promise<void> {
+  private async _onSubmit(e: SubmitTripEvent): Promise<void> {
     try {
       debugger;
       show(this._loader);

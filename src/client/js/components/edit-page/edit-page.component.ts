@@ -5,24 +5,24 @@ import Trip from "../../models/trip.model";
 import { Component } from "../../base/decorators";
 import { Inject } from "../../base/inject";
 import TripService from "../../services/trip.service";
-import { CardRemoveEvent } from "../../models/events";
+import { RemoveTripEvent } from "../../models/events";
 import TripListComponent from "../trip-list/trip-list.component";
 import moment from "moment";
 import TripDetailComponent from '../trip-detail/trip-detail.component';
 import { navigateTo, Routable } from '../../base/router';
 
-const template: string = require("./detail-page.component.html");
+const template: string = require("./edit-page.component.html");
 
 @Inject({
   injectionToken: TripService.injectionToken,
   nameAsDependency: '_tripService'
 })
 @Component({
-  selector:"add-page-details",
+  selector:"edit-page",
   template,
-  route: '#add-page-details'
+  route: '#edit'
 })
-export default class AddPageDetailsComponent extends DynamicWebComponent implements Routable {
+export default class EditPageComponent extends DynamicWebComponent implements Routable {
 
   private _detailTitle: HTMLElement;
   private _tripDetail: TripDetailComponent;
@@ -57,7 +57,7 @@ export default class AddPageDetailsComponent extends DynamicWebComponent impleme
   }
 
   protected _attachEventHandlers(): void {
-    this._saveButton.addEventListener('click', this._onSubmit);
+    this._saveButton.addEventListener('click', () => this._onSubmit());
   }
 
   private _onSubmit(): void {

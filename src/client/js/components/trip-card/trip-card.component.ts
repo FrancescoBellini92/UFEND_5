@@ -2,7 +2,7 @@ import DynamicWebComponent from '../../base/dynamic.web.component';
 import Trip from '../../models/trip.model';
 import * as moment from 'moment';
 import { show, hide } from '../../DOM-utils/DOM-utils';
-import { CardRemoveEvent, CardViewEvent } from "../../models/events";
+import { RemoveTripEvent, SelectTripEvent } from "../../models/events";
 import { Component } from "../../base/decorators";
 
 const template: string = require('./trip-card.component.html') ;
@@ -29,13 +29,17 @@ export default class TripCardComponent extends DynamicWebComponent {
 
   private _handlersMap = {
     'remove': () => {
-      const removeEvent = new CardRemoveEvent('remove', { detail: this._trip.general.id , bubbles: true });
+      const removeEvent = new RemoveTripEvent('remove', { detail: this._trip.general.id , bubbles: true });
       hide(this);
       this.dispatchEvent(removeEvent);
     },
     'view': () => {
-      const viewEvent = new CardViewEvent('view', { detail: this._trip , bubbles: true});
+      const viewEvent = new SelectTripEvent('view', { detail: this._trip , bubbles: true});
       this.dispatchEvent(viewEvent);
+    },
+    'edit': () => {
+      const editEvent = new SelectTripEvent('edit', { detail: this._trip , bubbles: true});
+      this.dispatchEvent(editEvent);
     }
   }
 

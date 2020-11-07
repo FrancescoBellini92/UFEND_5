@@ -1,6 +1,6 @@
 import DynamicWebComponent from '../../base/dynamic.web.component';
 import { inputNotValid } from '../../DOM-utils/DOM-utils';
-import { AddFormSubmitEvent } from '../../models/events';
+import { SubmitTripEvent } from '../../models/events';
 import { Component } from '../../base/decorators';
 
 const template: string = require('./trip-form.component.html');
@@ -53,7 +53,7 @@ export default class TripFormComponent extends DynamicWebComponent {
   }
 
   private _emitSubmit(): void {
-    const submitEvent = new AddFormSubmitEvent('submit', {
+    const submitEvent = new SubmitTripEvent('submit', {
       detail: {
         startDate: this._startDate.value,
         endDate: this._endDate.value,

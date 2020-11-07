@@ -1,5 +1,5 @@
 import WebComponent from "../base/web.component";
-import AddPageDetailsComponent from "./add-page-details/detail-page.component";
+import EditPageComponent from "./edit-page/edit-page.component";
 import AddPageMainComponent from "./add-page-main/add-page-main.component";
 import DetailPageComponent from "./detail-page/detail-page.component";
 import HomePageComponent from "./home-page/home-page.component";
@@ -21,5 +21,5 @@ export default () => registerComponents(
   TripDetailComponent,
   TripFormComponent,
   AddPageMainComponent,
-  AddPageDetailsComponent
+  EditPageComponent
 );

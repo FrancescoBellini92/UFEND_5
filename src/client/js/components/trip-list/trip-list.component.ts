@@ -1,7 +1,7 @@
 import DynamicWebComponent from "../../base/dynamic.web.component";
 import TripService from "../../services/trip.service";
 import { addClass, removeClass, show } from "../../DOM-utils/DOM-utils";
-import { ListRemoveEvent } from "../../models/events";
+import { RemoveListItemEvent } from "../../models/events";
 import { Component } from "../../base/decorators";
 
 const template = require("./trip-list.component.html");
@@ -67,7 +67,7 @@ export default class TripListComponent extends DynamicWebComponent {
     if (target.nodeName === 'BUTTON') {
       idToRemove = target.parentElement.attributes['data-id'].value;
       this.data.splice(idToRemove,1);
-      const removeEvent = new ListRemoveEvent('remove',{ detail: { idToRemove, element: this } }  );
+      const removeEvent = new RemoveListItemEvent('remove',{ detail: { idToRemove, element: this } }  );
       this.dispatchEvent(removeEvent);
       this._listEl.removeChild(target.parentNode);
     }

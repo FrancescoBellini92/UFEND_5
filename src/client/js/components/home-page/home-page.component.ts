@@ -5,7 +5,7 @@ import Trip from "../../models/trip.model";
 import { Component } from "../../base/decorators";
 import { Inject } from "../../base/inject";
 import TripService from "../../services/trip.service";
-import { CardRemoveEvent, CardViewEvent } from "../../models/events";
+import { RemoveTripEvent, SelectTripEvent } from "../../models/events";
 import { navigateTo, Routable } from "../../base/router";
 
 const template: string = require("./home-page.component.html");
@@ -76,20 +76,21 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
 
   protected _attachEventHandlers(): void {
     this.addEventListener('remove', this._onRemove);
-    this.addEventListener('view', this._onView);
+    this.addEventListener('view', (e: SelectTripEvent) => this._selectAndNavigate(e, '#details'));
+    this.addEventListener('edit', (e: SelectTripEvent) => this._selectAndNavigate(e, '#edit'));
   }
 
-  private _onRemove(e: CardRemoveEvent): void {
+  private _onRemove(e: RemoveTripEvent): void {
     const tripId = e.detail;
     this._tripService.delete(tripId);
   }
 
-  private _onView(e: CardViewEvent): void {
+  private _selectAndNavigate(e: SelectTripEvent, route: string): void {
     const currentTrip = e.detail;
     this._tripService.currentTrip = currentTrip;
     // TODO: create header component to manage this
     show(document.getElementById('detail-anchor'));
-    navigateTo('#details');
+    navigateTo(route);
   }
 
   private _updateUI(dataSize: number = this._cardTripMap.size): void {
