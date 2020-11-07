@@ -16,7 +16,7 @@ const style: { default: string } = require('./trip-card.component.scss');
 })
 export default class TripCardComponent extends DynamicWebComponent {
 
-  static _PICTURE_ID  = 'picture';
+  private static _PICTURE_ID  = 'picture';
 
   private _startDate: HTMLElement;
   private _endDate: HTMLElement;
@@ -27,7 +27,7 @@ export default class TripCardComponent extends DynamicWebComponent {
 
   private _pictureContainer: any;
 
-  _handlersMap = {
+  private _handlersMap = {
     'remove': () => {
       const removeEvent = new CardRemoveEvent('remove', { detail: this._trip.general.id , bubbles: true });
       hide(this);
@@ -41,11 +41,6 @@ export default class TripCardComponent extends DynamicWebComponent {
 
   constructor() {
     super();
-    this._init();
-  }
-
-  static define() {
-    super.define(TripCardComponent);
   }
 
   hideChildren(selector: string): void {

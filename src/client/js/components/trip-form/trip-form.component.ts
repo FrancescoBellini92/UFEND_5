@@ -5,6 +5,7 @@ import { Component } from '../../base/decorators';
 
 const template: string = require('./trip-form.component.html');
 const style: { default: string } = require('./trip-form.component.scss');
+
 @Component({
   selector: "trip-form",
   template,
@@ -21,11 +22,6 @@ export default class TripFormComponent extends DynamicWebComponent {
 
   constructor() {
     super();
-    this._init();
-  }
-
-  static define(): void {
-    super.define(TripFormComponent);
   }
 
   reset(): void {

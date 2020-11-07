@@ -5,38 +5,31 @@ import TripService, { BadRequestError } from "../../services/trip.service";
 import TripFormComponent from "../trip-form/trip-form.component";
 import { AddFormSubmitEvent } from "../../models/events";
 import DynamicWebComponent from "../../base/dynamic.web.component";
+import TripDetailComponent from "../trip-detail/trip-detail.component";
+import { navigateTo, Routable } from "../../base/router";
 
-const template: string = require("./add-page.component.html");
+const template: string = require("./add-page-main.component.html");
 
 @Inject({
   injectionToken: TripService.injectionToken,
   nameAsDependency: '_tripService'
 })
 @Component({
-  selector:"add-page",
-  template
+  selector:"add-page-main",
+  template,
+  route: '#add/main'
 })
-export default class AddPageComponent extends DynamicWebComponent {
+export default class AddPageMainComponent extends DynamicWebComponent implements Routable {
 
   private _tripForm: TripFormComponent;
   private _loader: HTMLElement;
-  private _addSuccessAlert: HTMLElement;
-  private _addErrorAlert: HTMLElement;
-
   private _tripService: TripService;
 
   constructor() {
     super();
-    this._init();
-  }
-
-  static define(): void {
-    super.define(this);
   }
 
   show(): void {
-    hide(this._addSuccessAlert);
-    hide(this._addErrorAlert);
     show(this.firstElementChild);
   }
 
@@ -47,8 +40,6 @@ export default class AddPageComponent extends DynamicWebComponent {
   protected _queryTemplate(): void {
     this._tripForm = document.getElementById('trip-form') as TripFormComponent;
     this._loader = document.getElementById('loader');
-    this._addSuccessAlert = document.getElementById('add-success');
-    this._addErrorAlert = document.getElementById('add-error');
   }
 
   protected _attachEventHandlers(): void {
@@ -57,16 +48,18 @@ export default class AddPageComponent extends DynamicWebComponent {
 
   private async _onSubmit(e: AddFormSubmitEvent): Promise<void> {
     try {
-      hide(this._addErrorAlert, this._addSuccessAlert);
-      show(this._loader);
-      await this._tripService.add(e.detail);
-      this._tripForm.reset();
-      show(this._addSuccessAlert);
-    } catch (e) {
       debugger;
+      show(this._loader);
+
+      await this._tripService.add(e.detail);
+
+      this._tripForm.reset();
+      // TODO: SHOW SUCCESS TOAST
+      setTimeout(() => navigateTo('#add/details'), 1000);
+    } catch (e) {
       if (e instanceof BadRequestError) {
-        show(this._addErrorAlert);
-      } else {
+      // TODO: SHOW ERROR TOAST
+    } else {
         throw e;
       }
     } finally {

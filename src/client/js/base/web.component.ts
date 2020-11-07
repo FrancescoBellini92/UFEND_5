@@ -1,6 +1,10 @@
+import router from './router';
+
 export default class WebComponent extends HTMLElement {
 
   static selector: string;
+
+  public route: string;
 
   public html: string;
   public hasShadow: boolean;
@@ -9,10 +13,14 @@ export default class WebComponent extends HTMLElement {
 
   constructor() {
     super();
+    if (this.route != undefined) {
+      router.register(this);
+    }
+    this._init();
   }
 
-  static define(className: any): void {
-    customElements.define(this.selector, className);
+  static define(): void {
+    customElements.define(this.selector, this);
   }
 
   protected _init(): void {

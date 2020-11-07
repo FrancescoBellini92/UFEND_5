@@ -29,6 +29,20 @@ export default interface Trip {
     }
   }[];
 
+  details: TripDetail[]
+
   error?: string;
 
+}
+
+export interface TripDetail {
+  type: TripDetailType,
+  date: string;
+  content: string
+}
+
+export enum TripDetailType {
+  TODO = 'todo',
+  STAY = 'stay',
+  TRAVEL = 'travel'
 }

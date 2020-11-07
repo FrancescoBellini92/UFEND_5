@@ -1,14 +1,16 @@
 import WebComponent from "../base/web.component";
-import AddPageComponent from "./add-page/add-page.component";
+import AddPageDetailsComponent from "./add-page-details/detail-page.component";
+import AddPageMainComponent from "./add-page-main/add-page-main.component";
 import DetailPageComponent from "./detail-page/detail-page.component";
 import HomePageComponent from "./home-page/home-page.component";
 import ToastComponent from "./toast/toast.component";
 import TripCardComponent from "./trip-card/trip-card.component";
+import TripDetailComponent from "./trip-detail/trip-detail.component";
 import TripFormComponent from "./trip-form/trip-form.component";
 import TripListComponent from "./trip-list/trip-list.component";
 
 function registerComponents(...components: typeof WebComponent[]) {
-  components.forEach(component => component.define(component));
+  components.forEach(component => component.define());
 }
 export default () => registerComponents(
   ToastComponent,
@@ -16,6 +18,8 @@ export default () => registerComponents(
   TripListComponent,
   HomePageComponent,
   DetailPageComponent,
+  TripDetailComponent,
   TripFormComponent,
-  AddPageComponent
+  AddPageMainComponent,
+  AddPageDetailsComponent
 );

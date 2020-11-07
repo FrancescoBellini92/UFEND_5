@@ -21,13 +21,8 @@ export default class ToastComponent extends WebComponent {
 
   constructor() {
     super();
-    this._init();
     this._tripService.onTripAdded$.subscribe(() => this._onTripAdded());
     this._tripService.onTripDeleted$.subscribe(() => this._onTripDeleted());
-  }
-
-  static define() {
-    super.define(ToastComponent);
   }
 
   private _onTripAdded(): void {

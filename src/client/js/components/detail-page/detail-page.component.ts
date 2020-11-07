@@ -8,6 +8,7 @@ import TripService from "../../services/trip.service";
 import { CardRemoveEvent } from "../../models/events";
 import TripListComponent from "../trip-list/trip-list.component";
 import moment from "moment";
+import { Routable } from '../../base/router';
 
 const template: string = require("./detail-page.component.html");
 
@@ -17,9 +18,10 @@ const template: string = require("./detail-page.component.html");
 })
 @Component({
   selector:"detail-page",
-  template
+  template,
+  route: '#detail'
 })
-export default class DetailPageComponent extends DynamicWebComponent {
+export default class DetailPageComponent extends DynamicWebComponent implements Routable{
 
   private _detailTitle: HTMLElement;
   private _detailCard: TripCardComponent;
@@ -30,12 +32,11 @@ export default class DetailPageComponent extends DynamicWebComponent {
 
   constructor() {
     super();
-    this._init();
     this._tripService.currentTrip$.subscribe((trip: Trip) => this.updateProps(trip));
   }
 
   static define(): void {
-    super.define(DetailPageComponent);
+    super.define();
   }
 
   show(): void {

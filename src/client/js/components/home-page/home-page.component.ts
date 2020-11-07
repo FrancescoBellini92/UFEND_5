@@ -6,7 +6,7 @@ import { Component } from "../../base/decorators";
 import { Inject } from "../../base/inject";
 import TripService from "../../services/trip.service";
 import { CardRemoveEvent, CardViewEvent } from "../../models/events";
-import { navigateTo } from "../../base/router";
+import { navigateTo, Routable } from "../../base/router";
 
 const template: string = require("./home-page.component.html");
 
@@ -16,9 +16,10 @@ const template: string = require("./home-page.component.html");
 })
 @Component({
   selector:"home-page",
-  template
+  template,
+  route: ''
 })
-export default class HomePageComponent extends DynamicWebComponent {
+export default class HomePageComponent extends DynamicWebComponent implements Routable {
 
   private _emptyContainer: HTMLElement;
   private _homeTitle: HTMLElement;
@@ -29,7 +30,6 @@ export default class HomePageComponent extends DynamicWebComponent {
 
   constructor() {
     super();
-    this._init();
     this._tripService.onTripAdded$.subscribe((trip: Trip) => {
       this.updateProps(trip)
       this._updateUI();
@@ -40,10 +40,6 @@ export default class HomePageComponent extends DynamicWebComponent {
       this._cardTripMap.delete(tripId);
       this._updateUI();
     })
-  }
-
-  static define(): void {
-    super.define(HomePageComponent);
   }
 
   connectedCallback(): void {

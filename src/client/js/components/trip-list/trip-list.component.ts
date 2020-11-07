@@ -24,11 +24,6 @@ export default class TripListComponent extends DynamicWebComponent {
 
   constructor() {
     super();
-    this._init();
-  }
-
-  static define(): void {
-    super.define(TripListComponent);
   }
 
   set title(val: string) {
