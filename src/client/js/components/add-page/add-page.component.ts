@@ -8,7 +8,7 @@ import DynamicWebComponent from "../../base/dynamic.web.component";
 import TripDetailComponent from "../trip-detail/trip-detail.component";
 import { navigateTo, Routable } from "../../base/router";
 
-const template: string = require("./add-page-main.component.html");
+const template: string = require("./add-page.component.html");
 
 @Inject({
   injectionToken: TripService.injectionToken,
@@ -19,7 +19,7 @@ const template: string = require("./add-page-main.component.html");
   template,
   route: '#add'
 })
-export default class AddPageMainComponent extends DynamicWebComponent implements Routable {
+export default class AddPageComponent extends DynamicWebComponent implements Routable {
 
   private _tripForm: TripFormComponent;
   private _loader: HTMLElement;
@@ -48,7 +48,6 @@ export default class AddPageMainComponent extends DynamicWebComponent implements
 
   private async _onSubmit(e: SubmitTripEvent): Promise<void> {
     try {
-      debugger;
       show(this._loader);
 
       await this._tripService.add(e.detail);
