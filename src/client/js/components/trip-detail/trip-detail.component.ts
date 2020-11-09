@@ -1,6 +1,8 @@
 import DynamicWebComponent from '../../base/dynamic.web.component';
 import { Component } from '../../base/decorators';
 import { TripDetail, TripDetailType } from '../../models/trip.model';
+import { hide, show } from '../../DOM-utils/DOM-utils';
+import { SaveTripDetailsEvent } from '../../models/events';
 
 const template: string = require('./trip-detail.component.html');
 const style: { default: string } = require('./trip-detail.component.scss');
@@ -13,8 +15,21 @@ const style: { default: string } = require('./trip-detail.component.scss');
 })
 export default class TripDetailComponent extends DynamicWebComponent {
 
-  formControlTemplate: HTMLTemplateElement;
-  detailsContainer: HTMLElement;
+  private _formControlTemplate: HTMLTemplateElement;
+  private _detailsContainer: HTMLElement;
+  private _saveDetailsBtn: HTMLElement;
+  private _noDetailsText: HTMLElement;
+
+  private _handlerFnMap = {
+    'add-detail-btn': () => this._cloneTemplate(),
+    'remove-all-btn': () => this.reset(),
+    'save-btn': () => {
+      console.log(this.tripDetails);
+      const saveDetailsEvent = new SaveTripDetailsEvent('save-details', { detail: this.tripDetails, bubbles: true });
+      this.dispatchEvent(saveDetailsEvent);
+    }
+
+  }
 
   constructor() {
     super();
@@ -27,67 +42,80 @@ export default class TripDetailComponent extends DynamicWebComponent {
 
       const { typeEl, dateEl, contentEl } = this._getInputs(node);
 
-      details.push({
-        type: typeEl.value as TripDetailType,
-        date: dateEl.value,
-        content: contentEl.value
-      });
+      const type = typeEl.value as TripDetailType;
+      const date = dateEl.value;
+      const content = contentEl.value;
+      const allValid = type && date && content;
+      if (allValid) {
+        details.push({
+          type: typeEl.value as TripDetailType,
+          date: dateEl.value,
+          content: contentEl.value
+        });
+      }
     })
 
     return details;
   }
 
-  private _getInputs(node: Element) {
-    const typeEl = node.querySelector('.detail-type') as HTMLInputElement;
-    const dateEl = node.querySelector('.detail-date') as HTMLInputElement;
-    const contentEl = node.querySelector('.detail-content') as HTMLInputElement;
-    return { typeEl, dateEl, contentEl };
-  }
+
 
   updateProps(details: TripDetail[]) {
+
     details.forEach(detail => {
-      const templateContent = this.formControlTemplate.content.cloneNode(true);
-
-
-          if (this.detailsContainer.firstElementChild) {
-            this.detailsContainer.firstElementChild.before(templateContent);
-          } else {
-            this.detailsContainer.appendChild(templateContent);
-          }
-          const { typeEl, dateEl, contentEl } = this._getInputs(this.detailsContainer.firstElementChild);
-
-          typeEl.value = detail.type;
-          dateEl.value = detail.date;
-          contentEl.value = detail.content;
-
+      this._cloneTemplate();
+      const { typeEl, dateEl, contentEl } = this._getInputs(this._detailsContainer.lastElementChild);
+      typeEl.value = detail.type;
+      dateEl.value = detail.date;
+      contentEl.value = detail.content;
     })
+
+    this._updateUI();
   }
 
   reset(): void {
-    this.detailsContainer.innerHTML = '';
+    this._detailsContainer.innerHTML = '';
+    this._updateUI();
   }
 
   protected _queryTemplate(): void {
-    this.formControlTemplate = this.shadowRoot.querySelector('#form-control');
-    this.detailsContainer = this.shadowRoot.querySelector('#details-container');
+    this._formControlTemplate = this.shadowRoot.querySelector('#form-control');
+    this._detailsContainer = this.shadowRoot.querySelector('#details-container');
+    this._saveDetailsBtn= this.shadowRoot.querySelector('#save-btn');
+    this._noDetailsText = this.shadowRoot.querySelector('#no-details-text');
   }
 
   protected _attachEventHandlers(): void {
     this.shadowRoot.addEventListener('click', (e: Event) => {
       const target = e.target as HTMLElement;
       const isRemoveBtn = target.classList.contains('remove');
-      const isAddBtn = target.id === 'add-detail-btn';
-      if (isRemoveBtn) {
-        target.parentElement.parentElement.remove();
-      } else if (isAddBtn) {
-        const templateContent = this.formControlTemplate.content.cloneNode(true);
-        if (this.detailsContainer.firstElementChild) {
-          this.detailsContainer.firstElementChild.before(templateContent);
-        } else {
-          this.detailsContainer.appendChild(templateContent);
-        }
-      }
+      isRemoveBtn ? this._onRemoveDetail(target) : this._handlerFnMap[target.id]();
+      this._updateUI();
     });
+  }
+
+  private _onRemoveDetail(target: HTMLElement): void {
+    target.parentElement.parentElement.remove()
+  }
+
+  private _cloneTemplate(): void {
+    const templateContent = this._formControlTemplate.content.cloneNode(true);
+    this._detailsContainer.appendChild(templateContent);
+    show(this._detailsContainer.lastElementChild)
+  }
+
+  private _getInputs(element: Element): { typeEl: HTMLInputElement, dateEl: HTMLInputElement, contentEl: HTMLInputElement } {
+    const typeEl = element.querySelector('.detail-type') as HTMLInputElement;
+    const dateEl = element.querySelector('.detail-date') as HTMLInputElement;
+    const contentEl = element.querySelector('.detail-content') as HTMLInputElement;
+    return { typeEl, dateEl, contentEl };
+  }
+
+  private _updateUI(hasDetails = this._detailsContainer.childElementCount): void {
+    const updateUISaveDetailBtnFn = hasDetails ? show : hide;
+    const updateUINoDetailsTextFn = hasDetails ? hide : show;
+    updateUISaveDetailBtnFn(this._saveDetailsBtn);
+    updateUINoDetailsTextFn(this._noDetailsText);
   }
 
 }

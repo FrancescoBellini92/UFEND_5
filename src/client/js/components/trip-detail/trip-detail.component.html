@@ -1,17 +1,25 @@
 <div class="column">
-  <button id="add-detail-btn" class="padding-medium margin-medium shadow bg-primary">Add detail</button>
-  <div id="details-container">
+  <div class="alert bg-primary shadow row">
+    <p>Details</p>
+    <div class="row">
+      <button id="add-detail-btn" class="alert__button padding-small">&#10005; Add</button>
+      <button id="remove-all-btn" class="alert__button padding-small">&#10005; Remove all</button>
+    </div>
   </div>
+  <div id="details-container" class="page">
+  </div>
+  <p id="no-details-text" class="can-hide-absent">Start by adding some details to your trip!</p>
+  <button id="save-btn" class="bg-primary margin-medium padding-medium shadow can-hide-absent hidden">Save details</button>
 </div>
 <template id="form-control">
-  <div class="column detail">
+  <div class="column detail can-hide-absent hidden">
     <div class="row">
       <select class="margin-small detail-type">
         <option value="todo">Todo</option>
         <option value="stay">Stay</option>
         <option value="travel">Travel</option>
       </select>
-      <input type="date" class="shadow margin-small detail-date">
+      <input type="datetime-local" class="shadow margin-small detail-date">
       <button class="remove" class="padding-small margin-small shadow">&#10005;</button>
     </div>
       <input class="shadow margin-small detail-content">
