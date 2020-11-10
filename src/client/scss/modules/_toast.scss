@@ -1,10 +1,10 @@
 .toast {
-    @extend .border;
-    @extend .border-radius;
-    @extend .padding-medium;
-    @extend .shadow;
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 150px;
+  @extend .border;
+  @extend .border-radius;
+  @extend .padding-medium;
+  @extend .shadow;
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 150px;
 }
