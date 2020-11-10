@@ -1,8 +1,9 @@
 <section class="column can-hide-absent hidden">
-  <div class="bg-primary alert">
-    <p>
-    </p>
+  <div class="pagenav">
+    <button class="bg-primary padding-small">Main</button>
+    <button class="bg-primary padding-small">Details</button>
   </div>
-  <trip-detail id="trip-details"></trip-detail>
-  <button id="save-details" class="padding-medium margin-medium shadow bg-primary">Save</button>
+  <trip-form class="can-hide-absent hidden"></trip-form>
+  <trip-detail class="page can-hide-absent hidden" id="trip-details"></trip-detail>
+  <div id="loader" class="loader can-hide-present hidden"></div>
 </section>

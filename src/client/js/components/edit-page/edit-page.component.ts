@@ -10,6 +10,7 @@ import TripListComponent from "../trip-list/trip-list.component";
 import moment from "moment";
 import TripDetailComponent from '../trip-detail/trip-detail.component';
 import { navigateTo, Routable } from '../../base/router';
+import TripFormComponent from '../trip-form/trip-form.component';
 
 const template: string = require("./edit-page.component.html");
 
@@ -24,9 +25,8 @@ const template: string = require("./edit-page.component.html");
 })
 export default class EditPageComponent extends DynamicWebComponent implements Routable {
 
-  private _detailTitle: HTMLElement;
   private _tripDetail: TripDetailComponent;
-  private _saveButton: HTMLElement;
+  private _tripForm: TripFormComponent;
 
   private _tripService: TripService;
 
@@ -37,6 +37,8 @@ export default class EditPageComponent extends DynamicWebComponent implements Ro
 
   show(): void {
     show(this.firstElementChild);
+    hide(this._tripForm);
+    hide(this._tripDetail);
   }
 
   hide(): void {
@@ -51,13 +53,21 @@ export default class EditPageComponent extends DynamicWebComponent implements Ro
   }
 
   protected _queryTemplate(): void {
-    this._detailTitle = document.getElementById('detail-title');
-    this._tripDetail = document.getElementById('trip-details') as TripDetailComponent;
-    this._saveButton = document.getElementById('save-details');
+    this._tripDetail = this.querySelector('#trip-details') as TripDetailComponent;
+    this._tripForm = this.querySelector('trip-form') as TripFormComponent;
   }
 
   protected _attachEventHandlers(): void {
-    this._saveButton.addEventListener('click', () => this._onSubmit());
+    this.addEventListener('click', e => {
+      const target = e.target as HTMLElement;
+      const isFromPagenav = target.parentElement.classList.contains('pagenav');
+      if (isFromPagenav) {
+        const tripFormUIFn = target.textContent === 'Main' ? show : hide;
+        const tripDetailUIFn = target.textContent === 'Details' ? show : hide;
+        tripFormUIFn(this._tripForm);
+        tripDetailUIFn(this._tripDetail);
+      }
+    })
   }
 
   private _onSubmit(): void {
