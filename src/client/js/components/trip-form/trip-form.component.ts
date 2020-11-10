@@ -64,7 +64,4 @@ export default class TripFormComponent extends DynamicWebComponent {
     });
     this.dispatchEvent(submitEvent);
   }
-
-
-
 }
