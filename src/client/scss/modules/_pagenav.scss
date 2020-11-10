@@ -1,0 +1,23 @@
+.pagenav {
+  @extend .row;
+  @extend .margin-medium;
+  @extend .shadow;
+
+  * {
+    border-radius: 0;
+    border-left: 1px solid $color-primary-contrast;
+    border-right: 1px solid $color-primary-contrast;
+  }
+
+  :first-child {
+    border-radius: 5px 0 0 5px;
+    border-left: 0;
+    border-right: 1px solid $color-primary-contrast;
+  }
+
+  :last-child {
+    border-radius: 0 5px 5px 0;
+    border-left: 1px solid $color-primary-contrast;
+    border-right: 0;
+  }
+}
