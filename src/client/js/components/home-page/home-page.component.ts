@@ -30,12 +30,16 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
 
   constructor() {
     super();
-    this._tripService.onTripAdded$.subscribe((trip: Trip) => {
+    this._tripService.onTripAdded$.subscribe(trip => {
       this.updateProps(trip)
       this._updateUI();
     });
+    this._tripService.onTripEdited$.subscribe(trip => {
+      const element = this._cardTripMap.get(trip.id) as TripCardComponent;
+      element.updateProps(trip);
+    })
     this._tripService.onTripDeleted$.subscribe(tripId => {
-      const element = this._cardTripMap.get(tripId);
+      const element = this._cardTripMap.get(tripId) as TripCardComponent;
       element.remove();
       this._cardTripMap.delete(tripId);
       this._updateUI();
@@ -60,7 +64,7 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
     const fragment = document.createDocumentFragment();
     trips.forEach(trip => {
       const tripCard = new TripCardComponent();
-      this._cardTripMap.set(trip.general.id, tripCard);
+      this._cardTripMap.set(trip.id, tripCard);
       tripCard.updateProps(trip)
       fragment.appendChild(tripCard);
     });
@@ -86,8 +90,8 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
   }
 
   private _selectAndNavigate(e: SelectTripEvent, route: string): void {
-    const currentTrip = e.detail;
-    this._tripService.currentTrip = currentTrip;
+    const tripId = e.detail;
+    this._tripService.setCurrentTripById(tripId);
     // TODO: create header component to manage this
     show(document.getElementById('detail-anchor'));
     navigateTo(route);

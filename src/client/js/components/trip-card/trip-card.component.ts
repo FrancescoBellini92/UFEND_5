@@ -29,16 +29,16 @@ export default class TripCardComponent extends DynamicWebComponent {
 
   private _handlersMap = {
     'remove': () => {
-      const removeEvent = new RemoveTripEvent('remove', { detail: this._trip.general.id , bubbles: true });
+      const removeEvent = new RemoveTripEvent('remove', { detail: this._trip.id , bubbles: true });
       hide(this);
       this.dispatchEvent(removeEvent);
     },
     'view': () => {
-      const viewEvent = new SelectTripEvent('view', { detail: this._trip , bubbles: true});
+      const viewEvent = new SelectTripEvent('view', { detail: this._trip.id , bubbles: true});
       this.dispatchEvent(viewEvent);
     },
     'edit': () => {
-      const editEvent = new SelectTripEvent('edit', { detail: this._trip , bubbles: true});
+      const editEvent = new SelectTripEvent('edit', { detail: this._trip.id , bubbles: true});
       this.dispatchEvent(editEvent);
     }
   }
@@ -59,7 +59,7 @@ export default class TripCardComponent extends DynamicWebComponent {
 
   updateProps(trip: Trip) {
     this._trip = trip;
-    const { id, name, location, start, end } = this._trip.general;
+    const { name, location, start, end } = this._trip.general;
     const pix = this._trip.pix.webformatURL;
     this._name.textContent = name;
     this._location.textContent = `${location} - ${this._trip.geo.countryName}`;
