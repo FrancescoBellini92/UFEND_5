@@ -1,6 +1,7 @@
 export default interface Trip {
+  id: number;
+
   general: {
-    id: number,
     start: string,
     end: string,
     location: string,

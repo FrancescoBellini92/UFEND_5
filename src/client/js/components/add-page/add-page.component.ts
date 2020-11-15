@@ -38,12 +38,12 @@ export default class AddPageComponent extends DynamicWebComponent implements Rou
   }
 
   protected _queryTemplate(): void {
-    this._tripForm = document.getElementById('trip-form') as TripFormComponent;
-    this._loader = document.getElementById('loader');
+    this._tripForm = this.querySelector('trip-form') as TripFormComponent;
+    this._loader = this.querySelector('.loader');
   }
 
   protected _attachEventHandlers(): void {
-    this.addEventListener('submit', this._onSubmit);
+    this.addEventListener('submit', (e: SubmitTripEvent) => this._onSubmit(e));
   }
 
   private async _onSubmit(e: SubmitTripEvent): Promise<void> {
