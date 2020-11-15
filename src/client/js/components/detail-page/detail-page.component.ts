@@ -70,7 +70,7 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
   }
 
   private _onRemove(): void {
-    const tripId = this._tripService.currentTrip.general.id;
+    const tripId = this._tripService.currentTrip.id;
     this._tripService.currentTrip = null;
     this._tripService.delete(tripId)
     // TODO: create header component to manage this
