@@ -10,7 +10,7 @@ const style = require('./trip-list.component.scss');
 @Component({
   selector: 'trip-list',
   template,
-  hasShadow: true,
+  hasShadowDom: true,
   style
 })
 export default class TripListComponent extends DynamicWebComponent {

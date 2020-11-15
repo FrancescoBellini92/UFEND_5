@@ -10,7 +10,7 @@ const style: { default: string } = require('./trip-form.component.scss');
 @Component({
   selector: "trip-form",
   template,
-  hasShadow: true,
+  hasShadowDom: true,
   style
 })
 export default class TripFormComponent extends DynamicWebComponent {
