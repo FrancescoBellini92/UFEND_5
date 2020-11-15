@@ -22,18 +22,19 @@ export default class TripDetailComponent extends DynamicWebComponent {
 
   private _handlerFnMap = {
     'add-detail-btn': () => this._cloneTemplate(),
-    'remove-all-btn': () => this.reset(),
-    'save-btn': () => {
-      console.log(this.tripDetails);
-      const saveDetailsEvent = new SaveTripDetailsEvent('save-details', { detail: this.tripDetails, bubbles: true });
-      this.dispatchEvent(saveDetailsEvent);
-    }
+    'remove-all-btn': () => {
+      this.reset();
+      this._onDetailsChanged();
+    },
+    'save-btn': () =>  this._onDetailsChanged()
 
   }
 
   constructor() {
     super();
   }
+
+
 
   get tripDetails(): TripDetail[] {
     const details: TripDetail[] = [];
@@ -58,9 +59,8 @@ export default class TripDetailComponent extends DynamicWebComponent {
     return details;
   }
 
-
-
   updateProps(details: TripDetail[]) {
+    this.reset();
 
     details.forEach(detail => {
       this._cloneTemplate();
@@ -90,18 +90,24 @@ export default class TripDetailComponent extends DynamicWebComponent {
       const target = e.target as HTMLElement;
       const isRemoveBtn = target.classList.contains('remove');
       isRemoveBtn ? this._onRemoveDetail(target) : this._handlerFnMap[target.id]();
-      this._updateUI();
     });
   }
 
+  private _onDetailsChanged() {
+    const saveDetailsEvent = new SaveTripDetailsEvent('save-details', { detail: this.tripDetails, bubbles: true });
+    this.dispatchEvent(saveDetailsEvent);
+  }
+
   private _onRemoveDetail(target: HTMLElement): void {
-    target.parentElement.parentElement.remove()
+    target.parentElement.parentElement.remove();
+    this._onDetailsChanged();
   }
 
   private _cloneTemplate(): void {
     const templateContent = this._formControlTemplate.content.cloneNode(true);
     this._detailsContainer.appendChild(templateContent);
-    show(this._detailsContainer.lastElementChild)
+    show(this._detailsContainer.lastElementChild);
+    this._updateUI();
   }
 
   private _getInputs(element: Element): { typeEl: HTMLInputElement, dateEl: HTMLInputElement, contentEl: HTMLInputElement } {
