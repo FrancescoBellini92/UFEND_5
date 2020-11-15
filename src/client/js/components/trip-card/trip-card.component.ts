@@ -11,7 +11,7 @@ const style: { default: string } = require('./trip-card.component.scss');
 @Component({
   selector:"trip-card",
   template,
-  hasShadow: true,
+  hasShadowDom: true,
   style
 })
 export default class TripCardComponent extends DynamicWebComponent {

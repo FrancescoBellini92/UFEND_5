@@ -10,7 +10,7 @@ const style: { default: string } = require('./trip-detail.component.scss');
 @Component({
   selector: "trip-detail",
   template,
-  hasShadow: true,
+  hasShadowDom: true,
   style
 })
 export default class TripDetailComponent extends DynamicWebComponent {

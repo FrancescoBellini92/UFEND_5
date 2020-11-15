@@ -7,7 +7,7 @@ export default class WebComponent extends HTMLElement {
   public route: string;
 
   public html: string;
-  public hasShadow: boolean;
+  public hasShadowDom: boolean;
   public _style: { default: string };
   protected _shadowRoot: ShadowRoot;
 
@@ -31,7 +31,7 @@ export default class WebComponent extends HTMLElement {
   }
 
   protected _attachHTML(): void {
-    this._shadowRoot = this.hasShadow ? this.attachShadow({ mode: "open" }): null;
+    this._shadowRoot = this.hasShadowDom ? this.attachShadow({ mode: "open" }): null;
     const root = this._shadowRoot ?? this;
     root.innerHTML = this.html;
   }

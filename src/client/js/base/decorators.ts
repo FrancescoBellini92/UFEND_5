@@ -1,10 +1,10 @@
 import WebComponent from "./web.component";
 
 export const Component: {(componentParams: ComponentParameters): { <T extends typeof WebComponent>(target:  T): void }} =
-  ({ selector, template, hasShadow, style, route }) => target => {
+  ({ selector, template, hasShadowDom, style, route }) => target => {
       target.selector = selector;
       target.prototype.html = template;
-      target.prototype.hasShadow = hasShadow;
+      target.prototype.hasShadowDom = hasShadowDom;
       target.prototype._style = style;
       target.prototype.route = route;
 };
@@ -12,7 +12,7 @@ export const Component: {(componentParams: ComponentParameters): { <T extends ty
 interface ComponentParameters {
   selector: string;
   template: string,
-  hasShadow?: boolean,
+  hasShadowDom?: boolean,
   style?: { default: string };
   route?: string;
 }
