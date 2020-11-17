@@ -1,4 +1,4 @@
-import Trip, { TripDetail } from "../models/trip.model";
+import Trip, { DayInfo, TripDetail } from "../models/trip.model";
 import environment from '../environment';
 import { Service } from '../base/service';
 
@@ -9,6 +9,7 @@ import {
 import TripRequest from "../models/trip.request";
 import { Injectable } from "../base/service";
 import Observable from "../base/observable";
+import moment from "moment";
 
 const isProd = environment.MODE === 'PROD';
 
@@ -41,6 +42,34 @@ export default class TripService extends Service{
   static isEmpty(collection) {
     const hasNoItems = collection.length === 0;
     return collection ? hasNoItems : true;
+  }
+
+
+  static getDayInfo(trip: Trip): DayInfo[] {
+    const dayMap: Map<string, DayInfo> = new Map<string, DayInfo>();
+    trip.details?.forEach(detail => {
+      const { dayData, dayKey } = TripService._getDayDataAndKey(detail.date, dayMap);
+      dayData.details = (dayData.details?? []).concat(detail);
+      dayMap.set(dayKey, dayData);
+    });
+    trip.weather?.forEach(weatherInfo => {
+      const { dayData, dayKey } = TripService._getDayDataAndKey(weatherInfo.valid_date, dayMap);
+      dayData.weather = weatherInfo;
+      dayMap.set(dayKey, dayData);
+    });
+    const accumulator = [];
+    dayMap.forEach(value => {
+      value.details = value.details?.sort((firstDetail, secondDetail) => moment(firstDetail.date).diff(secondDetail.date));
+      accumulator.push(value)
+    });
+    return accumulator;
+  }
+
+
+  private static _getDayDataAndKey(date: string, dayMap: Map<string, DayInfo>): { dayData: DayInfo, dayKey: string } {
+    const dayKey = moment(date).format('L');
+    const dayData = dayMap.get(dayKey) ?? {};
+    return { dayData, dayKey };
   }
 
   set trips(trips: Trip[]) {
@@ -95,7 +124,6 @@ export default class TripService extends Service{
 
   editDetails(details: TripDetail[]): void {
     this._currentTrip.details = details;
-    debugger;
     this.currentTrip  = this._currentTrip;
     this._syncStorage();
   }

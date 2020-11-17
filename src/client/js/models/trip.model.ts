@@ -44,6 +44,11 @@ export interface TripDetail {
   content: string
 }
 
+export interface DayInfo {
+  weather?: Weather;
+  details?: TripDetail[]
+}
+
 export enum TripDetailType {
   TODO = 'todo',
   STAY = 'stay',

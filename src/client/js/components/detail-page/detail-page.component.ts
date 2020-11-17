@@ -1,7 +1,7 @@
 import DynamicWebComponent from '../../base/dynamic.web.component';
 import TripCardComponent from '../trip-card/trip-card.component';
 import { hide, show } from "../../DOM-utils/DOM-utils";
-import Trip from "../../models/trip.model";
+import Trip, { DayInfo } from "../../models/trip.model";
 import { Component } from "../../base/decorators";
 import { Inject } from "../../base/inject";
 import TripService from "../../services/trip.service";
@@ -49,7 +49,7 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
 
   updateProps(trip: Trip): void {
     this._detailCard.updateProps(trip);
-    this._weatherList.addMany(trip.weather);
+    this._weatherList.addMany(TripService.getDayInfo(trip));
   }
 
   protected _queryTemplate(): void {
@@ -59,8 +59,24 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
     this._removedAlert = document.getElementById('detail-deleted');
 
     this._detailCard.hideChildren('#view');
-    this._weatherList.title = 'Weather forecast';
-    this._weatherList.makeListStrategyFn = ({ valid_date, temp, weather }) => `<p><strong>${moment(valid_date).format('L')}</strong></p><p>${weather.description} - ${temp} °C</p><button>&#10005;</button>`;
+    this._weatherList.title = 'Trip details';
+    this._weatherList.makeListStrategyFn = (dayData: DayInfo) => {
+      const { weather, details } = dayData;
+      let weatherHTML = '';
+      if( weather) {
+        weatherHTML = `
+        <span><strong>${moment(weather.valid_date).format('L')}</strong></span><span>${weather.weather.description} - ${weather.temp} °C</span>`
+      }
+      const detailsHTML = [];
+      details?.forEach(detail => {
+        const detailHTML = `
+        <li class="margin-small"><strong>${moment(detail.date).format('HH:mm')}</strong> - ${detail.type.toLowerCase()}</span><span>: ${detail.content}</li>`
+        detailsHTML.push(detailHTML);
+      });
+
+      const itemHTML = `<div class="margin-small row">${weatherHTML}</div><ul>${detailsHTML.join('')}</ul>`
+      return itemHTML;
+    }
   }
 
   protected _attachEventHandlers(): void {
