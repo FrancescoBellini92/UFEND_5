@@ -1,23 +1,27 @@
 import DynamicWebComponent from '../../base/dynamic.web.component';
-import TripCardComponent from '../trip-card/trip-card.component';
 import { hide, show } from "../../DOM-utils/DOM-utils";
 import Trip from "../../models/trip.model";
 import { Component } from "../../base/decorators";
 import { Inject } from "../../base/inject";
 import TripService, { BadRequestError } from "../../services/trip.service";
-import { RemoveTripEvent, SaveTripDetailsEvent, SubmitTripEvent } from "../../models/events";
-import TripListComponent from "../trip-list/trip-list.component";
-import moment from "moment";
+import { SaveTripDetailsEvent, SubmitTripEvent } from "../../models/events";
 import TripDetailComponent from '../trip-detail/trip-detail.component';
-import { navigateTo, Routable } from '../../base/router';
+import { Routable } from '../../base/router';
 import TripFormComponent from '../trip-form/trip-form.component';
+import ToastService from '../../services/toast.service';
 
 const template: string = require("./edit-page.component.html");
 
-@Inject({
-  injectionToken: TripService.injectionToken,
-  nameAsDependency: '_tripService'
-})
+@Inject(
+  {
+    injectionToken: TripService.injectionToken,
+    nameAsDependency: '_tripService'
+  },
+  {
+    injectionToken: ToastService.injectionToken,
+    nameAsDependency: '_toastService'
+  }
+)
 @Component({
   selector:"edit-page",
   template,
@@ -30,6 +34,7 @@ export default class EditPageComponent extends DynamicWebComponent implements Ro
   private _loader: HTMLElement;
 
   private _tripService: TripService;
+  private _toastService: ToastService;
 
   constructor() {
     super();
@@ -67,7 +72,10 @@ export default class EditPageComponent extends DynamicWebComponent implements Ro
     });
 
     this.addEventListener('submit', (e: SubmitTripEvent) => this._onSubmit(e));
-    this.addEventListener('save-details', (e: SaveTripDetailsEvent) => this._tripService.editDetails(e.detail));
+    this.addEventListener('save-details', (e: SaveTripDetailsEvent) => {
+      this._tripService.editDetails(e.detail);
+      this._toastService.showSuccess('Changes have been saved')
+    });
 
   }
 
@@ -76,10 +84,10 @@ export default class EditPageComponent extends DynamicWebComponent implements Ro
       show(this._loader);
       await this._tripService.edit(e.detail);
       this._tripForm.updateProps(this._tripService.currentTrip.general);
-      // TODO: SHOW SUCCESS TOAST
+      this._toastService.showSuccess('Trip modified!')
     } catch (e) {
       if (e instanceof BadRequestError) {
-      // TODO: SHOW ERROR TOAST
+        this._toastService.showDanger('Something went wrong: are the trip info correct?')
     } else {
         throw e;
       }

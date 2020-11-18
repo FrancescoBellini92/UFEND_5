@@ -17,7 +17,7 @@ const isProd = environment.MODE === 'PROD';
   injectionToken: 'tripService',
   isSingleton: true
 })
-export default class TripService extends Service{
+export default class TripService extends Service {
   static STORAGE_TRIP_PROP = "trips";
 
   currentTrip$: Observable<Trip, Trip> = new Observable<Trip, Trip>(async(trip: Trip) => trip);

@@ -9,13 +9,20 @@ import { RemoveTripEvent, SelectTripEvent } from "../../models/events";
 import TripListComponent from "../trip-list/trip-list.component";
 import moment from "moment";
 import { navigateTo, Routable } from '../../base/router';
+import ToastService from '../../services/toast.service';
 
 const template: string = require("./detail-page.component.html");
 
-@Inject({
-  injectionToken: TripService.injectionToken,
-  nameAsDependency: '_tripService'
-})
+@Inject(
+  {
+    injectionToken: TripService.injectionToken,
+    nameAsDependency: '_tripService'
+  },
+  {
+    injectionToken: ToastService.injectionToken,
+    nameAsDependency: '_toastService'
+  }
+)
 @Component({
   selector:"detail-page",
   template,
@@ -23,12 +30,11 @@ const template: string = require("./detail-page.component.html");
 })
 export default class DetailPageComponent extends DynamicWebComponent implements Routable{
 
-  private _detailTitle: HTMLElement;
   private _detailCard: TripCardComponent;
   private _weatherList: TripListComponent;
-  private _removedAlert: HTMLElement;
 
   private _tripService: TripService;
+  private _toastService: ToastService;
 
   constructor() {
     super();
@@ -53,10 +59,8 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
   }
 
   protected _queryTemplate(): void {
-    this._detailTitle = document.getElementById('detail-title');
     this._detailCard = document.getElementById('detail-card') as TripCardComponent;
     this._weatherList = document.getElementById('weather-list') as TripListComponent;
-    this._removedAlert = document.getElementById('detail-deleted');
 
     this._detailCard.hideChildren('#view');
     this._weatherList.title = 'Trip details';
@@ -88,11 +92,9 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
   private _onRemove(): void {
     const tripId = this._tripService.currentTrip.id;
     this._tripService.currentTrip = null;
-    this._tripService.delete(tripId)
-    // TODO: create header component to manage this
+    this._tripService.delete(tripId);
     hide(document.getElementById('detail-anchor'));
-    hide(this._detailTitle);
-    hide(this._weatherList);
-    show(this._removedAlert);
+    this._toastService.showSuccess('Trip deleted!');
+    setTimeout(() => navigateTo('home'));
   }
 }

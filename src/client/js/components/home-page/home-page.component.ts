@@ -7,13 +7,20 @@ import { Inject } from "../../base/inject";
 import TripService from "../../services/trip.service";
 import { RemoveTripEvent, SelectTripEvent } from "../../models/events";
 import { navigateTo, Routable } from "../../base/router";
+import ToastService from "../../services/toast.service";
 
 const template: string = require("./home-page.component.html");
 
-@Inject({
-  injectionToken: TripService.injectionToken,
-  nameAsDependency: '_tripService'
-})
+@Inject(
+  {
+    injectionToken: TripService.injectionToken,
+    nameAsDependency: '_tripService'
+  },
+  {
+    injectionToken: ToastService.injectionToken,
+    nameAsDependency: '_toastService'
+  }
+)
 @Component({
   selector:"home-page",
   template,
@@ -24,7 +31,9 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
   private _emptyContainer: HTMLElement;
   private _homeTitle: HTMLElement;
   private _cardContainer: HTMLElement;
+
   private _tripService: TripService;
+  private _toastService: ToastService;
 
   private _cardTripMap = new Map();
 
@@ -71,7 +80,6 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
     this._cardContainer.insertBefore(fragment, this._cardContainer.firstChild);
   }
 
-
   protected _queryTemplate(): void {
     this._emptyContainer = this.querySelector('#empty-container');
     this._homeTitle = this.querySelector('#home-title');
@@ -87,6 +95,7 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
   private _onRemove(e: RemoveTripEvent): void {
     const tripId = e.detail;
     this._tripService.delete(tripId);
+    this._toastService.showSuccess('Trip deleted!');
   }
 
   private _selectAndNavigate(e: SelectTripEvent, route: string): void {
@@ -98,11 +107,11 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
   }
 
   private _updateUI(dataSize: number = this._cardTripMap.size): void {
-    const hasProps = dataSize > 0;
-    if (hasProps) {
-      hide(this._emptyContainer);
-      show(this._homeTitle);
-    }
+    const isEmpty = dataSize === 0;
+    const emptyContainerUIFn =  isEmpty ? show : hide;
+    const homeTitleUIFn =  isEmpty ? hide : show;
+    emptyContainerUIFn(this._emptyContainer);
+    homeTitleUIFn(this._homeTitle);
   }
 
 }

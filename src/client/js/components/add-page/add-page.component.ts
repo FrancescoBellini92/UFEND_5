@@ -5,15 +5,21 @@ import TripService, { BadRequestError } from "../../services/trip.service";
 import TripFormComponent from "../trip-form/trip-form.component";
 import { SubmitTripEvent } from "../../models/events";
 import DynamicWebComponent from "../../base/dynamic.web.component";
-import TripDetailComponent from "../trip-detail/trip-detail.component";
 import { navigateTo, Routable } from "../../base/router";
+import ToastService from "../../services/toast.service";
 
 const template: string = require("./add-page.component.html");
 
-@Inject({
-  injectionToken: TripService.injectionToken,
-  nameAsDependency: '_tripService'
-})
+@Inject(
+  {
+    injectionToken: TripService.injectionToken,
+    nameAsDependency: '_tripService'
+  },
+  {
+    injectionToken: ToastService.injectionToken,
+    nameAsDependency: '_toastService'
+  }
+)
 @Component({
   selector:"add-page-main",
   template,
@@ -24,6 +30,7 @@ export default class AddPageComponent extends DynamicWebComponent implements Rou
   private _tripForm: TripFormComponent;
   private _loader: HTMLElement;
   private _tripService: TripService;
+  private _toastService: ToastService;
 
   constructor() {
     super();
@@ -53,11 +60,11 @@ export default class AddPageComponent extends DynamicWebComponent implements Rou
       await this._tripService.add(e.detail);
 
       this._tripForm.reset();
-      // TODO: SHOW SUCCESS TOAST
+      this._toastService.showSuccess('Trip created!')
       setTimeout(() => navigateTo('#details'), 1000);
     } catch (e) {
       if (e instanceof BadRequestError) {
-      // TODO: SHOW ERROR TOAST
+        this._toastService.showDanger('Something went wrong: are the trip info correct?')
     } else {
         throw e;
       }
