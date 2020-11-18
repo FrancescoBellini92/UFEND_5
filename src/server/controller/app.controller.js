@@ -28,10 +28,10 @@ app.get(
   (req, res, next) => {
     // parameters validation
     const today = moment();
-    const isStartAfterPast = moment(req.query.start).isSameOrAfter(today, 'days'); 
-    const isEndAfterStart = moment(req.query.end).isSameOrAfter(req.query.start, 'days'); 
+    const isStartAfterPast = moment(req.query.start).isSameOrAfter(today, 'days');
+    const isEndAfterStart = moment(req.query.end).isSameOrAfter(req.query.start, 'days');
     (isStartAfterPast && isEndAfterStart) ? next() : res.status(400).json({ error: 'bad dates' });
-  }, 
+  },
   async (req, res) => {
     try {
       const APIRequest = await Promise.all([
@@ -44,11 +44,10 @@ app.get(
       const lat = geoAPIResponse.lat;
       const lon = geoAPIResponse.lng;
       const [deltaDaysFromStart, deltaDaysFromEnd] = WeatherResponse.calculateDeltaDays(start, end);
-      const isWithinMaxForecast = deltaDaysFromStart  <= API_WEATHERBIT_MAX_FORECAST; 
+      const isWithinMaxForecast = deltaDaysFromStart  <= API_WEATHERBIT_MAX_FORECAST;
       const weatherAPIResponse = isWithinMaxForecast ? await getWeatherData({query: {lat, lon, days: deltaDaysFromEnd}}) : [];
 
       const general = {
-        id: new Date().getTime(), // return UNIX time
         start,
         end,
         location: req.query.location,

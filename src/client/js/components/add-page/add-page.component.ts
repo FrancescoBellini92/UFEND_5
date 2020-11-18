@@ -3,40 +3,40 @@ import { Component } from "../../base/decorators";
 import { Inject } from "../../base/inject";
 import TripService, { BadRequestError } from "../../services/trip.service";
 import TripFormComponent from "../trip-form/trip-form.component";
-import { AddFormSubmitEvent } from "../../models/events";
+import { SubmitTripEvent } from "../../models/events";
 import DynamicWebComponent from "../../base/dynamic.web.component";
+import { navigateTo, Routable } from "../../base/router";
+import ToastService from "../../services/toast.service";
 
 const template: string = require("./add-page.component.html");
 
-@Inject({
-  injectionToken: TripService.injectionToken,
-  nameAsDependency: '_tripService'
-})
+@Inject(
+  {
+    injectionToken: TripService.injectionToken,
+    nameAsDependency: '_tripService'
+  },
+  {
+    injectionToken: ToastService.injectionToken,
+    nameAsDependency: '_toastService'
+  }
+)
 @Component({
-  selector:"add-page",
-  template
+  selector:"add-page-main",
+  template,
+  route: '#add'
 })
-export default class AddPageComponent extends DynamicWebComponent {
+export default class AddPageComponent extends DynamicWebComponent implements Routable {
 
   private _tripForm: TripFormComponent;
   private _loader: HTMLElement;
-  private _addSuccessAlert: HTMLElement;
-  private _addErrorAlert: HTMLElement;
-
   private _tripService: TripService;
+  private _toastService: ToastService;
 
   constructor() {
     super();
-    this._init();
-  }
-
-  static define(): void {
-    super.define(this);
   }
 
   show(): void {
-    hide(this._addSuccessAlert);
-    hide(this._addErrorAlert);
     show(this.firstElementChild);
   }
 
@@ -45,28 +45,27 @@ export default class AddPageComponent extends DynamicWebComponent {
   }
 
   protected _queryTemplate(): void {
-    this._tripForm = document.getElementById('trip-form') as TripFormComponent;
-    this._loader = document.getElementById('loader');
-    this._addSuccessAlert = document.getElementById('add-success');
-    this._addErrorAlert = document.getElementById('add-error');
+    this._tripForm = this.querySelector('trip-form') as TripFormComponent;
+    this._loader = this.querySelector('.loader');
   }
 
   protected _attachEventHandlers(): void {
-    this.addEventListener('submit', this._onSubmit);
+    this.addEventListener('submit', (e: SubmitTripEvent) => this._onSubmit(e));
   }
 
-  private async _onSubmit(e: AddFormSubmitEvent): Promise<void> {
+  private async _onSubmit(e: SubmitTripEvent): Promise<void> {
     try {
-      hide(this._addErrorAlert, this._addSuccessAlert);
       show(this._loader);
+
       await this._tripService.add(e.detail);
+
       this._tripForm.reset();
-      show(this._addSuccessAlert);
+      this._toastService.showSuccess('Trip created!')
+      setTimeout(() => navigateTo('#details'), 1000);
     } catch (e) {
-      debugger;
       if (e instanceof BadRequestError) {
-        show(this._addErrorAlert);
-      } else {
+        this._toastService.showDanger('Something went wrong: are the trip info correct?')
+    } else {
         throw e;
       }
     } finally {

@@ -2,16 +2,18 @@
 
 .list {
   width: 100%;
-  
+
   .list__item {
     @extend .padding-medium;
     border-bottom: 1px solid $color-border;
     position: relative;
 
-    button {
-      position: absolute;
-      top: 2px;
-      right: 5px;
+    ul {
+      margin: 10px 0 5px 0;
+
+      li {
+        word-wrap: break-word;
+      }
     }
   }
 }
@@ -20,4 +22,11 @@
   @extend .padding-medium;
   width: 100%;
   font-size: 12px;
+
+  button {
+    &:hover {
+      background-color: darkgray !important;
+      color: white !important;
+    }
+  }
 }

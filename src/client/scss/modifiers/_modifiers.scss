@@ -38,12 +38,13 @@
 }
 
 .collapsable {
-  overflow: hidden;
+  overflow-y: hidden;
+  overflow-x: hidden;
   max-height: 0;
   transition: max-height 1s;
 
   &.open {
-    overflow: scroll;
+    overflow-y: scroll;
     max-height: 400px;
   }
 }
@@ -116,12 +117,13 @@
 
 .page {
   height: 100%;
+  width: 100%;
 }
 
 .column {
   @include flex(column, center, center);
   max-width: 400px;
-  margin: 20px;
+  margin: 20px 5px;
 }
 
 .row {

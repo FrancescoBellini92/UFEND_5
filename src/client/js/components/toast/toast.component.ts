@@ -2,14 +2,13 @@ import { Component } from "../../base/decorators";
 import { Inject } from "../../base/inject";
 import WebComponent from "../../base/web.component";
 import { addClass, hide, removeClass, show } from "../../DOM-utils/DOM-utils";
-import Trip from "../../models/trip.model";
-import TripService from "../../services/trip.service";
+import ToastService from "../../services/toast.service";
 
 const template = require('./toast.component.html');
 
 @Inject({
-  injectionToken: TripService.injectionToken,
-  nameAsDependency: '_tripService'
+  injectionToken: ToastService.injectionToken,
+  nameAsDependency: '_toastService'
 })
 @Component({
   selector: 'toast-component',
@@ -17,31 +16,25 @@ const template = require('./toast.component.html');
 })
 export default class ToastComponent extends WebComponent {
 
-  private _tripService: TripService;
+  private _toastService: ToastService;
 
   constructor() {
     super();
-    this._init();
-    this._tripService.onTripAdded$.subscribe(() => this._onTripAdded());
-    this._tripService.onTripDeleted$.subscribe(() => this._onTripDeleted());
+    this._toastService.toastEl = this;
   }
 
-  static define() {
-    super.define(ToastComponent);
-  }
-
-  private _onTripAdded(): void {
+  showSucces(message: string): void {
     this.firstElementChild.classList.remove('bg-danger');
     this.firstElementChild.classList.add('bg-success');
-    this.firstElementChild.firstElementChild.textContent = 'Trip added!'
+    this.firstElementChild.firstElementChild.textContent = message;
 
     this._showAndHide();
   }
 
-  private _onTripDeleted(): void {
+  showDanger(message: string): void {
     removeClass('bg-success', this.firstElementChild);
     addClass('bg-danger', this.firstElementChild);
-    this.firstElementChild.firstElementChild.textContent = 'Trip deleted!';
+    this.firstElementChild.firstElementChild.textContent = message;
 
     this._showAndHide();
   }

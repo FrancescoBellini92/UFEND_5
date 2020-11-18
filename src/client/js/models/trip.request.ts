@@ -1,6 +1,6 @@
 export default interface TripRequest {
-  startDate: string;
-  endDate: string;
+  start: string;
+  end: string;
   location: string;
   name: string;
 }

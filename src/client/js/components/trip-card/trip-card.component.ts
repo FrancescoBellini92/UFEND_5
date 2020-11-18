@@ -2,7 +2,7 @@ import DynamicWebComponent from '../../base/dynamic.web.component';
 import Trip from '../../models/trip.model';
 import * as moment from 'moment';
 import { show, hide } from '../../DOM-utils/DOM-utils';
-import { CardRemoveEvent, CardViewEvent } from "../../models/events";
+import { RemoveTripEvent, SelectTripEvent } from "../../models/events";
 import { Component } from "../../base/decorators";
 
 const template: string = require('./trip-card.component.html') ;
@@ -11,12 +11,12 @@ const style: { default: string } = require('./trip-card.component.scss');
 @Component({
   selector:"trip-card",
   template,
-  hasShadow: true,
+  hasShadowDom: true,
   style
 })
 export default class TripCardComponent extends DynamicWebComponent {
 
-  static _PICTURE_ID  = 'picture';
+  private static _PICTURE_ID  = 'picture';
 
   private _startDate: HTMLElement;
   private _endDate: HTMLElement;
@@ -27,25 +27,24 @@ export default class TripCardComponent extends DynamicWebComponent {
 
   private _pictureContainer: any;
 
-  _handlersMap = {
+  private _handlersMap = {
     'remove': () => {
-      const removeEvent = new CardRemoveEvent('remove', { detail: this._trip.general.id , bubbles: true });
+      const removeEvent = new RemoveTripEvent('remove', { detail: this._trip.id , bubbles: true });
       hide(this);
       this.dispatchEvent(removeEvent);
     },
     'view': () => {
-      const viewEvent = new CardViewEvent('view', { detail: this._trip , bubbles: true});
+      const viewEvent = new SelectTripEvent('view', { detail: this._trip.id , bubbles: true});
       this.dispatchEvent(viewEvent);
+    },
+    'edit': () => {
+      const editEvent = new SelectTripEvent('edit', { detail: this._trip.id , bubbles: true});
+      this.dispatchEvent(editEvent);
     }
   }
 
   constructor() {
     super();
-    this._init();
-  }
-
-  static define() {
-    super.define(TripCardComponent);
   }
 
   hideChildren(selector: string): void {
@@ -60,7 +59,7 @@ export default class TripCardComponent extends DynamicWebComponent {
 
   updateProps(trip: Trip) {
     this._trip = trip;
-    const { id, name, location, start, end } = this._trip.general;
+    const { name, location, start, end } = this._trip.general;
     const pix = this._trip.pix.webformatURL;
     this._name.textContent = name;
     this._location.textContent = `${location} - ${this._trip.geo.countryName}`;
@@ -86,10 +85,10 @@ export default class TripCardComponent extends DynamicWebComponent {
   }
 
   protected _attachEventHandlers(): void {
-    this._shadowRoot.addEventListener('click', this._onClick )
+    this._shadowRoot.addEventListener('click', e => this._onClick(e) )
   }
 
-  private _onClick = (e: Event) => {
+  private _onClick(e: Event): void {
     const target = e.target as HTMLElement;
     const handlerFn = this._handlersMap[target.id];
     handlerFn();

@@ -12,7 +12,15 @@ input {
   @extend .padding-small;
   @extend .border-radius;
   @extend .border;
+  background-color: white;
   width: 100%;
+}
+
+select {
+  @extend .padding-small;
+  @extend .border-radius;
+  @extend .border;
+  background-color: white;
 }
 
 

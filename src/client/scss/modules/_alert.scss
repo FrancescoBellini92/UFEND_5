@@ -1,8 +1,17 @@
 .alert {
-    @extend .column;
-    @extend .border;
-    @extend .border-radius;
-    @extend .padding-medium;
-    @extend .margin-medium;
-    @extend .shadow;
+  @extend .column;
+  @extend .border;
+  @extend .border-radius;
+  @extend .padding-medium;
+  @extend .margin-medium;
+  @extend .shadow;
+  width: 100%;
+
+  .alert__button {
+    margin: 0 10px !important;
+    &:hover {
+      background-color: darkgray !important;
+      color: white !important;
+    }
+  }
 }
