@@ -20,15 +20,10 @@ export default class TripListComponent extends DynamicWebComponent {
   makeListStrategyFn: { (item: any): string } = item => '';
 
   private _listEl: HTMLElement;
-  private _titleEl: HTMLElement;
+  private _toggleBtn: HTMLElement;
 
   constructor() {
     super();
-  }
-
-  set title(val: string) {
-    this._titleEl.textContent = val;
-    show(this._titleEl);
   }
 
   add(item: any): void {
@@ -38,11 +33,11 @@ export default class TripListComponent extends DynamicWebComponent {
   }
 
   addMany(data: any[]): void {
-    this.data = data;
-    if (TripService.isEmpty(this.data)) {
+    if (TripService.isEmpty(data)) {
       this._listEl.innerHTML = '<li class="list__item">Sorry, there is no data available</li>';
       return;
     }
+    this.data = data;
     const fragment = document.createDocumentFragment();
     data.forEach((item, index) => {
       const listEl = this._makeListEl(item, index);
@@ -54,29 +49,24 @@ export default class TripListComponent extends DynamicWebComponent {
 
   protected _queryTemplate(): void {
     this._listEl = this.shadowRoot.querySelector("#list");
-    this._titleEl = this.shadowRoot.querySelector("#title");
+    this._toggleBtn = this.shadowRoot.querySelector("#toggle-btn");
   }
 
   protected _attachEventHandlers(): void {
-    this.shadowRoot.addEventListener('click', e => this._onClick(e));
+    this._toggleBtn.addEventListener('click', e => this._onClick(e));
   }
 
   private _onClick(e: Event): void {
-    const target = e.target as HTMLElement;
-    let idToRemove: number;
-    if (target.nodeName === 'BUTTON') {
-      idToRemove = target.parentElement.attributes['data-id'].value;
-      this.data.splice(idToRemove,1);
-      const removeEvent = new RemoveListItemEvent('remove',{ detail: { idToRemove, element: this } }  );
-      this.dispatchEvent(removeEvent);
-      this._listEl.removeChild(target.parentNode);
+    if (this._listEl.className.includes('open')) {
+      removeClass('open', this._listEl);
+      this._toggleBtn.textContent = 'Open';
+      return;
     }
-    if (target.nodeName === 'H2') {
-      this._listEl.className.includes('open') ? removeClass('open', this._listEl) : addClass('open', this._listEl);
-    }
+    addClass('open', this._listEl);
+    this._toggleBtn.textContent = 'Close';
   }
 
-  private _makeListEl(item, index) {
+  private _makeListEl(item: any, index: any) {
     const listEl = document.createElement("li");
     listEl.innerHTML = this.makeListStrategyFn(item);
     listEl.classList.add("list__item");

@@ -70,7 +70,7 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
       const detailsHTML = [];
       details?.forEach(detail => {
         const detailHTML = `
-        <li class="margin-small"><strong>${moment(detail.date).format('HH:mm')}</strong> - ${detail.type.toLowerCase()}</span><span>: ${detail.content}</li>`
+        <li class="margin-small"><strong>${moment(detail.date).format('HH:mm')}</strong> - <em>${detail.type.toLowerCase()}</em><span>: ${detail.content}</li>`
         detailsHTML.push(detailHTML);
       });
 

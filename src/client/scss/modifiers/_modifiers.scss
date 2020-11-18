@@ -38,12 +38,13 @@
 }
 
 .collapsable {
-  overflow: hidden;
+  overflow-y: hidden;
+  overflow-x: hidden;
   max-height: 0;
   transition: max-height 1s;
 
   &.open {
-    overflow: scroll;
+    overflow-y: scroll;
     max-height: 400px;
   }
 }
