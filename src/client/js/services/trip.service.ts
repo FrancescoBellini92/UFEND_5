@@ -152,11 +152,4 @@ export default class TripService extends Service {
   private _syncStorage(): void {
     localStorage.setItem(TripService.STORAGE_TRIP_PROP, JSON.stringify(this.trips));
   }
-
-}
-
-export class BadRequestError extends Error {
-  constructor(message: string) {
-    super(message);
-  }
 }

@@ -1,12 +1,22 @@
 import DynamicWebComponent from '../../base/dynamic.web.component';
 import { Component } from '../../base/decorators';
-import { TripDetail, TripDetailType } from '../../models/trip.model';
-import { hide, show } from '../../DOM-utils/DOM-utils';
+import Trip, { TripDetail, TripDetailType } from '../../models/trip.model';
+import { addClass, hide, inputNotValid, removeClass, show } from '../../DOM-utils/DOM-utils';
 import { SaveTripDetailsEvent } from '../../models/events';
+import moment from 'moment';
+import { Inject } from '../../base/inject';
+import ToastService from '../../services/toast.service';
+import { NotValidInputError } from '../../exceptions/exceptions';
 
 const template: string = require('./trip-detail.component.html');
 const style: { default: string } = require('./trip-detail.component.scss');
 
+@Inject(
+  {
+    injectionToken: ToastService.injectionToken,
+    nameAsDependency: '_toastService'
+  }
+)
 @Component({
   selector: "trip-detail",
   template,
@@ -15,10 +25,15 @@ const style: { default: string } = require('./trip-detail.component.scss');
 })
 export default class TripDetailComponent extends DynamicWebComponent {
 
+  start: string;
+  end: string;
+
   private _formControlTemplate: HTMLTemplateElement;
   private _detailsContainer: HTMLElement;
   private _saveDetailsBtn: HTMLElement;
   private _noDetailsText: HTMLElement;
+
+  private _toastService: ToastService;
 
   private _handlerFnMap = {
     'add-detail-btn': () => this._cloneTemplate(),
@@ -39,30 +54,40 @@ export default class TripDetailComponent extends DynamicWebComponent {
   get tripDetails(): TripDetail[] {
     const details: TripDetail[] = [];
     const detailElements = this.shadowRoot.querySelectorAll('.detail');
-    detailElements.forEach(node => {
+    removeClass('error', ...detailElements)
+    for (const node of detailElements) {
 
       const { typeEl, dateEl, contentEl } = this._getInputs(node);
 
       const type = typeEl.value as TripDetailType;
       const date = dateEl.value;
       const content = contentEl.value;
-      const allValid = type && date && content;
-      if (allValid) {
-        details.push({
-          type: typeEl.value as TripDetailType,
-          date: dateEl.value,
-          content: contentEl.value
-        });
+
+      const isValidDate = moment(date).isSameOrAfter(this.start) && moment(date).isSameOrBefore(this.end);
+      const allValid = isValidDate && content;
+
+      if (!allValid)  {
+        const invalidNode = !content ? contentEl : dateEl;
+        this._hightlightInvalidFields(invalidNode as HTMLElement);
+        throw new NotValidInputError(!content ? 'Please fill the content field' : 'Selected date is out of trip date range');
       }
-    })
+      details.push({
+        type: typeEl.value as TripDetailType,
+        date: dateEl.value,
+        content: contentEl.value
+      });
+    }
 
     return details;
   }
 
-  updateProps(details: TripDetail[]) {
+  updateProps(trip: Trip) {
     this.reset();
 
-    details.forEach(detail => {
+    this.start = trip.general.start;
+    this.end = trip.general.end;
+
+    trip.details.forEach(detail => {
       this._cloneTemplate();
       const { typeEl, dateEl, contentEl } = this._getInputs(this._detailsContainer.lastElementChild);
       typeEl.value = detail.type;
@@ -94,13 +119,20 @@ export default class TripDetailComponent extends DynamicWebComponent {
   }
 
   private _onDetailsChanged() {
-    const saveDetailsEvent = new SaveTripDetailsEvent('save-details', { detail: this.tripDetails, bubbles: true });
-    this.dispatchEvent(saveDetailsEvent);
+    try {
+      const saveDetailsEvent = new SaveTripDetailsEvent('save-details', { detail: this.tripDetails, bubbles: true });
+      this.dispatchEvent(saveDetailsEvent);
+    } catch (e) {
+      if (e instanceof NotValidInputError) {
+        this._toastService.showDanger('Please fill all fields and check your dates');
+      } else {
+        throw e;
+      }
+    }
   }
 
   private _onRemoveDetail(target: HTMLElement): void {
     target.parentElement.parentElement.remove();
-    this._onDetailsChanged();
   }
 
   private _cloneTemplate(): void {
@@ -124,4 +156,7 @@ export default class TripDetailComponent extends DynamicWebComponent {
     updateUINoDetailsTextFn(this._noDetailsText);
   }
 
+  private _hightlightInvalidFields(el: HTMLElement): void {
+    addClass('error', el);
+  }
 }

@@ -1,2 +1,6 @@
 @import "../../../scss/shared";
 @import "../../../scss/modules/alert";
+
+.error {
+  border-color: $color-danger;
+}

@@ -13,17 +13,17 @@
 </div>
 
 <template id="form-control">
-  <div class="column detail can-hide-absent hidden">
+  <div class="column detail">
     <div class="row">
-      <select class="margin-small detail-type">
+      <select class="margin-small detail-type" required>
         <option value="todo">Todo</option>
         <option value="stay">Stay</option>
         <option value="travel">Travel</option>
       </select>
-      <input type="datetime-local" class="shadow margin-small detail-date">
+      <input type="datetime-local" class="shadow margin-small detail-date" required>
       <button class="remove" class="padding-small margin-small shadow">&#10005;</button>
     </div>
-      <input class="shadow margin-small detail-content">
+      <input class="shadow margin-small detail-content" required>
     </div>
   </div>
 </template>

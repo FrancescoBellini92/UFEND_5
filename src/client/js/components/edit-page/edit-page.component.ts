@@ -3,12 +3,13 @@ import { hide, show } from "../../DOM-utils/DOM-utils";
 import Trip from "../../models/trip.model";
 import { Component } from "../../base/decorators";
 import { Inject } from "../../base/inject";
-import TripService, { BadRequestError } from "../../services/trip.service";
 import { SaveTripDetailsEvent, SubmitTripEvent } from "../../models/events";
 import TripDetailComponent from '../trip-detail/trip-detail.component';
 import { Routable } from '../../base/router';
 import TripFormComponent from '../trip-form/trip-form.component';
 import ToastService from '../../services/toast.service';
+import { BadRequestError } from '../../exceptions/exceptions';
+import TripService from '../../services/trip.service';
 
 const template: string = require("./edit-page.component.html");
 
@@ -53,7 +54,7 @@ export default class EditPageComponent extends DynamicWebComponent implements Ro
 
   updateProps(trip: Trip): void {
     this._tripForm.updateProps(trip.general);
-    trip.details ? this._tripDetail.updateProps(trip.details) : this._tripDetail.reset();
+    this._tripDetail.updateProps(trip);
   }
 
   protected _queryTemplate(): void {
