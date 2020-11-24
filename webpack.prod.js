@@ -10,8 +10,11 @@ const Webpack = require('webpack');
 const { MODE, PORT } = require('./src/server/environment');
 
 module.exports = {
-  entry: './src/client/index.js',
+  entry: './src/client/index.ts',
   mode: 'production',
+  resolve: {
+    extensions: ['.ts', '.js']
+  },
   optimization: {
     // terser minifies js, opmtimizeCss minifies css
     minimizer: [new TerserPlugin({}), new OptimizeCssAssetsPlugin({})]
@@ -19,9 +22,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: '/node_modules',
-        loader: 'babel-loader' // transpile everything to es5
+        test: /\.ts$/,
+        exclude: ['/node_modules', /\.spec.ts$/],
+        loader: ['babel-loader', 'ts-loader']
       },
       {
         test: /\.scss$/,
@@ -31,25 +34,25 @@ module.exports = {
       },
       {
         test: /\.component.scss$/,
-          exclude: /node_modules/,
-          use: [
-            "sass-to-string",
-            {
-              loader: "sass-loader",
-              options: {
-                sassOptions: {
-                  outputStyle: "compressed",
-                },
+        exclude: /node_modules/,
+        use: [
+          'sass-to-string',
+          {
+            loader: 'sass-loader',
+            options: {
+              sassOptions: {
+                outputStyle: 'compressed'
               }
             }
-          ]
-        },
-        {
-          test: /\.html$/i,
-          loader: 'html-loader',
-        },
+          }
+        ]
+      },
       {
-        test: /\.ttf$/,
+        test: /\.html$/i,
+        loader: 'html-loader'
+      },
+      {
+        test: /\.(png|ttf)$/,
         loader: ['file-loader']
       }
     ]
