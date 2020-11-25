@@ -8,12 +8,20 @@
     border-bottom: 1px solid $color-border;
     position: relative;
 
+    > p {
+      margin-top: 20px;
+    }
+
     ul {
       margin: 10px 0 5px 0;
 
       li {
         word-wrap: break-word;
       }
+    }
+
+    .list__image {
+      width: 40px;
     }
   }
 }

@@ -1,15 +1,15 @@
 import DynamicWebComponent from '../../base/dynamic.web.component';
 import TripCardComponent from '../trip-card/trip-card.component';
 import { hide, show } from "../../DOM-utils/DOM-utils";
-import Trip, { DayInfo } from "../../models/trip.model";
+import Trip, { DayInfo, Weather } from "../../models/trip.model";
 import { Component } from "../../base/decorators";
 import { Inject } from "../../base/inject";
 import TripService from "../../services/trip.service";
-import { RemoveTripEvent, SelectTripEvent } from "../../models/events";
 import TripListComponent from "../trip-list/trip-list.component";
 import moment from "moment";
 import { navigateTo, Routable } from '../../base/router';
 import ToastService from '../../services/toast.service';
+import getWeatherIcon from './weather-icons';
 
 const template: string = require("./detail-page.component.html");
 
@@ -69,17 +69,32 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
       let weatherHTML = '';
       if( weather) {
         weatherHTML = `
-        <span><strong>${moment(weather.valid_date).format('L')}</strong></span><span>${weather.weather.description} - ${weather.temp} °C</span>`
+        <div class="row">
+          <strong>${moment(weather.valid_date).format('L')}</strong>
+          <img class="list__image" src="${getWeatherIcon(weather)}"/>
+        </div>
+        <p><em>Weather details:</em> ${weather.weather.description} - ${weather.temp} °C</p>
+        `
       }
       const detailsHTML = [];
       details?.forEach(detail => {
+        let iconClass;
+        switch (detail.type) {
+          case 'stay':
+            iconClass = 'fas fa-hotel'
+            break;
+          case 'travel':
+            iconClass='fas fa-route'
+          case 'todo':
+          default:
+            iconClass= 'fas fa-check-square'
+        }
         const detailHTML = `
-        <li class="margin-small"><strong>${moment(detail.date).format('HH:mm')}</strong> - <em>${detail.type.toLowerCase()}</em><span>: ${detail.content}</li>`
+        <li class="margin-small"><strong>${moment(detail.date).format('HH:mm')}</strong> - <i class="${iconClass}"></i><em>${detail.type.toLowerCase()}</em><span>: ${detail.content}</li>`
         detailsHTML.push(detailHTML);
       });
 
-      const itemHTML = `<div class="margin-small row">${weatherHTML}</div><ul>${detailsHTML.join('')}</ul>`
-      return itemHTML;
+      return details ?  `${weatherHTML}<p><em>Planning</em></p><ul>${detailsHTML.join('')}</ul>` : `${weatherHTML}<p>`;
     }
   }
 

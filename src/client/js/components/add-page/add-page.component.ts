@@ -1,12 +1,13 @@
 import { hide, show } from "../../DOM-utils/DOM-utils";
 import { Component } from "../../base/decorators";
 import { Inject } from "../../base/inject";
-import TripService, { BadRequestError } from "../../services/trip.service";
 import TripFormComponent from "../trip-form/trip-form.component";
 import { SubmitTripEvent } from "../../models/events";
 import DynamicWebComponent from "../../base/dynamic.web.component";
 import { navigateTo, Routable } from "../../base/router";
 import ToastService from "../../services/toast.service";
+import { BadRequestError } from "../../exceptions/exceptions";
+import TripService from "../../services/trip.service";
 
 const template: string = require("./add-page.component.html");
 
