@@ -43,7 +43,7 @@ module.exports = {
         loader: 'html-loader'
       },
       {
-        test: /\.ttf$/,
+        test: /\.(png|ttf|woff|woff2|eot|svg)$/,
         loader: ['file-loader']
       }
     ]
