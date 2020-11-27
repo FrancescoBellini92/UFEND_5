@@ -29,7 +29,6 @@ const template: string = require("./home-page.component.html");
 export default class HomePageComponent extends DynamicWebComponent implements Routable {
 
   private _emptyContainer: HTMLElement;
-  private _homeTitle: HTMLElement;
   private _cardContainer: HTMLElement;
 
   private _tripService: TripService;
@@ -82,7 +81,6 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
 
   protected _queryTemplate(): void {
     this._emptyContainer = this.querySelector('#empty-container');
-    this._homeTitle = this.querySelector('#home-title');
     this._cardContainer = this.querySelector('#card-container');
   }
 
@@ -101,17 +99,13 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
   private _selectAndNavigate(e: SelectTripEvent, route: string): void {
     const tripId = e.detail;
     this._tripService.setCurrentTripById(tripId);
-    // TODO: create header component to manage this
-    show(document.getElementById('detail-anchor'));
     navigateTo(route);
   }
 
   private _updateUI(dataSize: number = this._cardTripMap.size): void {
     const isEmpty = dataSize === 0;
     const emptyContainerUIFn =  isEmpty ? show : hide;
-    const homeTitleUIFn =  isEmpty ? hide : show;
     emptyContainerUIFn(this._emptyContainer);
-    homeTitleUIFn(this._homeTitle);
   }
 
 }
