@@ -51,7 +51,8 @@ app.get(
         start,
         end,
         location: req.query.location,
-        name: req.query.name
+        name: req.query.name,
+        details: {}
       }
 
       const APIResponse = {general, geo: geoAPIResponse, pix: pixAPIResponse, weather: weatherAPIResponse};
