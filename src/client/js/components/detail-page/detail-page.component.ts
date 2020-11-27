@@ -94,7 +94,7 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
         detailsHTML.push(detailHTML);
       });
 
-      return details ?  `${weatherHTML}<p><em>Planning</em></p><ul>${detailsHTML.join('')}</ul>` : `${weatherHTML}<p>`;
+      return details ? `${weatherHTML}<p><em>Planning</em></p><ul>${detailsHTML.join('')}</ul>` : `${weatherHTML}<p>`;
     }
   }
 
@@ -108,7 +108,6 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
     const tripId = this._tripService.currentTrip.id;
     this._tripService.currentTrip = null;
     this._tripService.delete(tripId);
-    hide(document.getElementById('detail-anchor'));
     this._toastService.showSuccess('Trip deleted!');
     setTimeout(() => navigateTo('home'));
   }

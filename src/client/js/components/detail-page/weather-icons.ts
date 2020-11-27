@@ -1,9 +1,8 @@
 import { Weather } from "../../models/trip.model";
 
-function importAll(r) {
-  console.log(r)
+function importAll(webpackContext) {
   const images = {};
-  r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
+  webpackContext.keys().forEach(item => images[item.replace('./', '')] = webpackContext(item));
   return images;
 }
 
