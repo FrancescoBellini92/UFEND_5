@@ -49,8 +49,6 @@ export default class TripDetailComponent extends DynamicWebComponent {
     super();
   }
 
-
-
   get tripDetails(): TripDetail[] {
     const details: TripDetail[] = [];
     const detailElements = this.shadowRoot.querySelectorAll('.detail');
@@ -87,7 +85,7 @@ export default class TripDetailComponent extends DynamicWebComponent {
     this.start = trip.general.start;
     this.end = trip.general.end;
 
-    trip.details.forEach(detail => {
+    trip.details?.forEach(detail => {
       this._cloneTemplate();
       const { typeEl, dateEl, contentEl } = this._getInputs(this._detailsContainer.lastElementChild);
       typeEl.value = detail.type;
@@ -113,7 +111,7 @@ export default class TripDetailComponent extends DynamicWebComponent {
   protected _attachEventHandlers(): void {
     this.shadowRoot.addEventListener('click', (e: Event) => {
       const target = e.target as HTMLElement;
-      const isRemoveBtn = target.classList.contains('remove');
+      const isRemoveBtn = target.classList.contains('detail__remove');
       isRemoveBtn ? this._onRemoveDetail(target) : this._handlerFnMap[target.id]();
     });
   }
@@ -124,7 +122,7 @@ export default class TripDetailComponent extends DynamicWebComponent {
       this.dispatchEvent(saveDetailsEvent);
     } catch (e) {
       if (e instanceof NotValidInputError) {
-        this._toastService.showDanger('Please fill all fields and check your dates');
+        this._toastService.showDanger('Please fill empty fields and check the dates');
       } else {
         throw e;
       }
@@ -133,6 +131,10 @@ export default class TripDetailComponent extends DynamicWebComponent {
 
   private _onRemoveDetail(target: HTMLElement): void {
     target.parentElement.parentElement.remove();
+    const allDeleted = this._detailsContainer.childElementCount === 0;
+    if (allDeleted) {
+      this._handlerFnMap["remove-all-btn"]();
+    }
   }
 
   private _cloneTemplate(): void {
@@ -143,9 +145,9 @@ export default class TripDetailComponent extends DynamicWebComponent {
   }
 
   private _getInputs(element: Element): { typeEl: HTMLInputElement, dateEl: HTMLInputElement, contentEl: HTMLInputElement } {
-    const typeEl = element.querySelector('.detail-type') as HTMLInputElement;
-    const dateEl = element.querySelector('.detail-date') as HTMLInputElement;
-    const contentEl = element.querySelector('.detail-content') as HTMLInputElement;
+    const typeEl = element.querySelector('.detail__type') as HTMLInputElement;
+    const dateEl = element.querySelector('.detail__date') as HTMLInputElement;
+    const contentEl = element.querySelector('.detail__content') as HTMLInputElement;
     return { typeEl, dateEl, contentEl };
   }
 

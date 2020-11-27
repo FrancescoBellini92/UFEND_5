@@ -1,29 +1,29 @@
 <div class="column">
-  <div class="alert bg-primary shadow row">
+  <div class="alert bg-primary shadow row min-width">
     <p>Details</p>
     <div class="row">
-      <button id="add-detail-btn" class="alert__button padding-small shadow">Add</button>
-      <button id="remove-all-btn" class="alert__button padding-small shadow">Remove all</button>
+      <button id="add-detail-btn" class="alert__button padding-small shadow border">Add</button>
+      <button id="remove-all-btn" class="alert__button padding-small shadow border">Remove all</button>
     </div>
   </div>
-  <div id="details-container" class="page">
+  <div id="details-container">
   </div>
   <p id="no-details-text" class="can-hide-absent">Start by adding some details to your trip!</p>
   <button id="save-btn" class="bg-primary margin-medium padding-medium shadow can-hide-absent hidden">Save details</button>
 </div>
 
 <template id="form-control">
-  <div class="column detail">
+  <div class="detail">
     <div class="row">
-      <select class="margin-small detail-type" required>
+      <select class="detail__type" required>
         <option value="todo">Todo</option>
         <option value="stay">Stay</option>
         <option value="travel">Travel</option>
       </select>
-      <input type="datetime-local" class="shadow margin-small detail-date" required>
-      <button class="remove" class="padding-small margin-small shadow">&#10005;</button>
+      <input type="datetime-local" class="detail__date shadow" required>
+      <button class="detail__remove padding-small shadow border" >&#10005;</button>
     </div>
-      <input class="shadow margin-small detail-content" required>
+      <input class="detail__content shadow" required>
     </div>
   </div>
 </template>

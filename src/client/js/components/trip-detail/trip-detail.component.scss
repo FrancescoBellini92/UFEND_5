@@ -4,3 +4,25 @@
 .error {
   border-color: $color-danger;
 }
+
+.min-width {
+  min-width: 315px;
+}
+
+.detail {
+  @extend .column;
+  margin: 20px 0 !important;
+
+  .detail__type {
+    margin: 10px 5px 10px 0 ;
+  }
+
+  .detail__date {
+    width: 180px;
+    margin: 10px 5px 10px 5px;
+  }
+
+  .detail__remove {
+    margin: 0 0 3px 5px;
+  }
+}
