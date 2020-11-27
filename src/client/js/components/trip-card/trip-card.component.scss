@@ -4,7 +4,7 @@
   @extend .border;
   @extend .border-radius;
   @extend .column;
-  max-width: 500px;
+  max-width: 400px;
   min-width: 280px;
   margin: 20px;
 
@@ -28,11 +28,5 @@
     margin-top: 5px;
     width: 80%;
     max-width: 200px;
-  }
-}
-
-@media (min-width: 768px) {
-  .card {
-    width: 400px;
   }
 }

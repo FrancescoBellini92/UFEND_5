@@ -17,6 +17,7 @@ const style: { default: string } = require('./trip-card.component.scss');
 export default class TripCardComponent extends DynamicWebComponent {
 
   private static _PICTURE_ID  = 'picture';
+  private static _DEFAULT_IMG_PATH = '/src/assets/images/default.jpg';
 
   private _startDate: HTMLElement;
   private _endDate: HTMLElement;
@@ -65,15 +66,12 @@ export default class TripCardComponent extends DynamicWebComponent {
     this._location.textContent = `${location} - ${this._trip.geo.countryName}`;
     this._startDate.textContent = moment(start).format('L');
     this._endDate.textContent = moment(end).format('L');
-    const img = this.shadowRoot.querySelector(`#${TripCardComponent._PICTURE_ID}`) ?? document.createElement('img');
-    if (pix) {
-      img.id = TripCardComponent._PICTURE_ID;
-      img.classList.add('card__img');
-      img['src'] = pix;
-      this._pictureContainer.appendChild(img);
-    } else {
-      img.remove();
-    }
+    const img = (this.shadowRoot.querySelector(`#${TripCardComponent._PICTURE_ID}`) ?? document.createElement('img')) as HTMLImageElement;
+    img.id = TripCardComponent._PICTURE_ID;
+    img.classList.add('card__img');
+    img.src=pix;
+    img.addEventListener('error', () => img.src = TripCardComponent._DEFAULT_IMG_PATH);
+    this._pictureContainer.appendChild(img);
   }
 
   protected _queryTemplate(): void {
