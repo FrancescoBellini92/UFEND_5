@@ -23,7 +23,7 @@ export default interface Trip {
 
   weather: Weather[];
 
-  details: TripDetail[]
+  details?: TripDetail[]
 
   error?: string;
 
