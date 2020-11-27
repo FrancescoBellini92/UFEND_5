@@ -4,7 +4,21 @@
   @extend .padding-medium;
   @extend .shadow;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 5px;
+  right: 5px;
   min-width: 150px;
+
+  &.visible {
+    animation: fade 2s cubic-bezier(0.51, 0.17, 0, 1.71);
+  }
+}
+
+
+@keyframes fade {
+  0%,100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
 }
