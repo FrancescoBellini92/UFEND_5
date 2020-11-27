@@ -31,6 +31,7 @@ button {
   &:hover {
     background-color: $color-primary;
     color: $color-primary-contrast;
+    cursor: pointer
   }
 }
 
@@ -47,4 +48,11 @@ label {
 
 ul {
   list-style: none;
+}
+
+// avoid horizontal scrollbars
+@media (min-width: 320px) {
+  body, .page {
+    overflow-x: hidden !important;
+  }
 }
