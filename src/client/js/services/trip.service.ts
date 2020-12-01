@@ -10,6 +10,7 @@ import TripRequest from "../models/trip.request";
 import { Injectable } from "../base/service";
 import Observable from "../base/observable";
 import moment from "moment";
+import { BadRequestError } from "../exceptions/exceptions";
 
 const isProd = environment.MODE === 'PROD';
 
@@ -144,7 +145,12 @@ export default class TripService extends Service {
       isProd
     );
     const newTrip: Trip = await manageRequestResponse<Trip>(
-      request
+      request,
+      response => response.status !== 201,
+      async response => {
+        const { error } = await response.json();
+        throw new BadRequestError(error)
+      }
     );
     return newTrip;
   }

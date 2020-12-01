@@ -57,15 +57,13 @@ export default class AddPageComponent extends DynamicWebComponent implements Rou
   private async _onSubmit(e: SubmitTripEvent): Promise<void> {
     try {
       show(this._loader);
-
       await this._tripService.add(e.detail);
-
       this._tripForm.reset();
       this._toastService.showSuccess('Trip created!')
       setTimeout(() => navigateTo('#details'), 1000);
     } catch (e) {
       if (e instanceof BadRequestError) {
-        this._toastService.showDanger('Something went wrong: are the trip info correct?')
+        this._toastService.showDanger(e.message)
     } else {
         throw e;
       }

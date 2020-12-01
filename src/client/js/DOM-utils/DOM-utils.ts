@@ -19,8 +19,7 @@ export function hide(...elements: Element[]): void {
 
 }
 
-export function inputNotValid(inputElement: HTMLInputElement): boolean {
-  const value = inputElement.value;
+export function inputNotValid(value: string): boolean {
   const trimmedValue = value ? value.trim() : value;
   return !trimmedValue;
 }

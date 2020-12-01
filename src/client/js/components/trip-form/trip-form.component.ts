@@ -3,10 +3,19 @@ import { inputNotValid } from '../../DOM-utils/DOM-utils';
 import { SubmitTripEvent } from '../../models/events';
 import { Component } from '../../base/decorators';
 import TripRequest from '../../models/trip.request';
+import moment from 'moment';
+import ToastService from '../../services/toast.service';
+import { Inject } from '../../base/inject';
 
 const template: string = require('./trip-form.component.html');
 const style: { default: string } = require('./trip-form.component.scss');
 
+@Inject(
+  {
+    injectionToken: ToastService.injectionToken,
+    nameAsDependency: '_toastService'
+  },
+)
 @Component({
   selector: "trip-form",
   template,
@@ -20,6 +29,8 @@ export default class TripFormComponent extends DynamicWebComponent {
   private _locationInput: HTMLInputElement;
   private _nameInput: HTMLInputElement;
   private _submitBtn: HTMLInputElement;
+
+  private _toastService: ToastService;
 
   constructor() {
     super();
@@ -53,22 +64,36 @@ export default class TripFormComponent extends DynamicWebComponent {
   }
 
   private _onSubmit(e: Event): void {
-    const notValid = inputNotValid(this._startDateInput) || inputNotValid(this._endDateInput) || inputNotValid(this._locationInput) || inputNotValid(this._nameInput);
-    if (notValid) {
+    const start: string =  this._startDateInput.value;
+    const end: string =  this._endDateInput.value;
+    const location: string =  this._locationInput.value;
+    const name: string =  this._nameInput.value;
+
+    const startDate = moment(this._startDateInput.value);
+    const endDate = moment(this._endDateInput.value);
+    const datesNotCorrect = !(startDate.isSameOrBefore(endDate) && endDate.isSameOrAfter(startDate));
+
+    const locationAndNameNotValid = inputNotValid(location) || inputNotValid(name);
+
+    if (locationAndNameNotValid || datesNotCorrect) {
+      this._manageValidationErrors(locationAndNameNotValid, datesNotCorrect, e);
       return;
     }
+
     e.preventDefault();
-    this._emitSubmit();
+    this._emitSubmit({ start, end, location, name });
   }
 
-  private _emitSubmit(): void {
+  private _manageValidationErrors(locationAndNameNotValid: boolean, datesNotCorrect: boolean, e: Event): void {
+    if (datesNotCorrect && !locationAndNameNotValid) {
+      this._toastService.showDanger('Dates are not correct');
+      e.preventDefault();
+    }
+  }
+
+  private _emitSubmit(detail: TripRequest): void {
     const submitEvent = new SubmitTripEvent('submit', {
-      detail: {
-        start: this._startDateInput.value,
-        end: this._endDateInput.value,
-        location: this._locationInput.value,
-        name: this._nameInput.value
-      },
+      detail,
       bubbles: true
     });
     this.dispatchEvent(submitEvent);

@@ -30,7 +30,7 @@ app.get(
     const today = moment();
     const isStartAfterPast = moment(req.query.start).isSameOrAfter(today, 'days');
     const isEndAfterStart = moment(req.query.end).isSameOrAfter(req.query.start, 'days');
-    (isStartAfterPast && isEndAfterStart) ? next() : res.status(400).json({ error: 'bad dates' });
+    (isStartAfterPast && isEndAfterStart) ? next() : res.status(400).json({ error: 'Dates are not correct' });
   },
   async (req, res) => {
     try {
@@ -56,10 +56,10 @@ app.get(
       }
 
       const APIResponse = {general, geo: geoAPIResponse, pix: pixAPIResponse, weather: weatherAPIResponse};
-      res.json(APIResponse);
+      res.status(201).json(APIResponse);
     } catch (e) {
       if (e instanceof EmptyResponseError) {
-        res.status(400).json({ error: 'bad location' });
+        res.status(400).json({ error: 'Location could not be found' });
         return;
       }
       throw e;
