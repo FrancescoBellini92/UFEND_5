@@ -98,12 +98,14 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
 
   private _onRemove(e: RemoveTripEvent): void {
     const tripId = e.detail;
-    this._dialogService.show('Are you sure?').subscribe(result => {
+    const dialogObs$ = this._dialogService.show('Are you sure?').subscribe(result => {
       if (result) {
         this._tripService.delete(tripId);
         this._toastService.showSuccess('Trip deleted!');
       }
+      dialogObs$.unsubscribe();
     });
+
   }
 
   private _selectAndNavigate(e: SelectTripEvent, route: string): void {

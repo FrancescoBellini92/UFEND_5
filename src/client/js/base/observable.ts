@@ -4,10 +4,15 @@ export default class Observable<TRequest, TResponse> {
   private _subscribers: { (item: TResponse): any }[] = [];
   private _children: Observable<TRequest, TResponse>[] = []; // observables create a tree structure
 
-  constructor(private _dataSource: { (input: TRequest): Promise<TResponse>}) {}
+  constructor(private _dataSource: { (input: TRequest): Promise<TResponse> }) {}
 
-  subscribe(subscriber: { (item: TResponse): any }) {
+  subscribe(subscriber: { (item: TResponse): any }): { unsubscribe: { (): void } } {
     this._subscribers.push(subscriber);
+    return { unsubscribe: () => this.unsubscribe(subscriber)()};
+  }
+
+  unsubscribe(subscriber: { (item: TResponse): any }): { (): void } {
+    return () => {this._subscribers = this._subscribers.filter(sub => sub !== subscriber)};
   }
 
   next(params: TRequest) {
@@ -35,5 +40,11 @@ export default class Observable<TRequest, TResponse> {
     this._children.push(child); // track it as child instance
     child._functions = this._functions; // share piped functions
     return child;
+  }
+}
+
+export class Subscription {
+  unSubscribe() {
+
   }
 }
