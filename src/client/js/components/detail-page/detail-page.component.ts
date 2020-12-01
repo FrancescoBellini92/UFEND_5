@@ -10,6 +10,7 @@ import moment from "moment";
 import { navigateTo, Routable } from '../../base/router';
 import ToastService from '../../services/toast.service';
 import getWeatherIcon from './weather-icons';
+import DialogService from '../../services/dialog.service';
 
 const template: string = require("./detail-page.component.html");
 
@@ -21,6 +22,10 @@ const template: string = require("./detail-page.component.html");
   {
     injectionToken: ToastService.injectionToken,
     nameAsDependency: '_toastService'
+  },
+  {
+    injectionToken: DialogService.injectionToken,
+    nameAsDependency: '_dialogService'
   }
 )
 @Component({
@@ -35,6 +40,7 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
 
   private _tripService: TripService;
   private _toastService: ToastService;
+  private _dialogService: DialogService;
 
   constructor() {
     super();
@@ -101,14 +107,17 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
   protected _attachEventHandlers(): void {
     this._detailCard.addEventListener('remove', () => this._onRemove());
     this.addEventListener('edit', () => navigateTo('#edit'));
-    // this._weatherList.addEventListener('remove', this._onRemove);
   }
 
   private _onRemove(): void {
     const tripId = this._tripService.currentTrip.id;
-    this._tripService.currentTrip = null;
-    this._tripService.delete(tripId);
-    this._toastService.showSuccess('Trip deleted!');
-    setTimeout(() => navigateTo('home'));
+    this._dialogService.show('Are you sure?').subscribe(result => {
+      if (result) {
+        this._tripService.currentTrip = null;
+        this._tripService.delete(tripId);
+        this._toastService.showSuccess('Trip deleted!');
+        setTimeout(() => navigateTo('home'));
+      }
+    });
   }
 }

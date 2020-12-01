@@ -8,6 +8,7 @@ import TripService from "../../services/trip.service";
 import { RemoveTripEvent, SelectTripEvent } from "../../models/events";
 import { navigateTo, Routable } from "../../base/router";
 import ToastService from "../../services/toast.service";
+import DialogService from "../../services/dialog.service";
 
 const template: string = require("./home-page.component.html");
 
@@ -19,6 +20,10 @@ const template: string = require("./home-page.component.html");
   {
     injectionToken: ToastService.injectionToken,
     nameAsDependency: '_toastService'
+  },
+  {
+    injectionToken: DialogService.injectionToken,
+    nameAsDependency: '_dialogService'
   }
 )
 @Component({
@@ -33,6 +38,7 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
 
   private _tripService: TripService;
   private _toastService: ToastService;
+  private _dialogService: DialogService;
 
   private _cardTripMap = new Map();
 
@@ -92,8 +98,12 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
 
   private _onRemove(e: RemoveTripEvent): void {
     const tripId = e.detail;
-    this._tripService.delete(tripId);
-    this._toastService.showSuccess('Trip deleted!');
+    this._dialogService.show('Are you sure?').subscribe(result => {
+      if (result) {
+        this._tripService.delete(tripId);
+        this._toastService.showSuccess('Trip deleted!');
+      }
+    });
   }
 
   private _selectAndNavigate(e: SelectTripEvent, route: string): void {

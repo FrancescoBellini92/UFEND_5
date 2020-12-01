@@ -8,12 +8,14 @@ import TripCardComponent from "./trip-card/trip-card.component";
 import TripDetailComponent from "./trip-detail/trip-detail.component";
 import TripFormComponent from "./trip-form/trip-form.component";
 import TripListComponent from "./trip-list/trip-list.component";
+import DialogComponent from "./dialog/dialog.component";
 
 function registerComponents(...components: typeof WebComponent[]) {
   components.forEach(component => component.define());
 }
 export default () => registerComponents(
   ToastComponent,
+  DialogComponent,
   TripCardComponent,
   TripListComponent,
   HomePageComponent,

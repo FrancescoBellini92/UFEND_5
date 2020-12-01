@@ -24,9 +24,7 @@ export default class Observable<TRequest, TResponse> {
   private async _update(params: TRequest) {
     const composedPipedOps = this._compose(...this._functions);
     const result: TResponse = composedPipedOps(await this._dataSource(params));
-    if (result) {
-      this._subscribers.forEach(subscriber => subscriber(result));
-    }
+    this._subscribers.forEach(subscriber => subscriber(result));
   }
 
   private _compose: { (...functions: { (item: any): any }[]): { (input: any): TResponse } } = (...functions) => input =>
