@@ -111,13 +111,14 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
 
   private _onRemove(): void {
     const tripId = this._tripService.currentTrip.id;
-    this._dialogService.show('Are you sure?').subscribe(result => {
+    const dialogObs$ = this._dialogService.show('Are you sure?').subscribe(result => {
       if (result) {
         this._tripService.currentTrip = null;
         this._tripService.delete(tripId);
         this._toastService.showSuccess('Trip deleted!');
         setTimeout(() => navigateTo('home'));
       }
+      dialogObs$.unsubscribe();
     });
   }
 }
