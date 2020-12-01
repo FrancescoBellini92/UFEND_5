@@ -68,6 +68,8 @@ app.get(
 );
 
 if (MODE === 'PROD') {
+  const compression = require('compression');
+  app.use(compression);
   app.use(express.static('dist'));
 }
 
