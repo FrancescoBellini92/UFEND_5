@@ -16,10 +16,11 @@ export function hide(...elements: Element[]): void {
   addClass('hidden', ...elements);
   removeClass('open', ...elements);
   removeClass('visible', ...elements)
-
 }
 
-export function inputNotValid(value: string): boolean {
-  const trimmedValue = value ? value.trim() : value;
-  return !trimmedValue;
+export function inputNotValid(value: any): boolean {
+  if (typeof value === 'string') {
+    return !value.trim();
+  }
+  return value !== undefined ;
 }

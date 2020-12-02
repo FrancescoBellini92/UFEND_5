@@ -1,7 +1,7 @@
 import { addClass, removeClass, show, hide, inputNotValid } from '../DOM-utils';
 
 describe('DOM utils functions', () => {
-  let targetEl;
+  let targetEl: HTMLInputElement;
 
   beforeEach(() => {
     targetEl = document.createElement('input');
@@ -45,15 +45,15 @@ describe('DOM utils functions', () => {
   });
 
   test('validates input', () => {
-    expect(inputNotValid(targetEl)).toBeTruthy();
+    expect(inputNotValid(targetEl.value)).toBeTruthy();
 
     targetEl.value = '';
-    expect(inputNotValid(targetEl)).toBeTruthy();
+    expect(inputNotValid(targetEl.value)).toBeTruthy();
 
     targetEl.value = ' ';
-    expect(inputNotValid(targetEl)).toBeTruthy();
+    expect(inputNotValid(targetEl.value)).toBeTruthy();
 
     targetEl.value = 'foo';
-    expect(inputNotValid(targetEl)).toBeFalsy();
+    expect(inputNotValid(targetEl.value)).toBeFalsy();
   });
 });

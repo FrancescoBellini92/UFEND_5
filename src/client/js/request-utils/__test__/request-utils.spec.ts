@@ -2,7 +2,7 @@ import { sendRequest, manageRequestResponse } from '../request-utils';
 import '@babel/polyfill';
 
 describe('request utils', () => {
-  let isProd;
+  let isProd: boolean;
   const mockResponseBody = { foo: 'bar' };
   let mockFetchReturnVal;
 
@@ -25,13 +25,13 @@ describe('request utils', () => {
 
     isProd = true;
     await sendRequest(mockUrl, isProd);
-    expect(fetch.mock.calls[1][1]).toStrictEqual({ mode: 'same-origin' });
+    expect(fetch['mock'].calls[1][1]).toStrictEqual({ mode: 'same-origin' });
   });
 
   test('manage response', async() => {
     const mockUrl = 'http://foo';
     const response = await sendRequest(mockUrl, isProd);
-    const responsePayload = await manageRequestResponse(response);
+    const responsePayload = await manageRequestResponse<{foo: string}>(response);
     expect(responsePayload).toStrictEqual(mockResponseBody);
   });
 
@@ -39,10 +39,10 @@ describe('request utils', () => {
     const mockUrl = 'http://foo';
     const response = await sendRequest(mockUrl, isProd);
     const errorCheckFn = jest.fn((response) => true);
-    const errorHandlerFn = jest.fn((response) => true);
+    const errorHandlerFn = jest.fn(async(response) => { throw new Error('error')} );
     expect(
       async() => {
-        const responsePayload = await manageRequestResponse(response, errorCheckFn, errorHandlerFn)
+        const responsePayload = await manageRequestResponse<{foo: string}>(response, errorCheckFn, errorHandlerFn)
         expect(responsePayload).toBeFalsy();
       }
     ).rejects.toThrow();
