@@ -14,7 +14,9 @@ const app = express();
 app.use(logger, bodyParser.json(), cors());
 
 function logger (req, res, next) {
-  console.log('Request', 'method', req.method, 'pathname', req.url);
+  if (MODE !== 'PROD') {
+    console.log('Request', 'method', req.method, 'pathname', req.url);
+  }
   next();
 }
 
@@ -23,7 +25,7 @@ app.get(
   (req, res, next) => {
     // check parameters defined
     const hasQueryParams = req.query && req.query.name && req.query.start && req.query.end && req.query.location;
-    hasQueryParams ? next() : res.status(400).json({ error: 'missing required query parameters' });
+    hasQueryParams ? next() : res.status(400).json({ error: 'Missing required query parameters' });
   },
   (req, res, next) => {
     // parameters validation
@@ -40,12 +42,12 @@ app.get(
       ]);
       const start = req.query.start;
       const end = req.query.end;
-      const [ geoAPIResponse, pixAPIResponse ] = APIRequest;
+      const [geoAPIResponse, pixAPIResponse] = APIRequest;
       const lat = geoAPIResponse.lat;
       const lon = geoAPIResponse.lng;
       const [deltaDaysFromStart, deltaDaysFromEnd] = WeatherResponse.calculateDeltaDays(start, end);
-      const isWithinMaxForecast = deltaDaysFromStart  <= API_WEATHERBIT_MAX_FORECAST;
-      const weatherAPIResponse = isWithinMaxForecast ? await getWeatherData({query: {lat, lon, days: deltaDaysFromEnd}}) : [];
+      const isWithinMaxForecast = deltaDaysFromStart <= API_WEATHERBIT_MAX_FORECAST;
+      const weatherAPIResponse = isWithinMaxForecast ? await getWeatherData({ query: { lat, lon, days: deltaDaysFromEnd } }) : [];
 
       const general = {
         start,
@@ -55,7 +57,7 @@ app.get(
         details: {}
       }
 
-      const APIResponse = {general, geo: geoAPIResponse, pix: pixAPIResponse, weather: weatherAPIResponse};
+      const APIResponse = { general, geo: geoAPIResponse, pix: pixAPIResponse, weather: weatherAPIResponse };
       res.status(201).json(APIResponse);
     } catch (e) {
       if (e instanceof EmptyResponseError) {

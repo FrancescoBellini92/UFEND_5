@@ -1,17 +1,17 @@
-const { 
-  API_KEY_GEO, 
-  API_GEO_BASEURL,  
-  API_KEY_WEATHERBIT, 
-  API_WEATHERBIT_BASEURL, 
-  API_KEY_PIXABAY, 
-  API_PIXABAY_BASEURL 
+const {
+  API_KEY_GEO,
+  API_GEO_BASEURL,
+  API_KEY_WEATHERBIT,
+  API_WEATHERBIT_BASEURL,
+  API_KEY_PIXABAY,
+  API_PIXABAY_BASEURL
 } = require('../environment');
 
-const { 
-  makeGeoResponse, 
-  makePixResponse, 
-  makeWeatherResponse, 
-  EmptyResponseError 
+const {
+  makeGeoResponse,
+  makePixResponse,
+  makeWeatherResponse,
+  EmptyResponseError
 } = require('../factories/response-factory');
 
 const fetch = require('node-fetch');
@@ -25,7 +25,7 @@ async function getDataFromAPI(req, urlBuilderFn, factoryFn, emptyResponseFallbac
     return parsedResponse;
   } catch (e) {
     if (e instanceof EmptyResponseError) {
-      if(emptyResponseFallback) {
+      if (emptyResponseFallback) {
         return emptyResponseFallback;
       }
     }

@@ -5,7 +5,7 @@ class GeoResponse extends BaseModel{
   countryName;
   lng;
   lat;
-  
+
   constructor(input) {
     super();
     this._initProps(input)

@@ -1,27 +1,27 @@
 const app = require('../controller/app.controller');
-const supertest = require('supertest');
 const moment = require('moment');
+const supertest = require('supertest');
 const request = supertest(app);
 
 describe('Server API', () => {
-    
+
     const today = moment().toISOString();
     const tomorrow = moment().add(1, 'days').toISOString();
     const realLocation = 'London';
     const fakeLocation = 'Foo bar';
     const name = 'My trip';
 
-    const badDatesPayload = {error: 'bad dates'};
-    const badLocationPayload = {error: 'bad location'};
-    const badQueryParamsPayload = {error: 'missing required query parameters'};
+    const badDatesPayload = {error: 'Dates are not correct'};
+    const badLocationPayload = {error: 'Location could not be found'};
+    const badQueryParamsPayload = {error: 'Missing required query parameters'};
 
     const getQueryParams = (start, end, location, name) => `?start=${start}&end=${end}&location=${location}&name=${name}`;
-        
-    it('responds 200 to good request', (done) => {
+
+    it('responds 201 to good request', (done) => {
         const queryParams = getQueryParams(today, tomorrow, realLocation, name);
         request.get(`/trip-info${queryParams}`)
         .expect('Content-Type', /json/)
-        .expect(200, done);
+        .expect(201, done);
     });
 
     it('responds 400 to request with bad dates', (done) => {

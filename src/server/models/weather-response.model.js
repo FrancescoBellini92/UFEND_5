@@ -4,11 +4,7 @@ const BaseModel = require('./base.model');
 const moment = require('moment');
 
 class WeatherData extends BaseModel {
-  // wind_spd;
-  // wind_cdir_full;
   temp;
-  // max_temp;
-  // min_temp;
   valid_date;
   weather = {
     icon: undefined,
@@ -30,7 +26,7 @@ class WeatherResponse {
     return this.data;
   }
 
-  
+
   static calculateDeltaDays(startDate, endDate) {
     const start = moment(startDate);
     const end = moment(endDate);
