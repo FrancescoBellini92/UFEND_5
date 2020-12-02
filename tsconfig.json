@@ -3,7 +3,7 @@
     "outDir": "./built",
     "sourceMap": true,
     "allowJs": true,
-    "target": "es2016",
+    "target": "es2018",
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node"
