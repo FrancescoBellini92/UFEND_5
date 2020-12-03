@@ -1,13 +1,13 @@
 import Trip, { DayInfo, TripDetail } from "../models/trip.model";
 import environment from '../environment';
-import { Service } from '../base/service';
+import { Service } from "../base/service";
 
 import {
   sendRequest,
   manageRequestResponse,
 } from "../request-utils/request-utils";
 import TripRequest from "../models/trip.request";
-import { Injectable } from "../base/service";
+import { Injectable } from "../base/injectable";
 import Observable from "../base/observable";
 import moment from "moment";
 import { BadRequestError } from "../exceptions/exceptions";
@@ -44,7 +44,6 @@ export default class TripService extends Service {
     const hasNoItems = collection.length === 0;
     return collection ? hasNoItems : true;
   }
-
 
   static getDayInfo(trip: Trip): DayInfo[] {
     const dayMap: Map<string, DayInfo> = new Map<string, DayInfo>();

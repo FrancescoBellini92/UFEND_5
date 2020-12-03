@@ -1,5 +1,5 @@
-import { Service } from '../base/service';
-import { Injectable } from "../base/service";
+import { Service } from "../base/service";
+import { Injectable } from "../base/injectable";
 import ToastComponent from '../components/toast/toast.component';
 import { addClass, removeClass } from '../DOM-utils/DOM-utils';
 

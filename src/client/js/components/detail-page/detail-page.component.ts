@@ -2,7 +2,7 @@ import DynamicWebComponent from '../../base/dynamic.web.component';
 import TripCardComponent from '../trip-card/trip-card.component';
 import { hide, show } from "../../DOM-utils/DOM-utils";
 import Trip, { DayInfo, Weather } from "../../models/trip.model";
-import { Component } from "../../base/decorators";
+import { Component } from "../../base/component";
 import { Inject } from "../../base/inject";
 import TripService from "../../services/trip.service";
 import TripListComponent from "../trip-list/trip-list.component";

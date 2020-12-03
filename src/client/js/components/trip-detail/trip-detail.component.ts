@@ -1,5 +1,5 @@
 import DynamicWebComponent from '../../base/dynamic.web.component';
-import { Component } from '../../base/decorators';
+import { Component } from '../../base/component';
 import Trip, { TripDetail, TripDetailType } from '../../models/trip.model';
 import { addClass, hide, inputNotValid, removeClass, show } from '../../DOM-utils/DOM-utils';
 import { SaveTripDetailsEvent } from '../../models/events';

@@ -1,6 +1,6 @@
 import Observable from '../base/observable';
-import { Service } from '../base/service';
-import { Injectable } from "../base/service";
+import { Service } from "../base/service";
+import { Injectable } from "../base/injectable";
 import DialogComponent from '../components/dialog/dialog.component';
 import { DialogEvent } from '../models/events';
 

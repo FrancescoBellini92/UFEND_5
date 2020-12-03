@@ -1,4 +1,4 @@
-import { Component } from "../../base/decorators";
+import { Component } from "../../base/component";
 import DynamicWebComponent from "../../base/dynamic.web.component";
 import { Inject } from "../../base/inject";
 import WebComponent from "../../base/web.component";

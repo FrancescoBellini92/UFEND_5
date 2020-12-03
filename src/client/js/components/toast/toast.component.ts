@@ -1,4 +1,4 @@
-import { Component } from "../../base/decorators";
+import { Component } from "../../base/component";
 import { Inject } from "../../base/inject";
 import WebComponent from "../../base/web.component";
 import { addClass, hide, removeClass, show } from "../../DOM-utils/DOM-utils";

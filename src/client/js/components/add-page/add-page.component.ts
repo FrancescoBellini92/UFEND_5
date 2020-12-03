@@ -1,5 +1,5 @@
 import { hide, show } from "../../DOM-utils/DOM-utils";
-import { Component } from "../../base/decorators";
+import { Component } from "../../base/component";
 import { Inject } from "../../base/inject";
 import TripFormComponent from "../trip-form/trip-form.component";
 import { SubmitTripEvent } from "../../models/events";

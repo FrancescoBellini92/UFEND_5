@@ -2,7 +2,7 @@ import DynamicWebComponent from "../../base/dynamic.web.component";
 import TripService from "../../services/trip.service";
 import { addClass, removeClass, show } from "../../DOM-utils/DOM-utils";
 import { RemoveListItemEvent } from "../../models/events";
-import { Component } from "../../base/decorators";
+import { Component } from "../../base/component";
 
 const template = require("./trip-list.component.html");
 const style = require('./trip-list.component.scss');

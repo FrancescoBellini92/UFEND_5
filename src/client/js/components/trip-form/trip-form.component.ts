@@ -1,7 +1,7 @@
 import DynamicWebComponent from '../../base/dynamic.web.component';
 import { inputNotValid } from '../../DOM-utils/DOM-utils';
 import { SubmitTripEvent } from '../../models/events';
-import { Component } from '../../base/decorators';
+import { Component } from '../../base/component';
 import TripRequest from '../../models/trip.request';
 import moment from 'moment';
 import ToastService from '../../services/toast.service';

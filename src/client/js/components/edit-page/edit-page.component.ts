@@ -1,7 +1,7 @@
 import DynamicWebComponent from '../../base/dynamic.web.component';
 import { hide, show } from "../../DOM-utils/DOM-utils";
 import Trip from "../../models/trip.model";
-import { Component } from "../../base/decorators";
+import { Component } from "../../base/component";
 import { Inject } from "../../base/inject";
 import { SaveTripDetailsEvent, SubmitTripEvent } from "../../models/events";
 import TripDetailComponent from '../trip-detail/trip-detail.component';

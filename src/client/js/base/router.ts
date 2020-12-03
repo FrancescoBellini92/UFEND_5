@@ -1,5 +1,6 @@
 import factory from "./factory";
-import { Injectable, Service } from "./service";
+import { Injectable } from "./injectable";
+import { Service } from "./service";
 
 export const HOME_HASH = '#home';
 export const BACK_HASH = '#back';

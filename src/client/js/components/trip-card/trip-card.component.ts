@@ -3,7 +3,7 @@ import Trip from '../../models/trip.model';
 import * as moment from 'moment';
 import { show, hide } from '../../DOM-utils/DOM-utils';
 import { RemoveTripEvent, SelectTripEvent } from "../../models/events";
-import { Component } from "../../base/decorators";
+import { Component } from "../../base/component";
 
 const template: string = require('./trip-card.component.html') ;
 const style: { default: string } = require('./trip-card.component.scss');
