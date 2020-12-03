@@ -17,7 +17,7 @@ describe('request utils', () => {
     global.fetch = jest.fn((url, isProd) => Promise.resolve(mockFetchReturnVal));
   });
 
-  test('make request', async() => {
+  it('makes request', async() => {
     const mockUrl = 'http://foo';
     const response = await sendRequest(mockUrl, isProd);
     expect(fetch).toHaveBeenCalledWith(mockUrl, { mode: 'cors' });
@@ -28,14 +28,14 @@ describe('request utils', () => {
     expect(fetch['mock'].calls[1][1]).toStrictEqual({ mode: 'same-origin' });
   });
 
-  test('manage response', async() => {
+  it('manages response', async() => {
     const mockUrl = 'http://foo';
     const response = await sendRequest(mockUrl, isProd);
     const responsePayload = await manageRequestResponse<{foo: string}>(response);
     expect(responsePayload).toStrictEqual(mockResponseBody);
   });
 
-  test('catch error', async() => {
+  it('catches error', async() => {
     const mockUrl = 'http://foo';
     const response = await sendRequest(mockUrl, isProd);
     const errorCheckFn = jest.fn((response) => true);

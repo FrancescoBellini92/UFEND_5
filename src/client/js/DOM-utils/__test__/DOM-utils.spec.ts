@@ -14,14 +14,14 @@ describe('DOM utils functions', () => {
     document['innerHTML'] = '';
   });
 
-  test('adds class', () => {
+  it('adds class', () => {
     addClass('added-class', targetEl);
     const classes = targetEl.classList;
     const hasClass = classes.contains('added-class');
     expect(hasClass).toBeTruthy();
   });
 
-  test('removes class', () => {
+  it('removes class', () => {
     addClass('added-class', targetEl);
     removeClass('added-class', targetEl);
     const classes = targetEl.classList;
@@ -29,14 +29,14 @@ describe('DOM utils functions', () => {
     expect(hasClass).toBeFalsy();
   });
 
-  test('is hidden', () => {
+  it('is hidden', () => {
     hide(targetEl);
     const classes = targetEl.classList;
     const hasClass = classes.contains('hidden');
     expect(hasClass).toBeTruthy();
   });
 
-  test('is shown', () => {
+  it('is shown', () => {
     hide(targetEl);
     show(targetEl);
     const classes = targetEl.classList;
@@ -44,7 +44,7 @@ describe('DOM utils functions', () => {
     expect(hasClass).toBeFalsy();
   });
 
-  test('validates input', () => {
+  it('validates input', () => {
     expect(inputNotValid(targetEl.value)).toBeTruthy();
 
     targetEl.value = '';
