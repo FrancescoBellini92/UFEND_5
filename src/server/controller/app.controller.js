@@ -14,7 +14,7 @@ const app = express();
 app.use(logger, bodyParser.json(), cors());
 
 function logger (req, res, next) {
-  if (MODE !== 'PROD') {
+  if (MODE === 'DEV') {
     console.log('Request', 'method', req.method, 'pathname', req.url);
   }
   next();
