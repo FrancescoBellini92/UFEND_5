@@ -16,8 +16,6 @@ export default interface Trip {
   };
 
   pix: {
-    pageURL: string,
-    previewURL: string,
     webformatURL: string
   };
 
