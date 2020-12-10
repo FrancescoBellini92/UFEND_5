@@ -1,0 +1,140 @@
+{
+  "id": 1234,
+  "general": {
+    "start": "2020-12-06",
+    "end": "2020-12-20",
+    "location": "Rome",
+    "name": "Trip to Rome"
+  },
+  "geo": {
+    "name": "Rome",
+    "countryName": "Italy",
+    "lng": "12.51133",
+    "lat": "41.89193"
+  },
+  "pix": {
+    "webformatURL": "https://pixabay.com/get/54e9dd474b50b10ff3d8992cc620337e143cdcec4e507749722d72d6924ccc_640.jpg"
+  },
+  "weather": [
+    {
+      "temp": 8.9,
+      "valid_date": "2020-12-07",
+      "weather": {
+        "icon": "r04d",
+        "code": 520,
+        "description": "Light shower rain"
+      }
+    },
+    {
+      "temp": 11.7,
+      "valid_date": "2020-12-08",
+      "weather": { "icon": "r03d", "code": 502, "description": "Heavy rain" }
+    },
+    {
+      "temp": 10.1,
+      "valid_date": "2020-12-09",
+      "weather": { "icon": "r01d", "code": 500, "description": "Light rain" }
+    },
+    {
+      "temp": 8.6,
+      "valid_date": "2020-12-10",
+      "weather": {
+        "icon": "c04d",
+        "code": 804,
+        "description": "Overcast clouds"
+      }
+    },
+    {
+      "temp": 6.7,
+      "valid_date": "2020-12-11",
+      "weather": { "icon": "c01d", "code": 800, "description": "Clear Sky" }
+    },
+    {
+      "temp": 7.2,
+      "valid_date": "2020-12-12",
+      "weather": { "icon": "c03d", "code": 803, "description": "Broken clouds" }
+    },
+    {
+      "temp": 7,
+      "valid_date": "2020-12-13",
+      "weather": { "icon": "c01d", "code": 800, "description": "Clear Sky" }
+    },
+    {
+      "temp": 6.8,
+      "valid_date": "2020-12-14",
+      "weather": { "icon": "c01d", "code": 800, "description": "Clear Sky" }
+    },
+    {
+      "temp": 7.7,
+      "valid_date": "2020-12-15",
+      "weather": { "icon": "c02d", "code": 801, "description": "Few clouds" }
+    },
+    {
+      "temp": 6.6,
+      "valid_date": "2020-12-16",
+      "weather": {
+        "icon": "c02d",
+        "code": 802,
+        "description": "Scattered clouds"
+      }
+    },
+    {
+      "temp": 8.4,
+      "valid_date": "2020-12-17",
+      "weather": {
+        "icon": "r04d",
+        "code": 520,
+        "description": "Light shower rain"
+      }
+    },
+    {
+      "temp": 7.5,
+      "valid_date": "2020-12-18",
+      "weather": { "icon": "r02d", "code": 501, "description": "Moderate rain" }
+    },
+    {
+      "temp": 5.6,
+      "valid_date": "2020-12-19",
+      "weather": {
+        "icon": "c04d",
+        "code": 804,
+        "description": "Overcast clouds"
+      }
+    },
+    {
+      "temp": 4.5,
+      "valid_date": "2020-12-20",
+      "weather": {
+        "icon": "c04d",
+        "code": 804,
+        "description": "Overcast clouds"
+      }
+    },
+    {
+      "temp": 5,
+      "valid_date": "2020-12-21",
+      "weather": {
+        "icon": "c04d",
+        "code": 804,
+        "description": "Overcast clouds"
+      }
+    }
+  ],
+  "details": [
+    {
+      "type": "todo",
+      "date": "2020-12-13T23:09",
+      "content": "Todo1"
+    },
+    {
+      "type": "stay",
+      "date": "2020-12-07T02:12",
+      "content": "Stay1"
+    },
+    {
+      "type": "travel",
+      "date": "2020-12-12T23:10",
+      "content": "Travel1"
+    }
+  ]
+}
