@@ -26,7 +26,6 @@ class WeatherResponse {
     return this.data;
   }
 
-
   static calculateDeltaDays(startDate, endDate) {
     const start = moment(startDate);
     const end = moment(endDate);
@@ -35,7 +34,7 @@ class WeatherResponse {
     deltaDaysFromEnd = deltaDaysFromEnd ? deltaDaysFromEnd + 2 : 1;
     let deltaDaysFromStart = start.diff(today, 'days');
     deltaDaysFromStart = deltaDaysFromStart ? deltaDaysFromStart + 2 : 1;
-    return [ deltaDaysFromStart, deltaDaysFromEnd ];
+    return [deltaDaysFromStart, deltaDaysFromEnd];
   }
 }
 

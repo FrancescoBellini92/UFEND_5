@@ -1,6 +1,6 @@
 const BaseModel = require('./base.model');
 
-class GeoResponse extends BaseModel{
+class GeoResponse extends BaseModel {
   name;
   countryName;
   lng;

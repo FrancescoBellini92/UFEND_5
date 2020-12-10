@@ -25,7 +25,7 @@ app.get(
   (req, res, next) => {
     // check parameters defined
     const hasQueryParams = req.query && req.query.name && req.query.start && req.query.end && req.query.location;
-    hasQueryParams ? next() : res.status(400).json({ error: 'Missing required query parameters' });
+    hasQueryParams ? next() : res.status(400).json({ error: 'Missing required parameters' });
   },
   (req, res, next) => {
     // parameters validation
@@ -53,8 +53,7 @@ app.get(
         start,
         end,
         location: req.query.location,
-        name: req.query.name,
-        details: {}
+        name: req.query.name
       }
 
       const APIResponse = { general, geo: geoAPIResponse, pix: pixAPIResponse, weather: weatherAPIResponse };
