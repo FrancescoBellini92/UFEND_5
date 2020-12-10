@@ -6,7 +6,8 @@
     "target": "es2018",
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "baseUrl": "."
   },
   "include": ["./src/**/*"]
 }

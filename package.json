@@ -7,7 +7,8 @@
     "test": "jest",
     "dev": "webpack-dev-server --config webpack.dev.js --open",
     "start": "node src/server/server.js",
-    "build": "webpack --config webpack.prod.js"
+    "build": "webpack --config webpack.prod.js",
+    "cypress:open": "cypress open"
   },
   "author": "",
   "license": "ISC",
@@ -21,8 +22,10 @@
     "babel-loader": "^8.2.1",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^4.2.2",
+    "cypress": "^6.0.1",
     "eslint": "^7.14.0",
     "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-cypress": "^2.11.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
