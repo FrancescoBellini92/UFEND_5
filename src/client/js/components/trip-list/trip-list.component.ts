@@ -1,8 +1,10 @@
 import DynamicWebComponent from "../../base/dynamic.web.component";
 import TripService from "../../services/trip.service";
 import { addClass, removeClass, show } from "../../DOM-utils/DOM-utils";
-import { RemoveListItemEvent } from "../../models/events";
 import { Component } from "../../base/component";
+import moment from "moment";
+import { DayInfo } from "../../models/trip.model";
+import getWeatherIcon from "../detail-page/weather-icons";
 
 const template = require("./trip-list.component.html");
 const style = require('./trip-list.component.scss');
@@ -29,7 +31,7 @@ export default class TripListComponent extends DynamicWebComponent {
   add(item: any): void {
     this.data.push(item);
     const listEl = this._makeListEl(item, this.data.length);
-    this._listEl.appendChild(listEl);
+    requestAnimationFrame(() => this._listEl.appendChild(listEl));
   }
 
   addMany(data: any[]): void {
@@ -37,14 +39,17 @@ export default class TripListComponent extends DynamicWebComponent {
       this._listEl.innerHTML = '<li class="list__item">Sorry, there is no data available</li>';
       return;
     }
+
     this.data = data;
     const fragment = document.createDocumentFragment();
+
     data.forEach((item, index) => {
       const listEl = this._makeListEl(item, index);
       fragment.appendChild(listEl);
     });
+
     this._listEl.innerHTML = '';
-    this._listEl.appendChild(fragment);
+    requestAnimationFrame(() => this._listEl.appendChild(fragment));
   }
 
   protected _queryTemplate(): void {
@@ -62,16 +67,43 @@ export default class TripListComponent extends DynamicWebComponent {
       this._toggleBtn.textContent = 'Open';
       return;
     }
+
     addClass('open', this._listEl);
     this._toggleBtn.textContent = 'Close';
   }
 
-  private _makeListEl(item: any, index: any) {
+  private _makeListEl(dayInfo: DayInfo, index: number) {
     const listEl = document.createElement("li");
-    listEl.innerHTML = this.makeListStrategyFn(item);
+    listEl.innerHTML = this._buildElementHTML(dayInfo);
     listEl.classList.add("list__item");
-    listEl.setAttribute('data-id', index);
+    listEl.setAttribute('data-id', index.toString());
     return listEl;
+  }
+
+  private _buildElementHTML(dayInfo: DayInfo): string {
+    const { weather, details } = dayInfo;
+    let weatherHTML = '';
+
+    if (weather) {
+      weatherHTML = `
+      <div class="row">
+        <strong>${moment(weather.valid_date).format('L')}</strong>
+        <img class="list__image" src="${getWeatherIcon(weather)}"/>
+      </div>
+      <p><em>Weather:</em> ${weather.weather.description} - ${weather.temp} °C</p>
+      `
+    }
+
+    const detailsHTML = [];
+    details?.forEach(detail => {
+      const detailHTML = `
+      <li class="margin-small">
+        <strong>${moment(detail.date).format('HH:mm')}</strong> - <em>${detail.type.toLowerCase()}</em><span>: ${detail.content}
+      </li>`
+      detailsHTML.push(detailHTML);
+    });
+
+    return details ? `${weatherHTML}<p><em>Planning</em></p><ul>${detailsHTML.join('')}</ul>` : `${weatherHTML}<p>`;
   }
 
 }

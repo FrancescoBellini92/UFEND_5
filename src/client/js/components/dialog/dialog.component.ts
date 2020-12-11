@@ -34,11 +34,11 @@ export default class DialogComponent extends DynamicWebComponent {
 
   show(message: string): void {
     this._paragraphEl.textContent = message;
-    show(this.shadowRoot.firstElementChild)
+    requestAnimationFrame(()=> show(this.shadowRoot.firstElementChild));
   }
 
   hide(): void {
-    hide(this.shadowRoot.firstElementChild)
+    requestAnimationFrame(() => hide(this.shadowRoot.firstElementChild));
   }
 
   protected _queryTemplate(): void {

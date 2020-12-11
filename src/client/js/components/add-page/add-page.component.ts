@@ -56,7 +56,7 @@ export default class AddPageComponent extends DynamicWebComponent implements Rou
 
   private async _onSubmit(e: SubmitTripEvent): Promise<void> {
     try {
-      show(this._loader);
+      requestAnimationFrame(() => show(this._loader));
       await this._tripService.add(e.detail);
       this._tripForm.reset();
       this._toastService.showSuccess('Trip created!')
@@ -68,7 +68,7 @@ export default class AddPageComponent extends DynamicWebComponent implements Rou
         throw e;
       }
     } finally {
-      hide(this._loader);
+      requestAnimationFrame(() => hide(this._loader));
     }
   }
 

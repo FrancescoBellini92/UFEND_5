@@ -67,6 +67,7 @@ export default class EditPageComponent extends DynamicWebComponent implements Ro
     this.addEventListener('click', e => {
       const target = e.target as HTMLElement;
       const isFromPagenav = target.parentElement.classList.contains('pagenav');
+
       if (isFromPagenav) {
         this._navigatePage(target);
       }
@@ -77,12 +78,11 @@ export default class EditPageComponent extends DynamicWebComponent implements Ro
       this._tripService.editDetails(e.detail);
       this._toastService.showSuccess('Changes have been saved')
     });
-
   }
 
   private async _onSubmit(e: SubmitTripEvent): Promise<void> {
     try {
-      show(this._loader);
+      requestAnimationFrame(() => show(this._loader));
       await this._tripService.edit(e.detail);
       this._tripForm.updateProps(this._tripService.currentTrip.general);
       this._toastService.showSuccess('Trip modified!')
@@ -93,14 +93,17 @@ export default class EditPageComponent extends DynamicWebComponent implements Ro
         throw e;
       }
     } finally {
-      hide(this._loader);
+      requestAnimationFrame(() => hide(this._loader));
     }
   }
 
-  private _navigatePage(target: HTMLElement) {
+  private _navigatePage(target: HTMLElement): void {
     const tripFormUIFn = target.textContent === 'Main' ? show : hide;
     const tripDetailUIFn = target.textContent === 'Details' ? show : hide;
-    tripFormUIFn(this._tripForm);
-    tripDetailUIFn(this._tripDetail);
+
+    requestAnimationFrame(() => {
+      tripFormUIFn(this._tripForm);
+      tripDetailUIFn(this._tripDetail);
+    });
   }
 }

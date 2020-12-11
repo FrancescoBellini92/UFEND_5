@@ -24,23 +24,28 @@ export default class ToastComponent extends WebComponent {
   }
 
   showSucces(message: string): void {
-    this.firstElementChild.classList.remove('bg-danger');
-    this.firstElementChild.classList.add('bg-success');
-    this.firstElementChild.firstElementChild.textContent = message;
+    requestAnimationFrame(() => {
+      this.firstElementChild.classList.remove('bg-danger');
+      this.firstElementChild.classList.add('bg-success');
+      this.firstElementChild.firstElementChild.textContent = message;
 
-    this._showAndHide();
+      this._showAndHide();
+    });
   }
 
   showDanger(message: string): void {
-    removeClass('bg-success', this.firstElementChild);
-    addClass('bg-danger', this.firstElementChild);
-    this.firstElementChild.firstElementChild.textContent = message;
 
-    this._showAndHide();
+    requestAnimationFrame(() => {
+      removeClass('bg-success', this.firstElementChild);
+      addClass('bg-danger', this.firstElementChild);
+      this.firstElementChild.firstElementChild.textContent = message;
+
+      this._showAndHide();
+    });
   }
 
-  private _showAndHide() {
-    setTimeout(() => show(this.firstElementChild));
-    setTimeout(() => hide(this.firstElementChild), 2000);
+  private _showAndHide(): void {
+    setTimeout(() => requestAnimationFrame(() => show(this.firstElementChild)));
+    setTimeout(() => requestAnimationFrame(() => hide(this.firstElementChild)), 2000);
   }
 }

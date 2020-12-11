@@ -1,15 +1,24 @@
 <div class="column">
   <div class="alert bg-primary shadow row min-width">
     <p>Details</p>
+
     <div class="row">
-      <button id="add-detail-btn" class="alert__button padding-small shadow border">Add</button>
-      <button id="remove-all-btn" class="alert__button padding-small shadow border">Remove all</button>
+      <button id="add-detail-btn" class="alert__button padding-small shadow border">
+        Add
+      </button>
+      <button id="id="save-btn" class="alert__button padding-small shadow border">
+        Save
+      </button>
+      <button id="remove-all-btn" class="alert__button padding-small shadow border">
+        Clear
+      </button>
     </div>
+
   </div>
-  <div id="details-container">
-  </div>
+
+  <div id="details-container"></div>
+
   <p id="no-details-text" class="can-hide-absent">Start by adding some details to your trip!</p>
-  <button id="save-btn" class="bg-primary margin-medium padding-medium shadow can-hide-absent hidden">Save details</button>
 </div>
 
 <template id="form-control">
@@ -20,8 +29,11 @@
         <option value="stay">Stay</option>
         <option value="travel">Travel</option>
       </select>
+
       <input type="datetime-local" class="detail__date shadow" required>
+
       <button class="detail__remove padding-small shadow border" >&#10005;</button>
+
     </div>
       <input class="detail__content shadow" required>
     </div>

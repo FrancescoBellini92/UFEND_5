@@ -1,7 +1,7 @@
 import DynamicWebComponent from '../../base/dynamic.web.component';
 import Trip from '../../models/trip.model';
 import * as moment from 'moment';
-import { show, hide } from '../../DOM-utils/DOM-utils';
+import { show, hide, addClass, removeClass } from '../../DOM-utils/DOM-utils';
 import { RemoveTripEvent, SelectTripEvent } from "../../models/events";
 import { Component } from "../../base/component";
 
@@ -31,7 +31,7 @@ export default class TripCardComponent extends DynamicWebComponent {
   private _handlersMap = {
     'remove': () => {
       const removeEvent = new RemoveTripEvent('remove', { detail: this._trip.id , bubbles: true });
-      hide(this);
+      requestAnimationFrame(() => hide(this));
       this.dispatchEvent(removeEvent);
     },
     'view': () => {
@@ -50,28 +50,20 @@ export default class TripCardComponent extends DynamicWebComponent {
 
   hideChildren(selector: string): void {
     const element = this.shadowRoot.querySelector(selector);
-    hide(element);
-  }
-
-  showChildren(selector: string): void {
-    const element = this.shadowRoot.querySelector(selector);
-    show(element);
+    requestAnimationFrame(() => hide(element));
   }
 
   updateProps(trip: Trip) {
     this._trip = trip;
-    const { name, location, start, end } = this._trip.general;
     const pix = this._trip.pix.webformatURL;
+    const { name, location, start, end } = this._trip.general;
+
     this._name.textContent = name;
     this._location.textContent = `${location} - ${this._trip.geo.countryName}`;
     this._startDate.textContent = moment(start).format('L');
     this._endDate.textContent = moment(end).format('L');
-    const img = (this.shadowRoot.querySelector(`#${TripCardComponent._PICTURE_ID}`) ?? document.createElement('img')) as HTMLImageElement;
-    img.id = TripCardComponent._PICTURE_ID;
-    img.classList.add('card__img');
-    img.src=pix;
-    img.addEventListener('error', () => img.src = TripCardComponent._DEFAULT_IMG_PATH);
-    this._pictureContainer.appendChild(img);
+
+    this._addPicture(pix);
   }
 
   protected _queryTemplate(): void {
@@ -86,9 +78,21 @@ export default class TripCardComponent extends DynamicWebComponent {
     this._shadowRoot.addEventListener('click', e => this._onClick(e) )
   }
 
+  private _addPicture(pix: string): void {
+    const img = (this.shadowRoot.querySelector(`#${TripCardComponent._PICTURE_ID}`) ?? document.createElement('img')) as HTMLImageElement;
+    img.id = TripCardComponent._PICTURE_ID;
+    img.src = pix;
+    img.classList.add('card__img', 'can-hide-present', 'hidden');
+    img.addEventListener('error', () => img.src = TripCardComponent._DEFAULT_IMG_PATH);
+    img.addEventListener('load', () => removeClass('hidden', img));
+    requestAnimationFrame(() => this._pictureContainer.appendChild(img));
+  }
+
   private _onClick(e: Event): void {
     const target = e.target as HTMLElement;
-    const handlerFn = this._handlersMap[target.id];
-    handlerFn();
+    const handlerFn = this._handlersMap[target.id]?.call();
+    if (handlerFn) {
+      handlerFn();
+    }
   };
 }

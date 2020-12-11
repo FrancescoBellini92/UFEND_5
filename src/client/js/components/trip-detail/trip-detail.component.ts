@@ -1,7 +1,7 @@
 import DynamicWebComponent from '../../base/dynamic.web.component';
 import { Component } from '../../base/component';
 import Trip, { TripDetail, TripDetailType } from '../../models/trip.model';
-import { addClass, hide, inputNotValid, removeClass, show } from '../../DOM-utils/DOM-utils';
+import { addClass, hide, removeClass, show } from '../../DOM-utils/DOM-utils';
 import { SaveTripDetailsEvent } from '../../models/events';
 import moment from 'moment';
 import { Inject } from '../../base/inject';
@@ -36,13 +36,12 @@ export default class TripDetailComponent extends DynamicWebComponent {
   private _toastService: ToastService;
 
   private _handlerFnMap = {
-    'add-detail-btn': () => this._cloneTemplate(),
+    'add-detail-btn': () => this._addTemplate(),
     'remove-all-btn': () => {
       this.reset();
       this._onDetailsChanged();
     },
     'save-btn': () =>  this._onDetailsChanged()
-
   }
 
   constructor() {
@@ -52,12 +51,11 @@ export default class TripDetailComponent extends DynamicWebComponent {
   get tripDetails(): TripDetail[] {
     const details: TripDetail[] = [];
     const detailElements = this.shadowRoot.querySelectorAll('.detail');
-    removeClass('error', ...detailElements)
-    for (const node of detailElements) {
+    requestAnimationFrame(() => removeClass('error', ...detailElements));
 
-      const { typeEl, dateEl, contentEl } = this._getInputs(node);
+    detailElements.forEach(element => {
+      const { typeEl, dateEl, contentEl } = this._getInputs(element);
 
-      const type = typeEl.value as TripDetailType;
       const date = dateEl.value;
       const content = contentEl.value;
 
@@ -69,31 +67,37 @@ export default class TripDetailComponent extends DynamicWebComponent {
         this._hightlightInvalidFields(invalidNode as HTMLElement);
         throw new NotValidInputError(!content ? 'Please fill the content field' : 'Selected date is out of trip date range');
       }
+
       details.push({
         type: typeEl.value as TripDetailType,
         date: dateEl.value,
         content: contentEl.value
       });
-    }
+    });
 
     return details;
   }
 
-  updateProps(trip: Trip) {
+  updateProps(trip: Trip): void {
     this.reset();
 
     this.start = trip.general.start;
     this.end = trip.general.end;
 
+    const fragment = document.createDocumentFragment();
+
     trip.details?.forEach(detail => {
-      this._cloneTemplate();
-      const { typeEl, dateEl, contentEl } = this._getInputs(this._detailsContainer.lastElementChild);
+      this._cloneTemplate(fragment as any);
+      const { typeEl, dateEl, contentEl } = this._getInputs(fragment.lastElementChild as any);
       typeEl.value = detail.type;
       dateEl.value = detail.date;
       contentEl.value = detail.content;
-    })
+    });
 
-    this._updateUI();
+    requestAnimationFrame(() => {
+      this._detailsContainer.appendChild(fragment);
+      this._updateUI();
+    })
   }
 
   reset(): void {
@@ -116,7 +120,7 @@ export default class TripDetailComponent extends DynamicWebComponent {
     });
   }
 
-  private _onDetailsChanged() {
+  private _onDetailsChanged(): void {
     try {
       const saveDetailsEvent = new SaveTripDetailsEvent('save-details', { detail: this.tripDetails, bubbles: true });
       this.dispatchEvent(saveDetailsEvent);
@@ -137,14 +141,21 @@ export default class TripDetailComponent extends DynamicWebComponent {
     }
   }
 
-  private _cloneTemplate(): void {
+  private _cloneTemplate(parentEl: Element = this._detailsContainer): void {
     const templateContent = this._formControlTemplate.content.cloneNode(true);
-    this._detailsContainer.appendChild(templateContent);
-    show(this._detailsContainer.lastElementChild);
-    this._updateUI();
+    parentEl.append(templateContent);
+  }
+
+  private _addTemplate(parentEl: Element = this._detailsContainer): void {
+    const templateContent = this._formControlTemplate.content.cloneNode(true);
+    requestAnimationFrame(() => {
+      parentEl.prepend(templateContent);
+      this._updateUI();
+    });
   }
 
   private _getInputs(element: Element): { typeEl: HTMLInputElement, dateEl: HTMLInputElement, contentEl: HTMLInputElement } {
+    debugger;
     const typeEl = element.querySelector('.detail__type') as HTMLInputElement;
     const dateEl = element.querySelector('.detail__date') as HTMLInputElement;
     const contentEl = element.querySelector('.detail__content') as HTMLInputElement;
@@ -152,13 +163,10 @@ export default class TripDetailComponent extends DynamicWebComponent {
   }
 
   private _updateUI(hasDetails = this._detailsContainer.childElementCount): void {
-    const updateUISaveDetailBtnFn = hasDetails ? show : hide;
-    const updateUINoDetailsTextFn = hasDetails ? hide : show;
-    updateUISaveDetailBtnFn(this._saveDetailsBtn);
-    updateUINoDetailsTextFn(this._noDetailsText);
+    hasDetails ? hide(this._noDetailsText) : show(this._noDetailsText);
   }
 
   private _hightlightInvalidFields(el: HTMLElement): void {
-    addClass('error', el);
+    requestAnimationFrame(() => addClass('error', el));
   }
 }

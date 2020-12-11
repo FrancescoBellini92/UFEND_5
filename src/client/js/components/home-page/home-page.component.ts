@@ -44,20 +44,25 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
 
   constructor() {
     super();
+
     this._tripService.onTripAdded$.subscribe(trip => {
       this.updateProps(trip)
-      this._updateUI();
+      requestAnimationFrame(() => this._updateUI());
     });
+
     this._tripService.onTripEdited$.subscribe(trip => {
       const element = this._cardTripMap.get(trip.id) as TripCardComponent;
       element.updateProps(trip);
-    })
+    });
+
     this._tripService.onTripDeleted$.subscribe(tripId => {
       const element = this._cardTripMap.get(tripId) as TripCardComponent;
-      element.remove();
-      this._cardTripMap.delete(tripId);
-      this._updateUI();
-    })
+      requestAnimationFrame(() => {
+        element.remove();
+        this._cardTripMap.delete(tripId);
+        this._updateUI();
+      });
+    });
   }
 
   connectedCallback(): void {
@@ -65,24 +70,27 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
   }
 
   show(): void {
-    this._updateUI();
-    show(this.firstElementChild);
+    requestAnimationFrame(() => {
+      this._updateUI();
+      show(this.firstElementChild);
+    });
   }
 
-
   hide(): void {
-    hide(this.firstElementChild);
+    requestAnimationFrame(() => hide(this.firstElementChild));
   }
 
   updateProps(...trips: Trip[]): void {
     const fragment = document.createDocumentFragment();
+
     trips.forEach(trip => {
       const tripCard = new TripCardComponent();
       this._cardTripMap.set(trip.id, tripCard);
       tripCard.updateProps(trip)
       fragment.appendChild(tripCard);
     });
-    this._cardContainer.insertBefore(fragment, this._cardContainer.firstChild);
+
+    requestAnimationFrame(() => this._cardContainer.insertBefore(fragment, this._cardContainer.firstChild));
   }
 
   protected _queryTemplate(): void {

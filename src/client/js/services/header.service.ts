@@ -1,6 +1,5 @@
 import { Service } from "../base/service";
 import { Injectable } from "../base/injectable";
-import ToastComponent from '../components/toast/toast.component';
 import { addClass, removeClass } from '../DOM-utils/DOM-utils';
 
 @Injectable({
@@ -23,10 +22,12 @@ export default class HeaderService extends Service {
   }
 
   highlightNavigation(hash: string): void {
-    removeClass('visited', ...this._navAnchorsEl);
-    const visited = this._navAnchorsEl.find(a => a.hash === hash);
-    if (visited) {
-      addClass('visited', visited);
-    }
+    requestAnimationFrame(() => {
+      removeClass('visited', ...this._navAnchorsEl);
+      const visited = this._navAnchorsEl.find(a => a.hash === hash);
+      if (visited) {
+        addClass('visited', visited);
+      }
+    })
   }
 }
