@@ -1,5 +1,3 @@
-// @import '../modifiers/modifiers';
-
 .header {
   @include flex(row, space-between, center);
   padding: 10px;

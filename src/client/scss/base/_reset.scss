@@ -1,4 +1,3 @@
-// @import './modifiers';
 * {
   margin: 0;
   padding: 0;
@@ -22,7 +21,6 @@ select {
   @extend .border;
   background-color: white;
 }
-
 
 button {
   @extend .padding-small;
@@ -55,4 +53,18 @@ ul {
   body, .page {
     overflow-x: hidden !important;
   }
+}
+
+@media (min-width: 1366px) {
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: silver;
+    border-radius: 10px;
+}
 }

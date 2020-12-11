@@ -1,5 +1,3 @@
-// @import '../base/base';
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -18,7 +16,6 @@
   &.visible {
     animation: fadeIn 0.25s 1;
   }
-
 }
 
 .can-hide-present {
@@ -121,6 +118,7 @@
   width: 100%;
   overflow-y: scroll;
   @include flex(column, start, center);
+  transform: translateZ(0);
 }
 
 .column {

@@ -2,6 +2,8 @@
 
 .list {
   width: 100%;
+  transform: translateZ(0);
+
 
   .list__item {
     @extend .padding-medium;
