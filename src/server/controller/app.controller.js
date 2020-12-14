@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const compression = require('compression');
 const moment = require('moment');
 require('@babel/polyfill');
 
@@ -69,8 +70,7 @@ app.get(
 );
 
 if (MODE === 'PROD') {
-  const compression = require('compression');
-  app.use(compression);
+  app.use(compression());
   app.use(express.static('dist'));
 }
 
