@@ -55,7 +55,7 @@ module.exports = {
     new CleanWebpackPlugin({}),
     new Webpack.DefinePlugin({
       'process.env.APIURL': JSON.stringify(`http://localhost:${PORT}/trip-info`),
-      'process.env.MODE': 'DEV'
+      'process.env.MODE': JSON.stringify('DEV')
     })
   ]
 };

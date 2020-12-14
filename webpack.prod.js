@@ -65,7 +65,7 @@ module.exports = {
     new MiniCssExtractPlugin({}),
     new Webpack.DefinePlugin({
       'process.env.APIURL': JSON.stringify(`http://localhost:${PORT}/trip-info`),
-      'process.env.MODE': 'PROD'
+      'process.env.MODE': JSON.stringify('PROD')
     }),
     new WorkBoxPlugin.GenerateSW({
       clientsClaim: true,
