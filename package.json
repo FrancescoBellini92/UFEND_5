@@ -4,13 +4,13 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "jest",
+    "test": "jest && cypress run",
     "dev": "webpack-dev-server --config webpack.dev.js --open",
     "start": "node src/server/server.js",
     "build": "webpack --config webpack.prod.js",
     "cypress:open": "cypress open"
   },
-  "author": "",
+  "author": "Francesco Bellni",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.12.9",

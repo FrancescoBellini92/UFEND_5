@@ -19,10 +19,10 @@ describe('Edit page', () => {
       cy.get('.column > .visible').shadow().contains('Add').click();
       cy.get('.column > .visible').shadow().find('.detail__type').should('have.length', details.length + 1);
 
-      cy.get('.column > .visible').shadow().contains('Save details').click();
+      cy.get('.column > .visible').shadow().contains('Save').click();
       cy.contains('Please fill empty fields and check the dates').should('exist');
 
-      cy.get('.column > .visible').shadow().contains('Remove all').click();
+      cy.get('.column > .visible').shadow().contains('Clear').click();
       cy.get('.column > .visible').shadow().find('.detail__type').should('not.exist');
 
       cy.contains('Changes have been saved').should('exist');
