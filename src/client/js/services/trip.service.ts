@@ -27,7 +27,6 @@ export default class TripService extends Service {
   onTripDeleted$: Observable<number, number> = new Observable<number, number>(async tripId => tripId);
 
   private _currentTrip: Trip;
-
   private _trips: Trip[] = [];
   private _tripMap: Map<number, Trip> = new Map<number, Trip>();
 
@@ -47,16 +46,19 @@ export default class TripService extends Service {
 
   static getDayInfo(trip: Trip): DayInfo[] {
     const dayMap: Map<string, DayInfo> = new Map<string, DayInfo>();
+
     trip.details?.forEach(detail => {
       const { dayData, dayKey } = TripService._getDayDataAndKey(detail.date, dayMap);
       dayData.details = (dayData.details?? []).concat(detail);
       dayMap.set(dayKey, dayData);
     });
+
     trip.weather?.forEach(weatherInfo => {
       const { dayData, dayKey } = TripService._getDayDataAndKey(weatherInfo.valid_date, dayMap);
       dayData.weather = weatherInfo;
       dayMap.set(dayKey, dayData);
     });
+
     const accumulator = [];
     dayMap.forEach(value => {
       value.details = value.details?.sort((firstDetail, secondDetail) => moment(firstDetail.date).diff(secondDetail.date));
@@ -99,6 +101,7 @@ export default class TripService extends Service {
     if (savedTrips && !TripService.isEmpty(savedTrips)) {
       this.trips = savedTrips;
     }
+
     return this.trips;
   }
 
@@ -133,6 +136,7 @@ export default class TripService extends Service {
     if(TripService.isEmpty(this.trips)) {
       localStorage.removeItem('trips');
     }
+
     this._syncStorage();
     this.onTripDeleted$.next(tripId);
   }
@@ -143,6 +147,7 @@ export default class TripService extends Service {
       `${environment.APIURL}?name=${name}&start=${start}&end=${end}&location=${location}`,
       isProd
     );
+
     const newTrip: Trip = await manageRequestResponse<Trip>(
       request,
       response => response.status !== 201,

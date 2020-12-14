@@ -6,7 +6,7 @@
       <button id="add-detail-btn" class="alert__button padding-small shadow border">
         Add
       </button>
-      <button id="id="save-btn" class="alert__button padding-small shadow border">
+      <button id="save-btn" class="alert__button padding-small shadow border">
         Save
       </button>
       <button id="remove-all-btn" class="alert__button padding-small shadow border">
@@ -24,18 +24,18 @@
 <template id="form-control">
   <div class="detail">
     <div class="row">
-      <select class="detail__type" required>
+      <select aria-label="select detail type" class="detail__type" required>
         <option value="todo">Todo</option>
         <option value="stay">Stay</option>
         <option value="travel">Travel</option>
       </select>
 
-      <input type="datetime-local" class="detail__date shadow" required>
+      <input type="datetime-local" aria-label="select date and time" class="detail__date shadow" required>
 
-      <button class="detail__remove padding-small shadow border" >&#10005;</button>
+      <button class="detail__remove padding-small shadow border">&#10005;</button>
 
     </div>
-      <input class="detail__content shadow" required>
+      <input class="detail__content shadow" aria-label="detail content" required>
     </div>
   </div>
 </template>

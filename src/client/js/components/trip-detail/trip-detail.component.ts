@@ -31,12 +31,13 @@ export default class TripDetailComponent extends DynamicWebComponent {
   private _formControlTemplate: HTMLTemplateElement;
   private _detailsContainer: HTMLElement;
   private _saveDetailsBtn: HTMLElement;
+  private _removeAllBtn: HTMLElement;
+  private _addBtn: HTMLElement;
   private _noDetailsText: HTMLElement;
 
   private _toastService: ToastService;
 
   private _handlerFnMap = {
-    'add-detail-btn': () => this._addTemplate(),
     'remove-all-btn': () => {
       this.reset();
       this._onDetailsChanged();
@@ -108,15 +109,26 @@ export default class TripDetailComponent extends DynamicWebComponent {
   protected _queryTemplate(): void {
     this._formControlTemplate = this.shadowRoot.querySelector('#form-control');
     this._detailsContainer = this.shadowRoot.querySelector('#details-container');
-    this._saveDetailsBtn= this.shadowRoot.querySelector('#save-btn');
+    this._saveDetailsBtn = this.shadowRoot.querySelector('#save-btn');
+    this._addBtn = this.shadowRoot.querySelector('#add-detail-btn');
+    this._removeAllBtn= this.shadowRoot.querySelector('#remove-all-btn');
     this._noDetailsText = this.shadowRoot.querySelector('#no-details-text');
   }
 
   protected _attachEventHandlers(): void {
+    this._saveDetailsBtn.addEventListener('click', () => this._onDetailsChanged());
+    this._addBtn.addEventListener('click', () => this._addTemplate())
+    this._removeAllBtn.addEventListener('click', () => {
+      this.reset();
+      this._onDetailsChanged();
+    });
+
     this.shadowRoot.addEventListener('click', (e: Event) => {
       const target = e.target as HTMLElement;
       const isRemoveBtn = target.classList.contains('detail__remove');
-      isRemoveBtn ? this._onRemoveDetail(target) : this._handlerFnMap[target.id]();
+      if (isRemoveBtn) {
+        this._onRemoveDetail(target);
+      }
     });
   }
 
@@ -155,7 +167,6 @@ export default class TripDetailComponent extends DynamicWebComponent {
   }
 
   private _getInputs(element: Element): { typeEl: HTMLInputElement, dateEl: HTMLInputElement, contentEl: HTMLInputElement } {
-    debugger;
     const typeEl = element.querySelector('.detail__type') as HTMLInputElement;
     const dateEl = element.querySelector('.detail__date') as HTMLInputElement;
     const contentEl = element.querySelector('.detail__content') as HTMLInputElement;

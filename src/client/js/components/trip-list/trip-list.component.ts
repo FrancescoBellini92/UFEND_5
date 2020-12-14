@@ -88,7 +88,7 @@ export default class TripListComponent extends DynamicWebComponent {
       weatherHTML = `
       <div class="row">
         <strong>${moment(weather.valid_date).format('L')}</strong>
-        <img class="list__image" src="${getWeatherIcon(weather)}"/>
+        <img class="list__image" alt="weather picture" src="${getWeatherIcon(weather)}"/>
       </div>
       <p><em>Weather:</em> ${weather.weather.description} - ${weather.temp} °C</p>
       `
