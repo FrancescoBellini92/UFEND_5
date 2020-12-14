@@ -7,7 +7,6 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const WorkBoxPlugin = require('workbox-webpack-plugin');
 
 const Webpack = require('webpack');
-const { PORT } = require('./src/server/environment');
 
 module.exports = {
   entry: './src/client/index.ts',
@@ -64,7 +63,7 @@ module.exports = {
     new CleanWebpackPlugin({}),
     new MiniCssExtractPlugin({}),
     new Webpack.DefinePlugin({
-      'process.env.APIURL': JSON.stringify(`http://localhost:${PORT}/trip-info`),
+      'process.env.APIURL': JSON.stringify('/trip-info'),
       'process.env.MODE': JSON.stringify('PROD')
     }),
     new WorkBoxPlugin.GenerateSW({
