@@ -42,9 +42,3 @@ export default class Observable<TRequest, TResponse> {
     return child;
   }
 }
-
-export class Subscription {
-  unSubscribe() {
-
-  }
-}
