@@ -2,22 +2,25 @@
 
 This repo started as the final project for the Udacity Front End Nanodegree, which required some kind of travel app that allows the user to create trips and see weather forecasts.
 
-To make things more interesting, I tried to go a little bit further: making a full (albeit simple) single page application (SPA) build with vanilla JS/SCSS and powered by a node/express API:
+To make things more interesting, I tried to go a little bit further: making a full (albeit simple) single page application build with vanilla JS/TS and powered by a node/express API:
 
-As per Udacity requirements, no frameworks or external libraries (except for very basic ones) were used for both JS and SCSS code.
+As per Udacity requirements, no frameworks or external libraries (except for very basic ones) were used for both JS/TS and SCSS code.
 
-Althoug responsive and working on any viewport, this project was built mobile-first and style and layout reflect this decision.
+Althoug responsive and working on any viewport, this project was built mobile-first and style and layout reflect this (the UI is organized vertically).
+
 #
-## Components, dependency injection and routing
-Being familiar with Angular, client logic was split in components and services.
+Being particularly familiar with Angular (at the time of writing), I really liked the idea to organize the codebase in an "angular-ish" way.
 
-Dependency injection was implemented, and components were implemented as Web Components
+This resulted in:
+- use of decorators
+- components with encapsulated style and templates (with web components)
+- service (business-logic classes) injected into components (with a dependency injection enginge)
+- observables (with a class that mimicks RxJS observables)
+- routing (implemented via hash change)
 
-Routing was implemented via hash changes
+Also, a service worker is provided for caching assets.
 
-An Observable class was provided to mimick RxJS observables
-
-A service worker is provided for caching assets.
+HTML/SCSS was organized with BEM conventions in mind.
 ## Dependencies
 Please refer to package.json for dependencies
 
