@@ -6,6 +6,7 @@
   @extend .margin-medium;
   @extend .shadow;
   width: 90%;
+  min-width: 300px;
 
   .alert__button {
     margin: 0 10px !important;
