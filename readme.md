@@ -5,6 +5,8 @@ This repo started as the final project for the Udacity Front End Nanodegree, whi
 To make things more interesting, I tried to go a little bit further: making a full (albeit simple) single page application (SPA) build with vanilla JS/SCSS and powered by a node/express API:
 
 As per Udacity requirements, no frameworks or external libraries (except for very basic ones) were used for both JS and SCSS code.
+
+Althoug responsive and working on any viewport, this project was built mobile-first and style and layout reflect this decision.
 #
 ## Components, dependency injection and routing
 Being familiar with Angular, client logic was split in components and services.
