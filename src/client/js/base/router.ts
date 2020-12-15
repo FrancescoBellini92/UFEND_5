@@ -43,8 +43,7 @@ export class Router extends Service {
   }
 
   private _back(): void {
-    window.history.back();
-    window.history.back();
+    setTimeout(() => window.history.go(-2), 80);
   }
 
   private _onNavigation(): void {
