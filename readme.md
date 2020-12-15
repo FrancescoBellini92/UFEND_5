@@ -6,7 +6,7 @@ To make things more interesting, I tried to go a little bit further: making a fu
 
 As per Udacity requirements, no frameworks or external libraries (except for very basic ones) were used for both JS/TS and SCSS code.
 
-Althoug responsive and working on any viewport, this project was built mobile-first and style and layout reflect this (the UI is organized vertically).
+Although responsive and working on any viewport, this project was built mobile-first and style and layout reflect this (the UI is organized vertically).
 
 #
 Being particularly familiar with Angular (at the time of writing), I really liked the idea to organize the codebase in an "angular-ish" way.
