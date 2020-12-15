@@ -9,7 +9,7 @@ As per Udacity requirements, no frameworks or external libraries (except for ver
 ## Components, dependency injection and routing
 Being familiar with Angular, client logic was split in components and services.
 
-Dependency injection was implemented, and components were built with a combination of custom elements and shadow DOM to maintain encapsulation of style and DOM attributes.
+Dependency injection was implemented, and components were implemented as Web Components
 
 Routing was implemented via hash changes
 
@@ -27,3 +27,11 @@ To run the project:
 4) npm run build to build the frontend
 5) npm start to run the express server
 
+## How to test
+To run the project:
+1) install all required dependencies via npm install
+2) set up a .env file with content from .env.example (use your own API keys)
+3) to test the build, set "MODE" to "DEV"
+4) start a dev server via npm run dev
+5) start the node server via npm start
+6) run unit and e2e tests via npm test
