@@ -13,8 +13,8 @@ Being particularly familiar with Angular (at the time of writing), I really like
 
 This resulted in:
 - use of decorators
-- components with encapsulated style and templates (with web components)
-- service (business-logic classes) injected into components (with a dependency injection enginge)
+- components with encapsulated style and template (with web components)
+- services (business-logic classes) injected into components (with a dependency injection enginge)
 - observables (with a class that mimicks RxJS observables)
 - routing (implemented via hash change)
 
