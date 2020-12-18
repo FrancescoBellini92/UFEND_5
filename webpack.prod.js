@@ -81,7 +81,7 @@ module.exports = {
         scope: '/',
         display: 'standalone',
         background_color: '#ffffff',
-        theme_color: '#0A6885',
+        theme_color: '#1E7E9B',
         icons: {
           coast: false,
           yandex: false
