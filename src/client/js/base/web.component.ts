@@ -1,5 +1,8 @@
 import router from './router';
 
+/**
+ * Base class for all components
+ */
 export default class WebComponent extends HTMLElement {
 
   static selector: string;

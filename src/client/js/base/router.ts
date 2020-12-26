@@ -5,25 +5,19 @@ import { Service } from "./service";
 export const HOME_HASH = '#home';
 export const BACK_HASH = '#back';
 
-export function navigateTo(hash: string = HOME_HASH) {
-  window.location.hash = hash;
-}
 
-
-export interface Routable extends Object {
-  show: { (): void; };
-  hide: { (): void; };
-}
+/**
+ * Manages routing via hash change
+ */
 @Injectable({
   injectionToken: 'router',
   isSingleton: true
-
 })
 export class Router extends Service {
 
   routes: Map<string, Routable>;
 
-  optionalFns: {(hash: string): void}[] = [];
+  onNavigationCallbacks: NavigationCallback[] = [];
 
   constructor() {
     super();
@@ -38,8 +32,8 @@ export class Router extends Service {
     this.routes.set(component.route, component);
   }
 
-  addOptionalFn(fn:{(hash: string): void}): void {
-    this.optionalFns.push(fn);
+  addOnNavigationCallback(fn: NavigationCallback): void {
+    this.onNavigationCallbacks.push(fn);
   }
 
   private _back(): void {
@@ -66,7 +60,7 @@ export class Router extends Service {
       behavior: 'smooth'
     });
 
-    this.optionalFns.forEach(optionalFn => optionalFn(hash));
+    this.onNavigationCallbacks.forEach(fn => fn(hash));
   }
 }
 
@@ -77,5 +71,17 @@ export class UnRoutableComponentError extends Error {
     super(`${componentName} does not implement Routable interface`);
   }
 }
+
+export function navigateTo(hash: string = HOME_HASH) {
+  window.location.hash = hash;
+}
+
+export interface Routable {
+  show: { (): void; };
+  hide: { (): void; };
+}
+
+
+export type NavigationCallback = {(hash: string): void};
 
 export default factory.make<Router>(Router.injectionToken);

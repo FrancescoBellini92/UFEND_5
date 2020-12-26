@@ -8,6 +8,6 @@ const headerService = factory.make<HeaderService>(HeaderService.injectionToken)
 
 export default () => {
   registerComponents();
-  router.addOptionalFn((hash: string) => headerService.highlightNavigation(hash));
+  router.addOnNavigationCallback((hash: string) => headerService.highlightNavigation(hash));
   navigateTo();
 }
