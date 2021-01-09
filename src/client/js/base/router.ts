@@ -36,16 +36,21 @@ export class Router extends Service {
     this.onNavigationCallbacks.push(fn);
   }
 
+  initNavigation(): void {
+    const notInHomePage = window.location.hash !== HOME_HASH;
+    notInHomePage ? navigateTo() : this._onNavigation(HOME_HASH);
+  }
+
   private _back(): void {
     setTimeout(() => window.history.go(-2), 80);
   }
 
-  private _onNavigation(): void {
-    const hash = this.routes.has(window.location.hash) ? window.location.hash : '';
+  private _onNavigation(hash: string = window.location.hash): void {
+    const hashToNavigate = this.routes.has(hash) ? hash : '';
 
     this.routes.forEach((component, route) => {
       try {
-        route === hash ? component.show() : component.hide()
+        route === hashToNavigate ? component.show() : component.hide()
       } catch (e) {
         if (e instanceof TypeError) {
           throw new UnRoutableComponentError(component.constructor.name);
@@ -60,7 +65,7 @@ export class Router extends Service {
       behavior: 'smooth'
     });
 
-    this.onNavigationCallbacks.forEach(fn => fn(hash));
+    this.onNavigationCallbacks.forEach(fn => fn(hashToNavigate));
   }
 }
 
@@ -80,7 +85,6 @@ export interface Routable {
   show: { (): void; };
   hide: { (): void; };
 }
-
 
 export type NavigationCallback = {(hash: string): void};
 
