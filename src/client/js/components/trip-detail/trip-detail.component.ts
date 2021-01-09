@@ -7,6 +7,7 @@ import moment from 'moment';
 import { Inject } from '../../base/inject';
 import ToastService from '../../services/toast.service';
 import { NotValidInputError } from '../../exceptions/exceptions';
+import { Child } from '../../base/child';
 
 const template: string = require('./trip-detail.component.html');
 const style: { default: string } = require('./trip-detail.component.scss');
@@ -28,11 +29,22 @@ export default class TripDetailComponent extends DynamicWebComponent {
   start: string;
   end: string;
 
+  @Child('#form-control')
   private _formControlTemplate: HTMLTemplateElement;
+
+  @Child('#details-container')
   private _detailsContainer: HTMLElement;
+
+  @Child('#save-btn')
   private _saveDetailsBtn: HTMLElement;
+
+  @Child('#remove-all-btn')
   private _removeAllBtn: HTMLElement;
+
+  @Child('#add-detail-btn')
   private _addBtn: HTMLElement;
+
+  @Child('#no-details-text')
   private _noDetailsText: HTMLElement;
 
   private _toastService: ToastService;
@@ -104,15 +116,6 @@ export default class TripDetailComponent extends DynamicWebComponent {
   reset(): void {
     this._detailsContainer.innerHTML = '';
     this._updateUI();
-  }
-
-  protected _queryTemplate(): void {
-    this._formControlTemplate = this.shadowRoot.querySelector('#form-control');
-    this._detailsContainer = this.shadowRoot.querySelector('#details-container');
-    this._saveDetailsBtn = this.shadowRoot.querySelector('#save-btn');
-    this._addBtn = this.shadowRoot.querySelector('#add-detail-btn');
-    this._removeAllBtn= this.shadowRoot.querySelector('#remove-all-btn');
-    this._noDetailsText = this.shadowRoot.querySelector('#no-details-text');
   }
 
   protected _attachEventHandlers(): void {

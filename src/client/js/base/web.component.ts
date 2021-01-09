@@ -26,6 +26,10 @@ export default class WebComponent extends HTMLElement {
     customElements.define(this.selector, this);
   }
 
+  queryShadowRoot(selector: string, multiple?: boolean): HTMLElement {
+    return this._shadowRoot[multiple ? 'queryselectorAll' : 'querySelector'](selector);
+  }
+
   protected _init(): void {
     this._attachHTML();
     if (this._style) {

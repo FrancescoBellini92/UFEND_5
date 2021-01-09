@@ -1,3 +1,4 @@
+import { Child } from "../../base/child";
 import { Component } from "../../base/component";
 import DynamicWebComponent from "../../base/dynamic.web.component";
 import { Inject } from "../../base/inject";
@@ -21,11 +22,16 @@ const style = require('./dialog.component.scss');
 })
 export default class DialogComponent extends DynamicWebComponent {
 
-  private _dialogService: DialogService;
-
+  @Child('#abort')
   private _abortBtn: HTMLButtonElement;
+
+  @Child('#ok')
   private _okBtn: HTMLButtonElement;
+
+  @Child('#dialog__text')
   private _paragraphEl: HTMLElement;
+
+  private _dialogService: DialogService;
 
   constructor() {
     super();
@@ -39,12 +45,6 @@ export default class DialogComponent extends DynamicWebComponent {
 
   hide(): void {
     requestAnimationFrame(() => hide(this.shadowRoot.firstElementChild));
-  }
-
-  protected _queryTemplate(): void {
-    this._abortBtn = this.shadowRoot.querySelector('#abort');
-    this._okBtn = this.shadowRoot.querySelector('#ok');
-    this._paragraphEl = this.shadowRoot.querySelector('#dialog__text');
   }
 
   protected _attachEventHandlers(): void {

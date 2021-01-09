@@ -10,6 +10,7 @@ import TripFormComponent from '../trip-form/trip-form.component';
 import ToastService from '../../services/toast.service';
 import { BadRequestError } from '../../exceptions/exceptions';
 import TripService from '../../services/trip.service';
+import { Child } from '../../base/child';
 
 const template: string = require("./edit-page.component.html");
 
@@ -30,8 +31,13 @@ const template: string = require("./edit-page.component.html");
 })
 export default class EditPageComponent extends DynamicWebComponent implements Routable {
 
+  @Child('trip-detail')
   private _tripDetail: TripDetailComponent;
+
+  @Child('trip-form')
   private _tripForm: TripFormComponent;
+
+  @Child('.loader')
   private _loader: HTMLElement;
 
   private _tripService: TripService;
@@ -55,12 +61,6 @@ export default class EditPageComponent extends DynamicWebComponent implements Ro
   updateProps(trip: Trip): void {
     this._tripForm.updateProps(trip.general);
     this._tripDetail.updateProps(trip);
-  }
-
-  protected _queryTemplate(): void {
-    this._tripDetail = this.querySelector('trip-detail') as TripDetailComponent;
-    this._tripForm = this.querySelector('trip-form') as TripFormComponent;
-    this._loader = this.querySelector('.loader');
   }
 
   protected _attachEventHandlers(): void {

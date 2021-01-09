@@ -8,6 +8,7 @@ import { navigateTo, Routable } from "../../base/router";
 import ToastService from "../../services/toast.service";
 import { BadRequestError } from "../../exceptions/exceptions";
 import TripService from "../../services/trip.service";
+import { Child } from "../../base/child";
 
 const template: string = require("./add-page.component.html");
 
@@ -28,8 +29,12 @@ const template: string = require("./add-page.component.html");
 })
 export default class AddPageComponent extends DynamicWebComponent implements Routable {
 
+  @Child('trip-form')
   private _tripForm: TripFormComponent;
+
+  @Child('.loader')
   private _loader: HTMLElement;
+
   private _tripService: TripService;
   private _toastService: ToastService;
 
@@ -43,11 +48,6 @@ export default class AddPageComponent extends DynamicWebComponent implements Rou
 
   hide(): void {
     hide(this.firstElementChild);
-  }
-
-  protected _queryTemplate(): void {
-    this._tripForm = this.querySelector('trip-form') as TripFormComponent;
-    this._loader = this.querySelector('.loader');
   }
 
   protected _attachEventHandlers(): void {

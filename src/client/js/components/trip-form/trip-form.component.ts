@@ -6,6 +6,7 @@ import TripRequest from '../../models/trip.request';
 import moment from 'moment';
 import ToastService from '../../services/toast.service';
 import { Inject } from '../../base/inject';
+import { Child } from '../../base/child';
 
 const template: string = require('./trip-form.component.html');
 const style: { default: string } = require('./trip-form.component.scss');
@@ -24,10 +25,19 @@ const style: { default: string } = require('./trip-form.component.scss');
 })
 export default class TripFormComponent extends DynamicWebComponent {
 
+  @Child('#start-date')
   private _startDateInput: HTMLInputElement;
+
+  @Child('#end-date')
   private _endDateInput: HTMLInputElement;
+
+  @Child('#location')
   private _locationInput: HTMLInputElement;
+
+  @Child('#name')
   private _nameInput: HTMLInputElement;
+
+  @Child('#submit')
   private _submitBtn: HTMLInputElement;
 
   private _toastService: ToastService;
@@ -49,14 +59,6 @@ export default class TripFormComponent extends DynamicWebComponent {
     this._startDateInput.value = start;
     this._endDateInput.value = end;
     this._locationInput.value = location;
-  }
-
-  protected _queryTemplate(): void {
-    this._startDateInput = this.shadowRoot.querySelector('#start-date');
-    this._endDateInput = this.shadowRoot.querySelector('#end-date');
-    this._locationInput = this.shadowRoot.querySelector('#location');
-    this._nameInput = this.shadowRoot.querySelector('#name');
-    this._submitBtn = this.shadowRoot.querySelector('#submit');
   }
 
   protected _attachEventHandlers(): void {

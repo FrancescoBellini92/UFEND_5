@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { show, hide, addClass, removeClass } from '../../DOM-utils/DOM-utils';
 import { RemoveTripEvent, SelectTripEvent } from "../../models/events";
 import { Component } from "../../base/component";
+import { Child } from '../../base/child';
 
 const template: string = require('./trip-card.component.html') ;
 const style: { default: string } = require('./trip-card.component.scss');
@@ -19,14 +20,22 @@ export default class TripCardComponent extends DynamicWebComponent {
   private static _PICTURE_ID  = 'picture';
   private static _DEFAULT_IMG_PATH = '/src/assets/images/default.jpg';
 
+  @Child('#start-date')
   private _startDate: HTMLElement;
+
+  @Child('#end-date')
   private _endDate: HTMLElement;
+
+  @Child('#location')
   private _location: HTMLElement;
+
+  @Child('#name')
   private _name: HTMLElement;
 
-  private _trip: Trip;
+  @Child('#picture-container')
+  private _pictureContainer: HTMLElement;
 
-  private _pictureContainer: any;
+  private _trip: Trip;
 
   private _handlersMap = {
     'remove': () => {
@@ -54,6 +63,7 @@ export default class TripCardComponent extends DynamicWebComponent {
   }
 
   updateProps(trip: Trip) {
+    debugger;
     this._trip = trip;
     const pix = this._trip.pix.webformatURL;
     const { name, location, start, end } = this._trip.general;
@@ -64,14 +74,6 @@ export default class TripCardComponent extends DynamicWebComponent {
     this._endDate.textContent = moment(end).format('L');
 
     this._addPicture(pix);
-  }
-
-  protected _queryTemplate(): void {
-    this._startDate = this._shadowRoot.querySelector('#start-date');
-    this._endDate = this._shadowRoot.querySelector('#end-date');
-    this._location = this._shadowRoot.querySelector('#location');
-    this._name = this._shadowRoot.querySelector('#name');
-    this._pictureContainer = this._shadowRoot.querySelector('#picture-container');
   }
 
   protected _attachEventHandlers(): void {

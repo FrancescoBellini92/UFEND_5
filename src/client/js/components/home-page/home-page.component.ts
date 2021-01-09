@@ -9,6 +9,7 @@ import { RemoveTripEvent, SelectTripEvent } from "../../models/events";
 import { navigateTo, Routable } from "../../base/router";
 import ToastService from "../../services/toast.service";
 import DialogService from "../../services/dialog.service";
+import { Child } from "../../base/child";
 
 const template: string = require("./home-page.component.html");
 
@@ -33,7 +34,10 @@ const template: string = require("./home-page.component.html");
 })
 export default class HomePageComponent extends DynamicWebComponent implements Routable {
 
+  @Child('#empty-container')
   private _emptyContainer: HTMLElement;
+
+  @Child('#card-container')
   private _cardContainer: HTMLElement;
 
   private _tripService: TripService;
@@ -91,11 +95,6 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
     });
 
     requestAnimationFrame(() => this._cardContainer.insertBefore(fragment, this._cardContainer.firstChild));
-  }
-
-  protected _queryTemplate(): void {
-    this._emptyContainer = this.querySelector('#empty-container');
-    this._cardContainer = this.querySelector('#card-container');
   }
 
   protected _attachEventHandlers(): void {

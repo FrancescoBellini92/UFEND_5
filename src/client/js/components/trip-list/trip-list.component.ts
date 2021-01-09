@@ -5,6 +5,7 @@ import { Component } from "../../base/component";
 import moment from "moment";
 import { DayInfo } from "../../models/trip.model";
 import getWeatherIcon from "../detail-page/weather-icons";
+import { Child } from "../../base/child";
 
 const template = require("./trip-list.component.html");
 const style = require('./trip-list.component.scss');
@@ -21,7 +22,10 @@ export default class TripListComponent extends DynamicWebComponent {
 
   makeListStrategyFn: { (item: any): string } = item => '';
 
+  @Child('#list')
   private _listEl: HTMLElement;
+
+  @Child('#toggle-btn')
   private _toggleBtn: HTMLElement;
 
   constructor() {
@@ -50,11 +54,6 @@ export default class TripListComponent extends DynamicWebComponent {
 
     this._listEl.innerHTML = '';
     requestAnimationFrame(() => this._listEl.appendChild(fragment));
-  }
-
-  protected _queryTemplate(): void {
-    this._listEl = this.shadowRoot.querySelector("#list");
-    this._toggleBtn = this.shadowRoot.querySelector("#toggle-btn");
   }
 
   protected _attachEventHandlers(): void {

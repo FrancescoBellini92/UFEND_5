@@ -9,6 +9,7 @@ import TripListComponent from "../trip-list/trip-list.component";
 import { navigateTo, Routable } from '../../base/router';
 import ToastService from '../../services/toast.service';
 import DialogService from '../../services/dialog.service';
+import { Child } from '../../base/child';
 
 const template: string = require("./detail-page.component.html");
 
@@ -31,9 +32,12 @@ const template: string = require("./detail-page.component.html");
   template,
   route: '#details'
 })
-export default class DetailPageComponent extends DynamicWebComponent implements Routable{
+export default class DetailPageComponent extends DynamicWebComponent implements Routable {
 
+  @Child('#detail-card')
   private _detailCard: TripCardComponent;
+
+  @Child('#weather-list')
   private _weatherList: TripListComponent;
 
   private _tripService: TripService;
@@ -58,14 +62,9 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
   }
 
   updateProps(trip: Trip): void {
+    this._detailCard.hideChildren('#view');
     this._detailCard.updateProps(trip);
     this._weatherList.addMany(TripService.getDayInfo(trip));
-  }
-
-  protected _queryTemplate(): void {
-    this._detailCard = document.getElementById('detail-card') as TripCardComponent;
-    this._weatherList = document.getElementById('weather-list') as TripListComponent;
-    this._detailCard.hideChildren('#view');
   }
 
   protected _attachEventHandlers(): void {
