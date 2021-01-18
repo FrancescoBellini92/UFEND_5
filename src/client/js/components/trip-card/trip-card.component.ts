@@ -63,7 +63,6 @@ export default class TripCardComponent extends DynamicWebComponent {
   }
 
   updateProps(trip: Trip) {
-    debugger;
     this._trip = trip;
     const pix = this._trip.pix.webformatURL;
     const { name, location, start, end } = this._trip.general;
