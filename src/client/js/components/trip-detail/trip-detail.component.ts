@@ -26,9 +26,6 @@ const style: { default: string } = require('./trip-detail.component.scss');
 })
 export default class TripDetailComponent extends DynamicWebComponent {
 
-  start: string;
-  end: string;
-
   @Child('#form-control')
   private _formControlTemplate: HTMLTemplateElement;
 
@@ -57,6 +54,9 @@ export default class TripDetailComponent extends DynamicWebComponent {
     'save-btn': () =>  this._onDetailsChanged()
   }
 
+  private _start: string;
+  private _end: string;
+
   constructor() {
     super();
   }
@@ -72,7 +72,7 @@ export default class TripDetailComponent extends DynamicWebComponent {
       const date = dateEl.value;
       const content = contentEl.value;
 
-      const isValidDate = moment(date).isSameOrAfter(this.start) && moment(date).isSameOrBefore(this.end);
+      const isValidDate = moment(date).isSameOrAfter(this._start) && moment(date).isSameOrBefore(this._end);
       const allValid = isValidDate && content;
 
       if (!allValid)  {
@@ -94,8 +94,8 @@ export default class TripDetailComponent extends DynamicWebComponent {
   updateProps(trip: Trip): void {
     this.reset();
 
-    this.start = trip.general.start;
-    this.end = trip.general.end;
+    this._start = trip.general.start;
+    this._end = trip.general.end;
 
     const fragment = document.createDocumentFragment();
 
@@ -162,7 +162,9 @@ export default class TripDetailComponent extends DynamicWebComponent {
   }
 
   private _addTemplate(parentEl: Element = this._detailsContainer): void {
-    const templateContent = this._formControlTemplate.content.cloneNode(true);
+    const templateContent = this._formControlTemplate.content.cloneNode(true) as HTMLElement;
+    const dateTimeInputEl = templateContent.firstElementChild.querySelector('.detail__date') as HTMLInputElement;
+    dateTimeInputEl.value = `${this._start}T12:00`;
     requestAnimationFrame(() => {
       parentEl.prepend(templateContent);
       this._updateUI();
