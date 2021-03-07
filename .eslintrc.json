@@ -17,6 +17,7 @@
   "parser": "@babel/eslint-parser",
     "rules": {
     "semi": "off",
-    "space-before-function-paren": "off"
+    "space-before-function-paren": "off",
+    "no-return-assign": "off"
   }
 }

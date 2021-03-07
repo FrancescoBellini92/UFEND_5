@@ -82,7 +82,7 @@ export default class TripCardComponent extends DynamicWebComponent {
   private _addPicture(pix: string): void {
     const img = (this.shadowRoot.querySelector(`#${TripCardComponent._PICTURE_ID}`) ?? document.createElement('img')) as HTMLImageElement;
     img.id = TripCardComponent._PICTURE_ID;
-    img.src = pix;
+    img.src = `data:image/png;base64,${pix}`;
     img.alt = 'Travel picture';
     img.classList.add('card__img', 'can-hide-present', 'hidden');
     img.addEventListener('error', () => img.src = TripCardComponent._DEFAULT_IMG_PATH);

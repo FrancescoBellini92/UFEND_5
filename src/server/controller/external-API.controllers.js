@@ -21,7 +21,7 @@ async function getDataFromAPI(req, urlBuilderFn, factoryFn, emptyResponseFallbac
     const url = urlBuilderFn(req.query);
     const request = await fetch(url);
     const response = await request.json();
-    const parsedResponse = factoryFn(response);
+    const parsedResponse = await factoryFn(response);
     return parsedResponse;
   } catch (e) {
     if (e instanceof EmptyResponseError) {

@@ -13,15 +13,15 @@ function factory(responseBody, dataProps, parserFn) {
 }
 
 function makeGeoResponse(responseBody) {
-  return factory(responseBody, 'geonames', (data) => new GeoResponse(data[0]));
+  return factory(responseBody, 'geonames', data => new GeoResponse(data[0]));
 }
 
 function makePixResponse(responseBody) {
-  return factory(responseBody, 'hits', (data) => new PixResponse(data[0]));
+  return factory(responseBody, 'hits', async data => await new PixResponse(data[0]).base64());
 }
 
 function makeWeatherResponse(responseBody) {
-  return factory(responseBody, 'data', (data) => new WeatherResponse(data));
+  return factory(responseBody, 'data', data => new WeatherResponse(data));
 }
 
 module.exports = {
