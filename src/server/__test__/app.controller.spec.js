@@ -21,7 +21,7 @@ describe('Server API', () => {
     request.get(`/trip-info${queryParams}`)
       .expect('Content-Type', /json/)
       .expect(201, done);
-  });
+  }, 10000);
 
   it('responds 400 to request with bad dates', (done) => {
     const queryParams = getQueryParams(tomorrow, today, realLocation, name);
