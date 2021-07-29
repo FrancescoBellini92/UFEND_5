@@ -37,7 +37,7 @@ export default class DetailPageComponent extends DynamicWebComponent implements 
   @Child('#detail-card')
   private _detailCard: TripCardComponent;
 
-  @Child('#weather-list')
+  @Child('#detail-list')
   private _weatherList: TripListComponent;
 
   private _tripService: TripService;

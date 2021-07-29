@@ -114,8 +114,8 @@ export default class TripDetailComponent extends DynamicWebComponent {
   }
 
   reset(): void {
-    this._detailsContainer.innerHTML = '';
-    this._updateUI();
+      this._detailsContainer.innerHTML = '';
+      this._updateUI();
   }
 
   protected _attachEventHandlers(): void {
@@ -149,11 +149,19 @@ export default class TripDetailComponent extends DynamicWebComponent {
   }
 
   private _onRemoveDetail(target: HTMLElement): void {
-    target.parentElement.parentElement.remove();
-    const allDeleted = this._detailsContainer.childElementCount === 0;
-    if (allDeleted) {
-      this._handlerFnMap["remove-all-btn"]();
-    }
+    requestAnimationFrame(() => {
+      this._addBtn.setAttribute('disabled', 'true');
+      removeClass('slideInTop', target.parentElement.parentElement);
+      addClass('slideOutRight', target.parentElement.parentElement);
+    });
+    setTimeout(() => {
+      target.parentElement.parentElement.remove();
+      const allDeleted = this._detailsContainer.childElementCount === 0;
+      this._addBtn.removeAttribute('disabled');
+      if (allDeleted) {
+        this._updateUI();
+      }
+    }, 1000);
   }
 
   private _cloneTemplate(parentEl: Element = this._detailsContainer): void {

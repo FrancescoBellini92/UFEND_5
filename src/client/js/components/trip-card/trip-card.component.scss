@@ -1,5 +1,6 @@
 @import "../../../scss/shared";
 
+
 .card {
   @extend .border;
   @extend .border-radius;
@@ -7,6 +8,9 @@
   max-width: 400px;
   min-width: 280px;
   margin: 20px;
+  content-visibility: auto;
+  content-intrinsic-size: 400px;
+  animation: slideInLeft 1s ease-out;
 
   .card__header {
     @extend .column;
@@ -21,6 +25,7 @@
   .card__img {
     width: 100%;
     height: auto;
+    animation: fadeIn 2s ease-out
   }
 
   .card__button {

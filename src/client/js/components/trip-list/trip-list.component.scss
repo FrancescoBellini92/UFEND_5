@@ -4,6 +4,9 @@
   width: 100%;
   min-width: 280px;
   transform: translateZ(0);
+  content-visibility: auto;
+  overflow-y: hidden;
+  // content-intrinsic-size: 400px;
 
 
   .list__item {

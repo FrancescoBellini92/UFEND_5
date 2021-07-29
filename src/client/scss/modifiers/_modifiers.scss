@@ -1,16 +1,9 @@
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 .can-hide-absent {
 
   &.hidden {
     display: none;
+    content-visibility: hidden; // TODO try this
+
   }
 
   &.visible {
@@ -44,6 +37,46 @@
   &.open {
     overflow-y: scroll;
     max-height: 400px;
+  }
+}
+
+.slideInLeft {
+  animation: slideInLeft 1s ease-out;
+}
+
+.slideOutRight {
+  animation: slideOutRight 1s ease-in;
+}
+
+
+.slideInRight {
+  animation: slideInRight 1s ease-out;
+}
+
+.slideInBottom {
+  animation: slideInBottom 1s ease-out;
+}
+
+.slideInTop {
+  animation: slideInTop 1s ease-out;
+}
+
+.alternateSlideInChildren {
+  :nth-child(even) {
+    background-color: red;
+    animation: slideInLeft 1s infinite;
+  }
+  :nth-child(odd) {
+    animation: slideInRight 1s infinite;
+  }
+}
+
+.alternateSlideOutChildren {
+  :nth-child(even) {
+    animation: slideOutLeft 1s ease-out;
+  }
+  :nth-child(odd) {
+    animation: slideOutRight 1s ease-out;
   }
 }
 
@@ -103,7 +136,7 @@
 }
 
 .border-radius {
-  border-radius: 6px;
+  border-radius: 50px;
 }
 
 @mixin flex($orientation, $justify, $align) {
