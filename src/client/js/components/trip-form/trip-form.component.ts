@@ -25,6 +25,8 @@ const style: { default: string } = require('./trip-form.component.scss');
 })
 export default class TripFormComponent extends DynamicWebComponent {
 
+  public nameObj = {name: 'default name'};
+
   @Child('#start-date')
   private _startDateInput: HTMLInputElement;
 
@@ -45,6 +47,7 @@ export default class TripFormComponent extends DynamicWebComponent {
   constructor() {
     super();
   }
+
 
   reset(): void {
     this._startDateInput.value = null;
