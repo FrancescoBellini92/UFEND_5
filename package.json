@@ -39,7 +39,7 @@
     "mini-css-extract-plugin": "^0.11.0",
     "node-sass": "^4.14.1",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
-    "sass-loader": "^10.1.0",
+    "sass-loader": "^8.0.2",
     "sass-to-string": "^1.1.0",
     "style-loader": "^1.2.1",
     "supertest": "^5.0.0",
