@@ -1,22 +1,20 @@
 import WebComponent from "./web.component"
 
 export const Effect: Effect = (onChange) => (target, name) =>{
-  const privateElementProperty = `_${name}`;
+  const privateKeyForBoundProp = `__boundProperty[[${name}]]`;
 
 
   Object.defineProperty(target, name, {
     get: function() {
-      if (Object.getOwnPropertyNames(this).find(n => n === privateElementProperty)) {
-        Object.defineProperty(this, privateElementProperty, {writable: true, enumerable: true });
-      }
-      return this[privateElementProperty];
+      return this[privateKeyForBoundProp];
     },
     set: function(val)  {
-      if (val !== this[privateElementProperty]) {
-        this[privateElementProperty] = val;
+      if (val !== this[privateKeyForBoundProp]) {
+        this[privateKeyForBoundProp] = val;
         onChange.call(this);
       }
-    }
+    },
+    enumerable: true
   })
 
 }
