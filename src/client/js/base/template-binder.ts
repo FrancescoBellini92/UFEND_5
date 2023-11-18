@@ -132,9 +132,21 @@ export class HTMLElementBinder extends Binder<HTMLElement> {
       const regex = /[^a-z.A-Z0-9]/g;
       const clearedPropName = bindedPropName.replaceAll(regex, '');
       const bindedPropNameNodesTraversal = clearedPropName.split('.');
-      let setter;
+      let setter = (value) => {
+        const rootKey = bindedPropNameNodesTraversal[0];
+        if (typeof instance[rootKey] === 'object' && bindedPropNameNodesTraversal.length > 1) {
+          const rootObjectClone = {...instance[rootKey]};
+          const lastKey = bindedPropNameNodesTraversal[bindedPropNameNodesTraversal.length - 1];
+          const traversalWithNoRootAndLeaf = [...bindedPropNameNodesTraversal].slice(1, -1);
+          const lastNode = traversalWithNoRootAndLeaf.reduce((acc, curr) => acc[curr], rootObjectClone)
+          lastNode[lastKey] = value;
+          instance[rootKey] = rootObjectClone;
+        } else {
+          instance[rootKey] = value;
+        }
+      };
+
       const propToBind = bindedPropNameNodesTraversal.reduce((currentNode, nextNode) => {
-        setter = value => currentNode[nextNode] = value;
         return currentNode[nextNode];
       }, instance);
       return { name: attr, value: propToBind, propName: clearedPropName, setter, node, instance };
