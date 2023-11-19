@@ -1,5 +1,5 @@
 import router from './router';
-import { parser } from './template-binder';
+import { TemplateParser, parser } from './template-binder';
 
 /**
  * Base class for all components
@@ -15,11 +15,15 @@ export default class WebComponent extends HTMLElement {
   public _style: { default: string };
   protected _shadowRoot: ShadowRoot;
 
+  protected _parser: TemplateParser;
+
   constructor() {
     super();
     if (this.route != undefined) {
       router.register(this);
     }
+
+    this._parser = new TemplateParser(this)
   }
 
   connectedCallback() {
@@ -44,7 +48,7 @@ export default class WebComponent extends HTMLElement {
   protected async _attachHTML(): Promise<void>{
     this._shadowRoot = this.hasShadowDom ? this.attachShadow({ mode: "open" }): null;
     const root = this._shadowRoot ?? this;
-    const bindedDomTree = await parser.parse(this);
+    const bindedDomTree = await this._parser.parse();
     root.appendChild(bindedDomTree.content);
   }
 

@@ -11,8 +11,10 @@ export class TemplateParser {
     [NodeTypes.TEXT_NODE]: new TextNodeBinder(NodeTypes.TEXT_NODE)
   }
 
-  async parse(instance: WebComponent): Promise<HTMLTemplateElement>{
-    const parsedHtml = instance.html.replaceAll('{{', TemplateParser.PARSED_ATTRIBUTE_KEY_START).replaceAll('}}', TemplateParser.PARSED_ATTRIBUTE_KEY_END);
+  constructor(private _instance: WebComponent) {}
+
+  async parse(): Promise<HTMLTemplateElement>{
+    const parsedHtml = this._instance.html.replaceAll('{{', TemplateParser.PARSED_ATTRIBUTE_KEY_START).replaceAll('}}', TemplateParser.PARSED_ATTRIBUTE_KEY_END);
     const isolatedDomTree = document.createElement('template')
     isolatedDomTree.innerHTML = parsedHtml;
 
@@ -30,7 +32,7 @@ export class TemplateParser {
       node.childNodes && [...node.childNodes].forEach(n => recursiveTraversal(n, instance));
     };
 
-    recursiveTraversal(isolatedDomTree.content, instance);
+    recursiveTraversal(isolatedDomTree.content, this._instance);
     return isolatedDomTree;
   }
 }
@@ -197,4 +199,3 @@ export class HTMLElementBinder extends Binder<HTMLElement> {
   }
 }
 
-export const parser = new TemplateParser()
