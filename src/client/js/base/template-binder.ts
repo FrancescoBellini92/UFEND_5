@@ -249,17 +249,15 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
       const newValue = (e.target as HTMLInputElement).value;
       setter(newValue);
     };
-    const isValue = name === 'value';
-    if (isValue) {
       this._attachEventListener(node, 'input', setValue);
       this._attachEventListener(node, 'change', setValue);
 
       const isDate = node.getAttribute('type') === 'date';
       if (isDate) {
         node.valueAsDate = value;
+      } else {
+        node.setAttribute(name, value);
       }
-    }
-    node.setAttribute(name, value)
   }
 
   private _attachEventListener(node: HTMLElement, event: keyof HTMLElementEventMap, handler: (e: Event) => void) {
