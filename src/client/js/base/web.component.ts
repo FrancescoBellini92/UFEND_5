@@ -1,5 +1,6 @@
+import Observable from './observable';
 import router from './router';
-import { TemplateParser, parser } from './template-binder';
+import { TemplateParser } from './template-binder';
 
 /**
  * Base class for all components
@@ -13,6 +14,8 @@ export default class WebComponent extends HTMLElement {
   public html: string;
   public hasShadowDom: boolean;
   public _style: { default: string };
+  public boundPropertiesChange$ =  new Observable<Record<string, any>, Record<string, any>>(async (boundProps: Record<string, any>) => boundProps)
+
   protected _shadowRoot: ShadowRoot;
 
   protected _parser: TemplateParser;
