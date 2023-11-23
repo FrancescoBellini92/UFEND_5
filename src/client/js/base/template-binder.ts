@@ -157,6 +157,7 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
     name: this._bindName.bind(this),
     class: this._bindClass.bind(this),
     style: this._bindStyle.bind(this),
+    event: this._bindEvent.bind(this),
   };
 
   private _eventHandlersNodeMap: WeakMap<Node, Record<HTMLElementEventMap & string, (e: Event) => void>> = new WeakMap()
@@ -168,7 +169,8 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
 
     attributesWithProps.forEach((bindings) => {
       const {name, value} = bindings;
-      const attributeBinder = this._attributeBinders[name];
+      const isEventHandler = name.startsWith('on');
+      const attributeBinder = isEventHandler ? this._attributeBinders['event'] : this._attributeBinders[name];
       if (attributeBinder) {
         attributeBinder(bindings)
       } else {
@@ -285,6 +287,11 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
 
     const keyVals = Array.from(Object.entries(value));
     node.setAttribute('style', keyVals.flatMap(pair => pair.join(':')).join(';'))
+  }
+
+  private _bindEvent({name, value, node, instance}: AttributeWithPropBindings<HTMLInputElement>) : void {
+    node.removeAttribute(name)
+    node.addEventListener(name.replace('on', ''), value.bind(instance))
   }
 }
 
