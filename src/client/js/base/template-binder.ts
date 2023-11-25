@@ -4,7 +4,6 @@ import WebComponent from "./web.component";
 
 export class TemplateParser {
 
-
   static PARSED_ATTRIBUTE_KEY_START = '__data-bind:';
   static PARSED_ATTRIBUTE_KEY_END = ':data-bind__';
 
@@ -25,10 +24,9 @@ export class TemplateParser {
         }
       })
     })
-
   }
 
-  async parse(): Promise<HTMLTemplateElement>{
+  async parse(): Promise<HTMLTemplateElement> {
     const parsedHtml = this._instance.html.replaceAll('{{', TemplateParser.PARSED_ATTRIBUTE_KEY_START).replaceAll('}}', TemplateParser.PARSED_ATTRIBUTE_KEY_END);
     const isolatedDomTree = document.createElement('template')
     isolatedDomTree.innerHTML = parsedHtml;
@@ -158,6 +156,7 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
     class: this._bindClass.bind(this),
     style: this._bindStyle.bind(this),
     event: this._bindEvent.bind(this),
+    'if-bound': this._bindIfBound.bind(this),
   };
 
   private _eventHandlersNodeMap: WeakMap<Node, Record<HTMLElementEventMap & string, (e: Event) => void>> = new WeakMap()
@@ -292,6 +291,18 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
   private _bindEvent({name, value, node, instance}: AttributeWithPropBindings<HTMLInputElement>) : void {
     node.removeAttribute(name)
     node.addEventListener(name.replace('on', ''), value.bind(instance))
+  }
+
+  private _bindIfBound({name, value, node}: AttributeWithPropBindings<HTMLInputElement>): void {
+    node.setAttribute(name,value)
+
+    const nodeWithParentRef: typeof node & { placeholderNode?: Node} = node;
+    if (!value) {
+      nodeWithParentRef.placeholderNode = nodeWithParentRef.placeholderNode ?? document.createComment(`${nodeWithParentRef.outerHTML}`);
+      nodeWithParentRef.parentElement?.replaceChild(nodeWithParentRef.placeholderNode, nodeWithParentRef);
+    } else {
+      nodeWithParentRef.placeholderNode?.parentElement.replaceChild(nodeWithParentRef, nodeWithParentRef.placeholderNode);
+    }
   }
 }
 
