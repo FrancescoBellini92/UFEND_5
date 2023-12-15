@@ -11,7 +11,11 @@ class Factory {
 
   instances = {};
 
-  constructor() {}
+  constructor() {
+    if (Factory.instance) {
+      throw new Error('Factory is a singleton and cannot be instantiaced twice')
+    }
+  }
 
   static instantiate(): Factory {
     if (!this.instance) {
