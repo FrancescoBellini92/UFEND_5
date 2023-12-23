@@ -11,7 +11,7 @@ const template = require('./dialog.component.html');
 const style = require('./dialog.component.scss');
 
 @Inject({
-  injectionToken: DialogService.injectionToken,
+  injectionToken: DialogService,
   nameAsDependency: '_dialogService'
 })
 @Component({

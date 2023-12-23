@@ -1,4 +1,4 @@
-import { Service } from "./service";
+import { Ctor, ValidInjectionToken, ValidProvider } from "./injectable";
 
 /**
  * Singleton that provides and mantains instances of required dependencies
@@ -7,9 +7,9 @@ class Factory {
 
   static instance: Factory;
 
-  providers: DependencyProviders = {};
-
-  instances = {};
+  providers = new Map<ValidInjectionToken, DependencyDescriptor>();
+  singletons = new WeakMap<Ctor, any>();
+  primitiveSingletons = new Map<string, any>();
 
   constructor() {
     if (Factory.instance) {
@@ -24,23 +24,39 @@ class Factory {
     return this.instance
   }
 
-  addInjectable(injectionToken: string, factoryFn:  {<T extends Service>(): T}) {
-    this.providers[injectionToken] = factoryFn;
+  addInjectable(injectionToken: ValidInjectionToken | string, provider: ValidProvider, isSingleton = false) {
+    this.providers.set(injectionToken, {
+      provider,
+      isSingleton
+    });
   }
 
-  make<T extends Service>(injectionToken: string): T {
-    const factoryFn = this.providers[injectionToken];
-    let instance = factoryFn<T>();
-    const previousInstance = this.instances[injectionToken];
-    if (!previousInstance && instance.isSingleton) {
-      this.instances[injectionToken] = instance;
+  make<T>(injectionToken: ValidInjectionToken): T {
+    const {provider, isSingleton} = this.providers.get(injectionToken);
+    let instance;
+    if (isSingleton) {
+
+
+      const getInstance = (token) => isPrimitive(injectionToken) ? this.primitiveSingletons.get(token) : this.singletons.get(token);
+      instance = getInstance(injectionToken) ?? provider();
+
+      const saveInstance = (instance: any) => isPrimitive(injectionToken) ? this.primitiveSingletons.set(injectionToken, instance) : this.singletons.set(injectionToken, instance);
+      saveInstance(instance)
+    } else {
+      instance = provider();
     }
-    return instance.isSingleton && previousInstance ? previousInstance : instance;
+
+    return instance;
   }
 };
 
-interface DependencyProviders {
-  [injectionToken: string]: {<T extends Service>(): T}
+function isPrimitive(token: ValidInjectionToken): token is string  {
+  return typeof token === 'string';
+}
+
+interface DependencyDescriptor {
+  provider: ValidProvider,
+  isSingleton: boolean
 }
 
 export default Factory.instantiate();

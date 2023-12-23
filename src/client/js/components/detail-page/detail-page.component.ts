@@ -15,15 +15,15 @@ const template: string = require("./detail-page.component.html");
 
 @Inject(
   {
-    injectionToken: TripService.injectionToken,
+    injectionToken: TripService,
     nameAsDependency: '_tripService'
   },
   {
-    injectionToken: ToastService.injectionToken,
+    injectionToken: ToastService,
     nameAsDependency: '_toastService'
   },
   {
-    injectionToken: DialogService.injectionToken,
+    injectionToken: DialogService,
     nameAsDependency: '_dialogService'
   }
 )

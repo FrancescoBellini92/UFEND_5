@@ -1,6 +1,5 @@
 import Trip, { DayInfo, TripDetail } from "../models/trip.model";
 import environment from '../environment';
-import { Service } from "../base/service";
 
 import {
   sendRequest,
@@ -15,10 +14,9 @@ import { BadRequestError } from "../exceptions/exceptions";
 const isProd = environment.MODE === 'PROD';
 
 @Injectable({
-  injectionToken: 'tripService',
   isSingleton: true
 })
-export default class TripService extends Service {
+export default class TripService {
   static STORAGE_TRIP_PROP = "trips";
 
   currentTrip$: Observable<Trip, Trip> = new Observable<Trip, Trip>(async(trip: Trip) => trip);
@@ -31,12 +29,7 @@ export default class TripService extends Service {
   private _tripMap: Map<number, Trip> = new Map<number, Trip>();
 
   constructor() {
-    super();
     this.index();
-  }
-
-  static factoryFn(): TripService {
-    return new TripService();
   }
 
   static isEmpty(collection) {

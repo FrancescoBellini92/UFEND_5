@@ -13,7 +13,7 @@ const style: { default: string } = require('./trip-form.component.scss');
 
 @Inject(
   {
-    injectionToken: ToastService.injectionToken,
+    injectionToken: ToastService,
     nameAsDependency: '_toastService'
   },
 )

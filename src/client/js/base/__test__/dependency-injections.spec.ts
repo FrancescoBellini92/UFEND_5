@@ -1,33 +1,27 @@
 import factory from '../factory';
 import { Inject } from '../inject';
 import { Injectable } from '../injectable';
-import { Service } from '../service';
 
 describe('Injectable', () => {
-  const mockSingletonInjectionToken = 'mock-singleton-service';
-  const mockInjectionToken = 'mock-service';
 
   @Injectable({
-    injectionToken: mockSingletonInjectionToken,
     isSingleton: true
   })
-  class MockSingletonService extends Service {
+  class MockSingletonService {
     static factoryFn = () => new MockSingletonService();
   }
 
-  @Injectable({
-    injectionToken: mockInjectionToken
-  })
-  class MockService extends Service {
+  @Injectable()
+  class MockService {
     static factoryFn = () => new MockService();
   }
 
   @Inject({
-      'injectionToken': MockSingletonService.injectionToken,
+      'injectionToken': MockSingletonService,
       'nameAsDependency': 'mockSingletonService'
     },
     {
-      'injectionToken': MockService.injectionToken,
+      'injectionToken': MockService,
       'nameAsDependency': 'mockService'
   })
   class MockClient {
@@ -40,23 +34,21 @@ describe('Injectable', () => {
   let mockClient: MockClient;
 
   beforeAll(() => {
-    mockSingletonService = factory.make<MockSingletonService>(MockSingletonService.injectionToken);
-    mockService = factory.make<MockService>(MockService.injectionToken);
+    mockSingletonService = factory.make<MockSingletonService>(MockSingletonService);
+    mockService = factory.make<MockService>(MockService);
     mockClient = new MockClient();
   });
 
   it('is decorated', () => {
-    expect(MockSingletonService.injectionToken).toBe(mockSingletonInjectionToken);
-    expect(mockSingletonService.isSingleton).toEqual(true);
-    expect(factory.make<MockSingletonService>(MockSingletonService.injectionToken)).toBe(mockSingletonService);
+    expect(factory.make<MockSingletonService>(MockSingletonService)).toBe(mockSingletonService);
   });
 
   it('is singleton', () => {
-    expect(factory.make<MockSingletonService>(MockSingletonService.injectionToken)).toBe(mockSingletonService);
+    expect(factory.make<MockSingletonService>(MockSingletonService)).toBe(mockSingletonService);
   });
 
   it('is not singleton', () => {
-    expect(factory.make<MockService>(MockService.injectionToken)).not.toBe(mockService);
+    expect(factory.make<MockService>(MockService)).not.toBe(mockService);
   });
 
   it('is injected', () => {

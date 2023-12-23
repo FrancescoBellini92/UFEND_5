@@ -1,26 +1,16 @@
 import Observable from '../base/observable';
-import { Service } from "../base/service";
 import { Injectable } from "../base/injectable";
 import DialogComponent from '../components/dialog/dialog.component';
 import { DialogEvent } from '../models/events';
 
 @Injectable({
-  injectionToken: 'dialogService',
   isSingleton: true
 })
-export default class DialogService extends Service {
+export default class DialogService {
 
   private _dialogEl: DialogComponent;
 
   private _dialogEvent$: Observable<boolean, boolean> = new Observable<boolean, boolean>(async(dialogEvent) => dialogEvent);
-
-  constructor() {
-    super();
-  }
-
-  static factoryFn(): DialogService {
-    return new DialogService();
-  }
 
   set dialogEl(el: DialogComponent) {
     this._dialogEl = el;

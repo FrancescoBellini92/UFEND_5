@@ -1,22 +1,12 @@
-import { Service } from "../base/service";
 import { Injectable } from "../base/injectable";
 import ToastComponent from '../components/toast/toast.component';
 
 @Injectable({
-  injectionToken: 'toastService',
   isSingleton: true
 })
-export default class ToastService extends Service {
+export default class ToastService {
 
   private _toastEl: ToastComponent;
-
-  constructor() {
-    super();
-  }
-
-  static factoryFn(): ToastService {
-    return new ToastService();
-  }
 
   set toastEl(el: ToastComponent) {
     this._toastEl = el;

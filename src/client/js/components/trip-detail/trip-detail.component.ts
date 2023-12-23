@@ -14,7 +14,7 @@ const style: { default: string } = require('./trip-detail.component.scss');
 
 @Inject(
   {
-    injectionToken: ToastService.injectionToken,
+    injectionToken: ToastService,
     nameAsDependency: '_toastService'
   }
 )

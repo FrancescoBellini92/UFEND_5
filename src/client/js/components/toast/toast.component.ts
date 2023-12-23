@@ -7,7 +7,7 @@ import ToastService from "../../services/toast.service";
 const template = require('./toast.component.html');
 
 @Inject({
-  injectionToken: ToastService.injectionToken,
+  injectionToken: ToastService,
   nameAsDependency: '_toastService'
 })
 @Component({

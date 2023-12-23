@@ -3,7 +3,7 @@ import router from './base/router';
 import factory from './base/factory';
 import HeaderService from './services/header.service';
 
-const headerService = factory.make<HeaderService>(HeaderService.injectionToken)
+const headerService = factory.make<HeaderService>(HeaderService)
 
 export default () => {
   registerComponents();
