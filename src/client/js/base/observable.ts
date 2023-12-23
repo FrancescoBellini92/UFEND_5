@@ -1,4 +1,4 @@
-export default class Observable<TRequest, TResponse> {
+export default class Observable<TRequest, TResponse = TRequest> {
 
   private _pipedFunctions: PipedFunction[] = [];
   private _subscribers: Subscriber<TResponse>[] = [];
