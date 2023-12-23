@@ -6,7 +6,7 @@ import factory from "./factory";
 export const Inject: InjectDecorator = (...dependencies) => target => {
     dependencies.forEach(
       ({nameAsDependency, injectionToken}) =>
-      target.prototype[nameAsDependency] = factory.make(injectionToken)
+      Object.defineProperty(target.prototype, nameAsDependency, {value: factory.make(injectionToken), enumerable: true, configurable: false})
   );
 }
 
