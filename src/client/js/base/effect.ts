@@ -4,7 +4,6 @@ export const Effect: Effect = (params) => (target, name) => {
   const privateKeyForBoundProp = `__boundProperty[[${name}]]`;
   let previousValue;
 
-  const isDifferent = (newVal, currentVal) => typeof newVal !== 'object' ? newVal !== currentVal : JSON.stringify(newVal) !== JSON.stringify(currentVal);
   Object.defineProperty(target, name, {
     get: function() {
       return this[privateKeyForBoundProp];
@@ -14,17 +13,21 @@ export const Effect: Effect = (params) => (target, name) => {
         previousValue = JSON.parse(JSON.stringify(val));
         this[privateKeyForBoundProp] = val;
         params?.onChange.call(this);
-        this.boundPropertiesChange$.next({
-          [name]: this[privateKeyForBoundProp]
-        })
+
+        if (this instanceof WebComponent) {
+          this.notifyBoundProperties({
+            [name]: this[privateKeyForBoundProp]
+          })
+        }
       }
     },
     enumerable: true,
     configurable: false,
   })
-
 }
+
+const isDifferent = (newVal, currentVal) => typeof newVal !== 'object' ? newVal !== currentVal : JSON.stringify(newVal) !== JSON.stringify(currentVal);
 export interface EffectParams {
   onChange: Function;
 }
-export type Effect = (params?: EffectParams) => <T extends WebComponent>(target: T, name: string ) => void;
+export type Effect = (params?: EffectParams) => <T extends WebComponent |  (new (...args: any[]) => object)>(target: T, name: string ) => void;
