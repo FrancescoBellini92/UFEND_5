@@ -14,7 +14,7 @@ export default class WebComponent extends HTMLElement {
   public html: string;
   public hasShadowDom: boolean;
   public _style: { default: string };
-  public boundPropertiesChange$ =  new Observable<Record<string, any>, Record<string, any>>(async (boundProps: Record<string, any>) => boundProps)
+  public boundPropertiesChange$ =  new Observable<Record<string, any>>(async (boundProps: Record<string, any>) => boundProps)
 
   protected _shadowRoot: ShadowRoot;
 
@@ -46,6 +46,10 @@ export default class WebComponent extends HTMLElement {
     if (this._style) {
       this._attachStyle();
     }
+  }
+
+  public notifyBoundProperties(val: Record<string, any>): void {
+    this.boundPropertiesChange$.next(val)
   }
 
   protected async _attachHTML(): Promise<void>{

@@ -6,6 +6,7 @@ export class TemplateParser {
 
   static PARSED_ATTRIBUTE_KEY_START = '__data-bind:';
   static PARSED_ATTRIBUTE_KEY_END = ':data-bind__';
+  static msForDigestingBeforeYelding = 50;
 
   private _binders: Record<NodeTypes, Binder> = {
     [NodeTypes.HTML_ELEMENT]: new HTMLElementBinder(NodeTypes.HTML_ELEMENT),
@@ -14,41 +15,81 @@ export class TemplateParser {
 
   private _attributeNodeMap: Map<string, Set<Node>> = new Map();
 
+  private _nodeToHydrateQueue = [];
+  private _isBusyDigestingQueue = false;
+
   constructor(private _instance: WebComponent) {
     const boundChangeObs$: Observable<Record<string, any>, Record<string, any>> = this._instance.boundPropertiesChange$;
     boundChangeObs$.subscribe(data => {
       Object.entries(data).forEach(([k,v]) => {
         const nodesBoundToK = this._attributeNodeMap.get(k);
         if (nodesBoundToK) {
-          Array.from(nodesBoundToK).forEach(n => this._recursiveTraversal(n))
+          Array.from(nodesBoundToK).forEach(n => this._recursiveEnqueNodeHydration(n))
         }
       })
+      if (!this._isBusyDigestingQueue) {
+        this._digestQueue();
+      }
     })
   }
 
   async parse(): Promise<HTMLTemplateElement> {
+    this._nodeToHydrateQueue = [];
     const parsedHtml = this._instance.html.replaceAll('{{', TemplateParser.PARSED_ATTRIBUTE_KEY_START).replaceAll('}}', TemplateParser.PARSED_ATTRIBUTE_KEY_END);
     const isolatedDomTree = document.createElement('template')
     isolatedDomTree.innerHTML = parsedHtml;
-    this._recursiveTraversal(isolatedDomTree.content);
+
+    this._recursiveEnqueNodeHydration(isolatedDomTree.content);
+    if (!this._isBusyDigestingQueue) {
+      this._digestQueue()
+    }
     return isolatedDomTree;
   }
 
-  private _recursiveTraversal(node: Node) {
-    const binderForCurrentNode = this._binders[node.nodeType];
-    const hasBindings: boolean = binderForCurrentNode?.hasBoundNode(node) || Binder.checkIfAnyBindings(node);
-    if (hasBindings) {
-      if (binderForCurrentNode) {
-        const boundDescriptor = binderForCurrentNode.bind(node, this._instance);
-        boundDescriptor.boundProperties.forEach((propKey) => {
-          this._attributeNodeMap.set(propKey, (this._attributeNodeMap.get(propKey) || new Set()).add(node))
-        })
-      } else {
-        console.error(`Cannot bind to node ${node.nodeName} of type ${node.nodeType}`);
+  private _digestQueue() {
+    this._isBusyDigestingQueue = true;
+    const start = performance.now();
+    while (this._nodeToHydrateQueue.length > 0) {
+      const hydrate = this._nodeToHydrateQueue.pop();
+      hydrate();
+      const elapsedMs = performance.now() - start;
+      const shouldYeldAndScheduleNewTask = elapsedMs > TemplateParser.msForDigestingBeforeYelding;
+      if (shouldYeldAndScheduleNewTask) {
+        break;
       }
     }
 
-    node.childNodes && [...node.childNodes].forEach(n => requestAnimationFrame(() => this._recursiveTraversal(n)));
+    const stillNodeToHydrate = this._nodeToHydrateQueue.length > 0;
+    this._isBusyDigestingQueue = stillNodeToHydrate;
+    if (stillNodeToHydrate) {
+      requestAnimationFrame(() => this._digestQueue())
+    }
+  }
+
+  private _recursiveEnqueNodeHydration(node: Node) {
+    const doBindLogic = () => {
+      const binderForCurrentNode = this._binders[node.nodeType];
+      const hasBindings: boolean = binderForCurrentNode?.hasBoundNode(node) || Binder.checkIfAnyBindings(node);
+      let boundDescriptor: NodeBoundsDescriptor;
+      if (hasBindings) {
+        if (binderForCurrentNode) {
+          boundDescriptor = binderForCurrentNode.bind(node, this._instance);
+          boundDescriptor.boundProperties.forEach((propKey) => {
+            this._attributeNodeMap.set(propKey, (this._attributeNodeMap.get(propKey) || new Set()).add(node))
+          })
+        } else {
+          console.error(`Cannot bind to node ${node.nodeName} of type ${node.nodeType}`);
+        }
+      }
+
+      const isHidden = boundDescriptor?.isHidden ?? false;
+      if (node.childNodes && !isHidden) {
+        const traverseChildren = () => [...node.childNodes].forEach(n => this._recursiveEnqueNodeHydration(n));
+        traverseChildren();
+      }
+    };
+
+    this._nodeToHydrateQueue.push(doBindLogic);
   };
 }
 export enum NodeTypes {
@@ -56,12 +97,15 @@ export enum NodeTypes {
   TEXT_NODE = Node.TEXT_NODE
 }
 
-interface NodeBoundsDescriptors<T extends Node = Node> {
+interface NodeBoundsDescriptor<T extends Node = Node> {
   node: T;
   boundProperties: string[];
+  isHidden?: boolean;
 }
 
 abstract class Binder<T extends Node = Node, D = any> {
+
+  public static IF_BINDING = 'if-bound';
 
   public static checkIfAnyBindings(node: Node): boolean {
     switch (node.nodeType) {
@@ -87,7 +131,7 @@ abstract class Binder<T extends Node = Node, D = any> {
 
   constructor(public targetNodeType: NodeTypes) {}
 
-  public bind(node: T, instance: WebComponent): NodeBoundsDescriptors<T> {
+  public bind(node: T, instance: WebComponent): NodeBoundsDescriptor<T> {
 
     if (node.nodeType !== this.targetNodeType) {
       throw new Error(`
@@ -108,7 +152,7 @@ abstract class Binder<T extends Node = Node, D = any> {
 
   protected abstract _getNodeStateForBinding(node: T): D
 
-  protected abstract _bind(node: T, nodeStateForBinding: D, instance: WebComponent): NodeBoundsDescriptors<T>
+  protected abstract _bind(node: T, nodeStateForBinding: D, instance: WebComponent): NodeBoundsDescriptor<T>
 }
 
 interface AttributeWithPropBindings<T extends Node = Node> {
@@ -122,7 +166,7 @@ interface AttributeWithPropBindings<T extends Node = Node> {
 
 export class TextNodeBinder extends Binder<Node, string> {
 
-  protected _bind(node: Node, nodeStateForBinding: string, instance: WebComponent): NodeBoundsDescriptors {
+  protected _bind(node: Node, nodeStateForBinding: string, instance: WebComponent): NodeBoundsDescriptor {
     const templateToElabeorate = nodeStateForBinding;
     const matcher = new RegExp(`${TemplateParser.PARSED_ATTRIBUTE_KEY_START}(.*)${TemplateParser.PARSED_ATTRIBUTE_KEY_END}`, 'g');
     const propNames = Array.from(templateToElabeorate.matchAll(matcher)).map(([_, propName]) => propName)
@@ -156,22 +200,22 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
     class: this._bindClass.bind(this),
     style: this._bindStyle.bind(this),
     event: this._bindEvent.bind(this),
-    'if-bound': this._bindIfBound.bind(this),
+    [Binder.IF_BINDING]: this._bindIfBound.bind(this),
   };
 
   private _eventHandlersNodeMap: WeakMap<Node, Record<HTMLElementEventMap & string, (e: Event) => void>> = new WeakMap()
 
 
-  protected _bind(node: HTMLElement, nodeStateForBinding: Attr[], instance: WebComponent): NodeBoundsDescriptors<HTMLElement> {
+  protected _bind(node: HTMLElement, nodeStateForBinding: Attr[], instance: WebComponent): NodeBoundsDescriptor<HTMLElement> {
     const attributesNodeToBind = nodeStateForBinding;
     const attributesWithProps: AttributeWithPropBindings[] = attributesNodeToBind.map(attr => this._mergeAttributesWithProps(node, instance, attr));
 
-    attributesWithProps.forEach((bindings) => {
-      const {name, value} = bindings;
+    attributesWithProps.forEach((binding) => {
+      const {name, value} = binding;
       const isEventHandler = name.startsWith('on');
       const attributeBinder = isEventHandler ? this._attributeBinders['event'] : this._attributeBinders[name];
       if (attributeBinder) {
-        attributeBinder(bindings)
+        attributeBinder(binding)
       } else {
         node.setAttribute(name, String(value))
       }
@@ -179,7 +223,8 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
 
     return {
       node,
-      boundProperties: attributesWithProps.map(({propName}) => propName.split('.')[0])
+      boundProperties: attributesWithProps.map(({propName}) => propName.split('.')[0]),
+      isHidden: !!attributesWithProps.find(binding => binding.name === Binder.IF_BINDING && !binding.value)
     }
   }
 
@@ -301,7 +346,7 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
       nodeWithParentRef.placeholderNode = nodeWithParentRef.placeholderNode ?? document.createComment(`${nodeWithParentRef.outerHTML}`);
       nodeWithParentRef.parentElement?.replaceChild(nodeWithParentRef.placeholderNode, nodeWithParentRef);
     } else {
-      nodeWithParentRef.placeholderNode?.parentElement.replaceChild(nodeWithParentRef, nodeWithParentRef.placeholderNode);
+      nodeWithParentRef.placeholderNode?.parentElement?.replaceChild(nodeWithParentRef, nodeWithParentRef.placeholderNode);
     }
   }
 }
