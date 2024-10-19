@@ -7,6 +7,7 @@ import moment from 'moment';
 import ToastService from '../../services/toast.service';
 import { Inject } from '../../base/inject';
 import { Child } from '../../base/child';
+import { Effect } from '../../base/effect';
 
 const template: string = require('./trip-form.component.html');
 const style: { default: string } = require('./trip-form.component.scss');
@@ -27,6 +28,13 @@ export default class TripFormComponent extends DynamicWebComponent {
 
   public nameObj = {name: 'default name'};
 
+
+  @Effect()
+  public ifBoundValue = false;
+
+  @Effect()
+  public forBoundValue = [1,2,3];
+
   @Child('#start-date')
   private _startDateInput: HTMLInputElement;
 
@@ -46,6 +54,11 @@ export default class TripFormComponent extends DynamicWebComponent {
 
   constructor() {
     super();
+    setInterval(() => this.ifBoundValue = !this.ifBoundValue, 1000)
+    setInterval(() => {
+      if (this.forBoundValue) {
+        this.forBoundValue = this.forBoundValue.concat(4);
+      }}, 5000)
   }
 
 

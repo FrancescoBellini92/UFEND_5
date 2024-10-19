@@ -1,6 +1,6 @@
 import Observable from './observable';
 import router from './router';
-import { TemplateParser } from './template-binder';
+import { MasterBinder } from './binders/MasterBinder';
 
 /**
  * Base class for all components
@@ -18,7 +18,7 @@ export default class WebComponent extends HTMLElement {
 
   protected _shadowRoot: ShadowRoot;
 
-  protected _parser: TemplateParser;
+  public _parser: MasterBinder;
 
   constructor() {
     super();
@@ -26,7 +26,7 @@ export default class WebComponent extends HTMLElement {
       router.register(this);
     }
 
-    this._parser = new TemplateParser(this)
+    this._parser = new MasterBinder(this)
   }
 
   connectedCallback() {
@@ -55,7 +55,7 @@ export default class WebComponent extends HTMLElement {
   protected async _attachHTML(): Promise<void>{
     this._shadowRoot = this.hasShadowDom ? this.attachShadow({ mode: "open" }): null;
     const root = this._shadowRoot ?? this;
-    const bindedDomTree = await this._parser.parse();
+    const bindedDomTree = await this._parser.parseAndDigest();
     root.appendChild(bindedDomTree.content);
   }
 
