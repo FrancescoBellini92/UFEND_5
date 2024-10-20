@@ -11,6 +11,7 @@ export interface NodeBoundsDescriptor<T extends Node = Node> {
   node: T;
   boundProperties: string[];
   isHidden?: boolean;
+  isForBound?: boolean;
 }
 
 

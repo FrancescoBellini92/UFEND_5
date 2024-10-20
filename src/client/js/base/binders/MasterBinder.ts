@@ -72,7 +72,8 @@ export class MasterBinder {
       })
 
       const isHidden = boundDescriptor?.isHidden ?? false;
-      if (isHidden || !node.hasChildNodes()) {
+      const isForBound = boundDescriptor?.isForBound ?? false;
+      if (isHidden || isForBound || !node.hasChildNodes()) {
         return;
       }
 

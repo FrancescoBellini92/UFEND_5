@@ -20,6 +20,7 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
   }
 
   private _bindCurrentForBound({node, value}: Pick<AttributeWithPropBindings, 'node' | 'value' >): void {
+
     binderAdapter.doBind(node, {[Binder.CURRENT_FOR_BINDING]: value} )
     if (node.hasChildNodes()) {
       Array.from(node.childNodes).forEach(node => this._bindCurrentForBound({node, value}))
@@ -29,7 +30,7 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
 
   private _bindForBound(bindings: AttributeWithPropBindings): void {
     const {node, value} = bindings;
-console.log('value', value)
+
     const isNotIterable = !(value && !!value[Symbol.iterator] );
     if (isNotIterable)  {
       return;
@@ -95,7 +96,8 @@ console.log('value', value)
     return {
       node,
       boundProperties: attributesWithProps.map(({instancePropertyName: propName}) => propName.split('.')[0]),
-      isHidden: !!attributesWithProps.find(binding => binding.attributeName === Binder.IF_BINDING && !binding.value)
+      isHidden: !!attributesWithProps.find(binding => binding.attributeName === Binder.IF_BINDING && !binding.value),
+      isForBound: !!attributesWithProps.find(binding => binding.attributeName === Binder.FOR_BINDING)
     }
   }
 
