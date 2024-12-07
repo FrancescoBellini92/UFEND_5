@@ -18,6 +18,8 @@
     "rules": {
     "semi": "off",
     "space-before-function-paren": "off",
-    "no-return-assign": "off"
+    "no-return-assign": "off",
+    "eol-last": "off",
+    "no-unused-vars": "warn"
   }
 }

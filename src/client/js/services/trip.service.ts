@@ -11,6 +11,8 @@ import { Injectable } from "../base/injectable";
 import Observable from "../base/observable";
 import moment from "moment";
 import { BadRequestError } from "../exceptions/exceptions";
+import { getFirebase } from "../../../firebase";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 const isProd = environment.MODE === 'PROD';
 
@@ -112,6 +114,17 @@ export default class TripService extends Service {
     this._syncStorage();
     this.currentTrip = newTrip
     this.onTripAdded$.next(newTrip);
+    const {firestore, auth} = getFirebase();
+    if (auth.currentUser) {
+      const userDoc = doc(firestore, 'users', auth.currentUser.uid);
+      await setDoc(userDoc, { // change this, bad practice
+        uid: auth.currentUser.uid
+      }, {merge: true})
+      const tripCol = collection(userDoc, 'trips');
+      const newTripDoc = doc(tripCol )
+      await setDoc(newTripDoc, newTrip, {merge: true})
+
+    }
     return newTrip;
   }
 

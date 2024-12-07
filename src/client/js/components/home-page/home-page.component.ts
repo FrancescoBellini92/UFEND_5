@@ -11,6 +11,16 @@ import ToastService from "../../services/toast.service";
 import DialogService from "../../services/dialog.service";
 import { Child } from "../../base/child";
 
+import { onAuthStateChanged, signInAnonymously, signOut } from "firebase/auth";
+import { getFirebase } from "../../../../firebase";
+
+
+const {auth} = getFirebase();
+onAuthStateChanged(auth, user => {
+  console.log(user)
+}, error => {
+  console.error(error)
+})
 const template: string = require("./home-page.component.html");
 
 @Inject(
@@ -101,6 +111,14 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
     this.addEventListener('remove', this._onRemove);
     this.addEventListener('view', (e: SelectTripEvent) => this._selectAndNavigate(e, '#details'));
     this.addEventListener('edit', (e: SelectTripEvent) => this._selectAndNavigate(e, '#edit'));
+    this.addEventListener('click', (e: Event) => {
+      const target = e.target as HTMLElement;
+      if (target.id === 'login-btn' ) {
+        signInAnonymously(auth)
+      } else if (target.id === 'logout-btn' && auth.currentUser) {
+        signOut(auth)
+      }
+    });
   }
 
   private _onRemove(e: RemoveTripEvent): void {
