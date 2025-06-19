@@ -212,7 +212,6 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
   }
 
   private _bindIfBound({attributeName: name, value, node}: AttributeWithPropBindings<HTMLInputElement>): void {
-    node.setAttribute(name,value)
 
     const nodeWithParentRef: typeof node & { placeholderNode?: Node} = node;
     if (!value) {
