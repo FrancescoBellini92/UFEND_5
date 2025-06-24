@@ -70,6 +70,7 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
   }
 
   connectedCallback(): void {
+    super.connectedCallback();
     this.updateProps(...this._tripService.trips);
   }
 
