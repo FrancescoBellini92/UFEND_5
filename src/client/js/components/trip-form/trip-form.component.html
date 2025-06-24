@@ -1,23 +1,15 @@
-<form name="text-entry" autocomplete="off" class="form">
-  <div  for-bound={{forBoundValue}}>
-    {{currentForBound}}
+<form name="text-entry" autocomplete="off" class="form" onSubmit={{handleSubmit}}>
+	<label class="color-primary margin-small" for="name">Name</label>
+	<input type="text" class="shadow" name="name" id="name" value={{tripFormValues.name}} required />
 
-    <!-- <label class="color-primary margin-small" for="name" >Name</label>
-    <input type="text" class="shadow" name="name" id="name" value={{nameObj.name}} required/> -->
-  </div>
-  <!-- <div>
-    <label class="color-primary margin-small" for="name" >Name</label>
-    <input type="text" class="shadow" name="name" id="name" value={{nameObj.name}} required/>
-  </div>
+	<label class="color-primary margin-small" for="location">Destination</label>
+	<input type="text" class="shadow" name="location" value={{tripFormValues.location}} id="location" required />
 
-  <label class="color-primary margin-small" for="location">Destination</label>
-  <input type="text" class="shadow" name="location" id="location" required/>
+	<label class="color-primary margin-small" for="start-date">Start date</label>
+	<input type="date" class="shadow" name="start-date" id="start-date" required value={{tripFormValues.startDate}}/>
 
-  <label class="color-primary margin-small" for="start-date">Start date</label>
-  <input type="date" class="shadow" name="start-date" id="start-date" required/>
+	<label class="color-primary margin-small" for="end-date">End date</label>
+	<input type="date" class="shadow" name="end-date" id="end-date" required value={{tripFormValues.endDate}}/>
 
-  <label class="color-primary margin-small" for="end-date">End date</label>
-  <input type="date" class="shadow" name="end-date" id="end-date" required/>
-
-  <button id="submit" type="submit" class="bg-primary padding-medium margin-medium shadow">Create trip</button> -->
+	<button id="submit" type="submit" class="bg-primary padding-medium margin-medium shadow">Create trip</button>
 </form>

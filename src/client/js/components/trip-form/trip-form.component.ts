@@ -26,14 +26,14 @@ const style: { default: string } = require('./trip-form.component.scss');
 })
 export default class TripFormComponent extends DynamicWebComponent {
 
-  public nameObj = {name: 'default name'};
-
-
   @Effect()
-  public ifBoundValue = false;
+  public tripFormValues = {
+    name: 'New trip',
+    location: 'Rome',
+    startDate: new Date(),
+    endDate: new Date(new Date().setDate(new Date().getDate() + 1))
+  }
 
-  @Effect()
-  public forBoundValue = [1,2,3];
 
   @Child('#start-date')
   private _startDateInput: HTMLInputElement;
@@ -51,16 +51,6 @@ export default class TripFormComponent extends DynamicWebComponent {
   private _submitBtn: HTMLInputElement;
 
   private _toastService: ToastService;
-
-  constructor() {
-    super();
-    setInterval(() => this.ifBoundValue = !this.ifBoundValue, 1000)
-    setInterval(() => {
-      if (this.forBoundValue) {
-        this.forBoundValue = this.forBoundValue.concat(4);
-      }}, 5000)
-  }
-
 
   reset(): void {
     this._startDateInput.value = null;
@@ -81,15 +71,12 @@ export default class TripFormComponent extends DynamicWebComponent {
     // this._submitBtn.addEventListener('click', e => this._onSubmit(e));
   }
 
-  private _onSubmit(e: Event): void {
-    const start: string =  this._startDateInput.value;
-    const end: string =  this._endDateInput.value;
-    const location: string =  this._locationInput.value;
-    const name: string =  this._nameInput.value;
+  public handleSubmit(e: Event): void {
+    e.preventDefault();
+    const {name, location, startDate, endDate} = this.tripFormValues;
 
-    const startDate = moment(this._startDateInput.value);
-    const endDate = moment(this._endDateInput.value);
-    const datesNotCorrect = !(startDate.isSameOrBefore(endDate) && endDate.isSameOrAfter(startDate));
+
+    const datesNotCorrect = startDate > endDate;
 
     const locationAndNameNotValid = inputNotValid(location) || inputNotValid(name);
 
@@ -99,7 +86,7 @@ export default class TripFormComponent extends DynamicWebComponent {
     }
 
     e.preventDefault();
-    this._emitSubmit({ start, end, location, name });
+    this._emitSubmit({ start: startDate.toISOString(), end: endDate.toISOString(), location, name });
   }
 
   private _manageValidationErrors(locationAndNameNotValid: boolean, datesNotCorrect: boolean, e: Event): void {
