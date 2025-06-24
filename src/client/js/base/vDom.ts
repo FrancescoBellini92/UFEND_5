@@ -2,11 +2,11 @@ import WebComponent from "./web.component";
 
 export const vDom = {
   recursiveVDom(nodes: (Node & WebComponent)[]): void {
-    [...nodes].filter(n => [Node.COMMENT_NODE, Node.ELEMENT_NODE, Node.TEXT_NODE].includes(n.nodeType)).map(n => ({type: n.nodeType, children: n.render ? null : this.recursiveVDom(n.childNodes), instance: n}))
+    [...nodes].filter(n => [Node.COMMENT_NODE, Node.ELEMENT_NODE, Node.TEXT_NODE].includes(n.nodeType)).map(n => ({type: n.nodeType, children: n.init ? null : this.recursiveVDom(n.childNodes), instance: n}))
   },
   recursiveRender(vNodes: vNode[]): void  {
     vNodes.forEach(vNode => {
-      vNode.instance?.render?.();
+      vNode.instance?.init?.();
       this.recursiveRender(vNode.children);
       })
   }

@@ -78,7 +78,7 @@ export default class TripFormComponent extends DynamicWebComponent {
   }
 
   protected _attachEventHandlers(): void {
-    this._submitBtn.addEventListener('click', e => this._onSubmit(e));
+    // this._submitBtn.addEventListener('click', e => this._onSubmit(e));
   }
 
   private _onSubmit(e: Event): void {

@@ -5,8 +5,8 @@ import WebComponent from "./web.component";
  */
 export default abstract class DynamicWebComponent extends WebComponent {
 
-  public async render(): Promise<void>{
-    await super.render();
+  public init(): void{
+    super.init();
     this._attachEventHandlers();
   }
 
