@@ -1,14 +1,16 @@
 <div class="card shadow">
-  <figure id="picture-container">
+  <figure id="picture-container"  >
+    <img alt="travel picture" class={{tripImage.classList}} onload={{handleImageLoad}} onerror={{handleImageError}} src={{tripImage.src}}/>
   </figure>
 
-  <p class="margin-small"><strong id="name"></strong></p>
-  <p class="margin-small" id="location"></p>
-  <p><span id="start-date"></span> - <span id="end-date"></span></p>
+
+  <p class="margin-small"><strong >{{trip.general.name}}</strong></p>
+  <p class="margin-small" >{{trip.general.location}}</p>
+  <p><span >{{trip.general.start}}</span> - <span>{{trip.general.end}}</span></p>
 
   <div class="row">
-    <button id="remove" class="can-hide-absent padding-small margin-medium shadow border">Remove</button>
-    <button id="view" class="can-hide-absent padding-small margin-medium shadow border">Open</button>
-    <button id="edit" class="can-hide-absent padding-small margin-medium shadow border">Edit</button>
+    <button class="can-hide-absent padding-small margin-medium shadow border" onclick={{handleRemove}}>Remove</button>
+    <button class="can-hide-absent padding-small margin-medium shadow border" onclick={{handleView}}>Open</button>
+    <button class="can-hide-absent padding-small margin-medium shadow border" onclick={{handleEdit}}>Edit</button>
   </div>
 </div>

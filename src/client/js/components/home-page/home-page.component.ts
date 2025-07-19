@@ -10,6 +10,7 @@ import { navigateTo, Routable } from "../../base/router";
 import ToastService from "../../services/toast.service";
 import DialogService from "../../services/dialog.service";
 import { Child } from "../../base/child";
+import { Effect } from "../../base/effect";
 
 const template: string = require("./home-page.component.html");
 
@@ -34,11 +35,13 @@ const template: string = require("./home-page.component.html");
 })
 export default class HomePageComponent extends DynamicWebComponent implements Routable {
 
-  @Child('#empty-container')
-  private _emptyContainer: HTMLElement;
+  @Effect({onChange() {
+    this.hasNoTrips = this.trips?.length == 0;
+  }})
+  public trips: Trip[];
 
-  @Child('#card-container')
-  private _cardContainer: HTMLElement;
+  @Effect()
+  public hasNoTrips = true;
 
   private _tripService: TripService;
   private _toastService: ToastService;
@@ -54,9 +57,9 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
       requestAnimationFrame(() => this._updateUI());
     });
 
-    this._tripService.onTripEdited$.subscribe(trip => {
-      const element = this._cardTripMap.get(trip.id) as TripCardComponent;
-      element.updateProps(trip);
+    this._tripService.onTripEdited$.subscribe(editedTrip => {
+      this.trips = this.trips.map(trip => trip.id === editedTrip.id ? editedTrip : trip )
+
     });
 
     this._tripService.onTripDeleted$.subscribe(tripId => {
@@ -86,16 +89,7 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
   }
 
   updateProps(...trips: Trip[]): void {
-    const fragment = document.createDocumentFragment();
-
-    trips.forEach(trip => {
-      const tripCard = new TripCardComponent();
-      this._cardTripMap.set(trip.id, tripCard);
-      tripCard.updateProps(trip)
-      fragment.appendChild(tripCard);
-    });
-
-    requestAnimationFrame(() => this._cardContainer.insertBefore(fragment, this._cardContainer.firstChild));
+    this.trips = trips;
   }
 
   protected _attachEventHandlers(): void {
@@ -125,7 +119,7 @@ export default class HomePageComponent extends DynamicWebComponent implements Ro
   private _updateUI(dataSize: number = this._cardTripMap.size): void {
     const isEmpty = dataSize === 0;
     const emptyContainerUIFn =  isEmpty ? show : hide;
-    emptyContainerUIFn(this._emptyContainer);
+    // emptyContainerUIFn(this._emptyContainer);
   }
 
 }

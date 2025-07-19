@@ -1,6 +1,6 @@
 import WebComponent from "./web.component"
 
-export const Effect: Effect = (params) => (target, name) => {
+export const Effect: Effect = (params: { onChange(): void }) => (target, name) => {
   const privateKeyForBoundProp = `__boundProperty[[${name}]]`;
   let previousValue;
 
@@ -26,8 +26,21 @@ export const Effect: Effect = (params) => (target, name) => {
   })
 }
 
-const isDifferent = (newVal, currentVal) => typeof newVal !== 'object' ? newVal !== currentVal : JSON.stringify(newVal) !== JSON.stringify(currentVal);
+const isDifferent = (newVal, currentVal) => {
+  const isNotObject =   typeof newVal !== 'object';
+
+  if (isNotObject) {
+    return  newVal !== currentVal
+   }
+
+   if (newVal === null || currentVal === null) {
+      return newVal !== currentVal
+   }
+
+    const ret = JSON.stringify(newVal) !== JSON.stringify(currentVal)
+    return ret;
+  };
 export interface EffectParams {
   onChange: Function;
 }
-export type Effect = (params?: EffectParams) => <T extends WebComponent |  (new (...args: any[]) => object)>(target: T, name: string ) => void;
+export type Effect =    (params?: EffectParams) => <T extends WebComponent |  (new (...args: any[]) => object)>(target: T, name: string ) => void;

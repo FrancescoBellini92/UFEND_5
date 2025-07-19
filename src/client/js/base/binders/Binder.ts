@@ -38,7 +38,6 @@ export abstract class Binder<T extends Node = Node, D = any> {
 
   public static traverseTree(namespaceToTraverse: string[], root: object | WebComponent): any {
     return namespaceToTraverse.reduce((acc, curr) => acc ? acc[curr] : acc, root)
-
   }
 
   protected _nodeOriginalTemplateMap: WeakMap<T, D> = new WeakMap();

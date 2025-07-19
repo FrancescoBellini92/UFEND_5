@@ -10,11 +10,8 @@ import TripFormComponent from "./trip-form/trip-form.component";
 import TripListComponent from "./trip-list/trip-list.component";
 import DialogComponent from "./dialog/dialog.component";
 
-function registerComponents(...components: typeof WebComponent[]) {
-  components.forEach(component => component.define());
-}
-export default () => registerComponents(
-  ToastComponent,
+
+const components = [ToastComponent,
   DialogComponent,
   TripCardComponent,
   TripListComponent,
@@ -24,4 +21,15 @@ export default () => registerComponents(
   TripFormComponent,
   AddPageComponent,
   EditPageComponent
-);
+]
+  ;
+
+  const componentTags = new Set(components.map(c => c.selector));
+function registerComponents(components: typeof WebComponent[]) {
+  components.forEach(component => component.define());
+}
+export default () => registerComponents(components);
+
+export function isComponent(node: HTMLElement) {
+  return componentTags.has(node.tagName.toLowerCase());
+}

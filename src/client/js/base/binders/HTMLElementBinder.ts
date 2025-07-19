@@ -1,3 +1,4 @@
+import { isComponent } from "../../components/components.module";
 import WebComponent from "../web.component";
 import { Binder, NodeBoundsDescriptor, NodeTypes } from "./Binder";
 import { binderAdapter } from "./bindersByNodeType";
@@ -20,7 +21,6 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
   }
 
   private _bindCurrentForBound({node, value}: Pick<AttributeWithPropBindings, 'node' | 'value' >): void {
-
     binderAdapter.doBind(node, {[Binder.CURRENT_FOR_BINDING]: value} )
     if (node.hasChildNodes()) {
       Array.from(node.childNodes).forEach(node => this._bindCurrentForBound({node, value}))
@@ -30,7 +30,6 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
 
   private _bindForBound(bindings: AttributeWithPropBindings): void {
     const {node, value} = bindings;
-
     const isNotIterable = !(value && !!value[Symbol.iterator] );
     if (isNotIterable)  {
       return;
@@ -89,7 +88,11 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
       if (attributeBinder) {
         attributeBinder(binding)
       } else {
-        node.setAttribute(name, String(value))
+        if (node instanceof WebComponent ) {
+           node[name] = value;
+        } else if (!isComponent(node)) {
+					node.setAttribute(name, typeof value === 'object' ? value instanceof Date ? value.toISOString() : JSON.stringify(value) : String(value))
+        }
       }
     });
 
@@ -212,7 +215,6 @@ export class HTMLElementBinder extends Binder<HTMLElement, Attr[]> {
   }
 
   private _bindIfBound({attributeName: name, value, node}: AttributeWithPropBindings<HTMLInputElement>): void {
-
     const nodeWithParentRef: typeof node & { placeholderNode?: Node} = node;
     if (!value) {
       nodeWithParentRef.placeholderNode = nodeWithParentRef.placeholderNode ?? document.createComment(`${nodeWithParentRef.outerHTML}`);

@@ -9,6 +9,10 @@ export default class WebComponent extends HTMLElement {
 
   static selector: string;
 
+
+
+
+
   public route: string;
 
   public html: string;
@@ -20,11 +24,14 @@ export default class WebComponent extends HTMLElement {
 
   public _parser: MasterBinder;
 
+
+
   constructor() {
     super();
-    if (this.route != undefined) {
+        if (this.route != undefined) {
       router.register(this);
     }
+
 
     this._parser = new MasterBinder(this)
   }
@@ -41,8 +48,8 @@ export default class WebComponent extends HTMLElement {
     return this._shadowRoot[multiple ? 'queryselectorAll' : 'querySelector'](selector);
   }
 
-  public async render(): Promise<void> {
-    await this._attachHTML();
+  public render(): void {
+    this._attachHTML();
     if (this._style) {
       this._attachStyle();
     }
@@ -52,10 +59,10 @@ export default class WebComponent extends HTMLElement {
     this.boundPropertiesChange$.next(val)
   }
 
-  protected async _attachHTML(): Promise<void>{
+  protected _attachHTML(): void{
     this._shadowRoot = this.hasShadowDom ? this.attachShadow({ mode: "open" }): null;
     const root = this._shadowRoot ?? this;
-    const bindedDomTree = await this._parser.parseAndDigest();
+    const bindedDomTree = this._parser.parseAndDigest();
     root.appendChild(bindedDomTree.content);
   }
 

@@ -1,9 +1,10 @@
 <section class="can-hide-absent hidden">
-  <div id="empty-container" class="column can-hide-absent">
-    <div class="alert">
-      <p>Start by creating a new trip!</p>
-    </div>
-    <a href="#add" class="bg-primary alert"> Add trip </a>
-  </div>
-  <div id="card-container"></div>
+	<div id="empty-container" class="column can-hide-absent" if-bound="{{ hasNoTrips }}">
+		<div class="alert">
+			<p>Start by creating a new trip!</p>
+		</div>
+		<a href="#add" class="bg-primary alert"> Add trip </a>
+	</div>
+
+	<trip-card for-bound="{{ trips }}" trip="{{ currentForBound }}"></trip-card>
 </section>
